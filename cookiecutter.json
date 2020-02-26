@@ -1,0 +1,9 @@
+{
+    "author_name": "Macklan Weinstein",
+    "author_email": "wolfgangwazzlestrauss@gmail.com",
+
+    "package_name": "scaffold-python",
+    "package_description": "Scaffolding template for Python packages.",
+    "package_version": "0.0.1",
+    "package_url": "https://github.com/wolfgangwazzlestrauss/scaffold-python"
+}
