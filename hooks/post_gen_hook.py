@@ -16,7 +16,7 @@ PATHS: Dict[str, str] = {
 }
 
 
-def clean_paths(platform str) -> None:
+def clean_paths(platform: str) -> None:
     """Delete residual paths from project.
 
     Args:
@@ -24,7 +24,7 @@ def clean_paths(platform str) -> None:
     """
 
     for host, paths in PATHS.items():
-        if platform == host:
+        if platform != host:
             for path in paths:
                 remove_path(path)
 

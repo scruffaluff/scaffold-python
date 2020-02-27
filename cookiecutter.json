@@ -3,9 +3,10 @@
     "author_email": "wolfgangwazzlestrauss@gmail.com",
 
     "git_host": ["github", "gitlab"],
+    "git_username": "wolfgangwazzlestrauss",
 
     "package_name": "scaffold-python",
     "package_description": "Scaffolding template for Python packages.",
     "package_version": "0.0.1",
-    "package_url": "https://github.com/wolfgangwazzlestrauss/scaffold-python"
+    "package_url": "https://{{ cookiecutter.git_host }}.com/{{ cookiecutter.git_username }}/{{ cookiecutter.package_name }}"
 }
