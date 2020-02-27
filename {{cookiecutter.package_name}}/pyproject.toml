@@ -22,10 +22,10 @@ source = ["{{ cookiecutter.package_name }}"]
 [tool.poetry]
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 description = "{{ cookiecutter.package_description }}"
-homepage = "https://github.com/wolfgangwazzlestrauss/{{ cookiecutter.package_name }}"
+homepage = "{{ cookiecutter.project_homepage }}"
 keywords = []
 license = "MIT"
-name = "{{ cookiecutter.package_name }}"
+name = "{{ cookiecutter.project_name }}"
 readme = "README.md"
 version = "{{ cookiecutter.package_version }}"
 

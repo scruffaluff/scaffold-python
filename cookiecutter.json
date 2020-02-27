@@ -5,8 +5,9 @@
     "git_host": ["github", "gitlab"],
     "git_username": "wolfgangwazzlestrauss",
 
-    "package_name": "scaffold-python",
+    "project_name": "scaffold-python",
+    "package_name": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
     "package_description": "Scaffolding template for Python packages.",
     "package_version": "0.0.1",
-    "package_url": "https://{{ cookiecutter.git_host }}.com/{{ cookiecutter.git_username }}/{{ cookiecutter.package_name }}"
+    "project_homepage": "https://{{ cookiecutter.git_host }}.com/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name }}"
 }

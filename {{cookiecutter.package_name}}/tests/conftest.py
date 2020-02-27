@@ -1,1 +1,1 @@
-"""Resuable testing fixtures for {{ cookiecutter.package_name }}."""
+"""Resuable testing fixtures for {{ cookiecutter.project_name }}."""

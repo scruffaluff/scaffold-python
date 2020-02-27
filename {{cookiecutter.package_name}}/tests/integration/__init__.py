@@ -1,1 +1,1 @@
-"""Integration tests for {{ cookiecutter.package_name }}."""
+"""Integration tests for {{ cookiecutter.project_name }}."""
