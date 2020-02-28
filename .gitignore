@@ -1,0 +1,12 @@
+.DS_Store
+.mypy_cache/*
+.pytest_cache/*
+.tox/*
+.venv/*
+.vscode/*
+*.pyc
+**/__pycache__/*
+**/.ipynb_checkpoints/*
+**/*.egg-info/*
+dist/*
+poetry.lock
