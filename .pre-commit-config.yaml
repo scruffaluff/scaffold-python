@@ -1,3 +1,4 @@
+exclude: "{{cookiecutter.project_name}}/*"
 repos:
 - repo: https://github.com/ambv/black
   rev: 19.3b0
