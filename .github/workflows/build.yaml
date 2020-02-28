@@ -26,5 +26,8 @@ jobs:
         poetry install -v
     - name: Build and test with tox
       run: |
-        poetry run tox -e format
-        poetry run tox -e py
+        poetry run flake8 hooks
+        poetry run flake8 tests
+        poetry run mypy hooks
+        poetry run mypy tests
+        poetry run pytest
