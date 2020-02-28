@@ -22,7 +22,7 @@ def main() -> None:
     """Entrypoint for project post generation hooks."""
 
     package_name = "{{ cookiecutter.package_name }}"
-    name_check(project_name)
+    name_check(package_name)
 
 
 if __name__ == "__main__":

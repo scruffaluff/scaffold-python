@@ -28,4 +28,5 @@ see the [contributing guide](CONTRIBUTING.md).
 
 ## License
 
-Licensed under the [MIT](LICENSE.md) license.
+Distributed under the terms of the [MIT license](LICENSE.md), {{ cookiecutter.project_name }} is
+free and open source software.
