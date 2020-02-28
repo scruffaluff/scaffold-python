@@ -3,16 +3,12 @@
 
 import pathlib
 import shutil
-from typing import Dict
+from typing import Dict, List
 
 
-PATHS: Dict[str, str] = {
-    "github": [
-        pathlib.Path(".github"),
-    ],
-    "gitlab": [
-        pathlib.Path(".gitlab-cy.yaml"),
-    ],
+PATHS: Dict[str, List[pathlib.Path]] = {
+    "github": [pathlib.Path(".github")],
+    "gitlab": [pathlib.Path(".gitlab-cy.yaml")],
 }
 
 
