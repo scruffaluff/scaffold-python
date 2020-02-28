@@ -1,9 +1,9 @@
 # {{ cookiecutter.project_name }}
 
-![](https://img.shields.io/pypi/v/{{ cookiecutter.package_name }})
-![](https://img.shields.io/{{ cookiecutter.git_host }}/license/{{ cookiecutter.git_username }}/{{ cookiecutter.package_name }})
-![](https://github.com/wolfgangwazzlestrauss/{{ cookiecutter.package_name }}/workflows/build/badge.svg)
-![](https://img.shields.io/{{ cookiecutter.git_host }}/repo-size/{{ cookiecutter.git_username }}/{{ cookiecutter.package_name }})
+![](https://img.shields.io/pypi/v/{{ cookiecutter.project_name }})
+![](https://img.shields.io/{{ cookiecutter.git_host }}/license/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name }})
+![](https://github.com/wolfgangwazzlestrauss/{{ cookiecutter.project_name }}/workflows/build/badge.svg)
+![](https://img.shields.io/{{ cookiecutter.git_host }}/repo-size/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name }})
 
 {{ cookiecutter.project_name }}
 

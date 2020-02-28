@@ -8,7 +8,7 @@ from typing import Dict, List
 
 PATHS: Dict[str, List[pathlib.Path]] = {
     "github": [pathlib.Path(".github")],
-    "gitlab": [pathlib.Path(".gitlab-cy.yaml")],
+    "gitlab": [pathlib.Path(".gitlab-ci.yaml")],
 }
 
 

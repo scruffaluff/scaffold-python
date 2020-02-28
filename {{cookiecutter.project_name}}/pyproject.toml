@@ -49,4 +49,4 @@ toml = "^0.10.0"
 tox = "^3.14.3"
 
 [tool.poetry.scripts]
-{{ cookiecutter.package_name }} = "{{ cookiecutter.package_name }}.main:app"
+{{ cookiecutter.project_name }} = "{{ cookiecutter.package_name }}.main:app"
