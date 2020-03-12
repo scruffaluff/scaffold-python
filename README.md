@@ -19,6 +19,7 @@ To develop with the generated project, install [Poetry](https://python-poetry.or
 ```console
 poetry install
 poetry shell
+git init
 pre-commit install
 ```
 
