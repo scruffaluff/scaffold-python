@@ -26,5 +26,6 @@ jobs:
         poetry install -v
     - name: Build and test with tox
       run: |
+        poetry run tox -e doc
         poetry run tox -e format
         poetry run tox -e py

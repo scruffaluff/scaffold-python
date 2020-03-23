@@ -1,9 +1,8 @@
 repos:
 - repo: https://github.com/ambv/black
-  rev: 19.3b0
+  rev: 19.10b0
   hooks:
   - id: black
-  language_version: python3.8
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v2.4.0
   hooks:
@@ -12,3 +11,7 @@ repos:
   rev: v0.761
   hooks:
   - id: mypy
+- repo: https://github.com/prettier/prettier
+  rev: "1.19.1"
+  hooks:
+    - id: prettier

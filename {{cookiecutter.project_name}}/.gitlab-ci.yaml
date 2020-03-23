@@ -1,4 +1,4 @@
-image: "python:3.8"
+image: "python:3.6"
 stages:
 - test
 - deploy
@@ -12,7 +12,7 @@ test:
   - poetry run tox -e doc
   - poetry run tox -e format
   - poetry run tox -e lint
-  - poetry run tox -e py37
+  - poetry run tox -e py36
 pages:
   stage: deploy
   script:

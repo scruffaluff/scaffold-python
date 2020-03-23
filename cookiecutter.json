@@ -2,6 +2,15 @@
     "author_name": "Macklan Weinstein",
     "author_email": "wolfgangwazzlestrauss@gmail.com",
 
+    "features": [
+        ["basic"], 
+        ["cli"], 
+        ["prettier"], 
+        ["cli", "django"],
+        ["cli", "prettier"],
+        ["cli", "django", "prettier"]
+    ],
+
     "git_host": ["github", "gitlab"],
     "git_username": "wolfgangwazzlestrauss",
 
