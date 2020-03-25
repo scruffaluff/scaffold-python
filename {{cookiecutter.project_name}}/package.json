@@ -1,0 +1,26 @@
+{
+  "name": "{{ cookiecutter.project_slug }}",
+  "version": "0.0.1",
+  "description": "{{ cookie",
+  "scripts": {
+    "format": "prettier --write **/*.{css,html,js,json,md,yaml,yml}"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+{{ cookiecutter.project_homepage }}.git"
+  },
+  "author": "Macklan Weinstein",
+  "license": "MIT",
+  "homepage": "{{ cookiecutter.project_homepage }}#readme",
+  "devDependencies": {
+    "prettier": "^1.19.1"
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "printWidth": 80,
+    "proseWrap": "always",
+    "semi": true,
+    "tabWidth": 2,
+    "trailingComma": "es5"
+  }
+}

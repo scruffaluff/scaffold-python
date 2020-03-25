@@ -10,14 +10,14 @@ exclude_lines = [
     "raise NotImplementedError",
     "if sys.version_info.*"
 ]
-fail_under = 80
+fail_under = 100
 show_missing = true
 
 [tool.coverage.run]
 branch = true
 command_line = "-m pytest"
 omit = []
-source = ["{{ cookiecutter.package_name }}"]
+source = ["{{ cookiecutter.project_slug }}"]
 
 [tool.poetry]
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
@@ -37,6 +37,7 @@ typer = "^0.0.11"
 typing-extensions = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
+bandit = "^1.6.2"
 black = "^19.10b0"
 coverage = { version = "^5.0.1", extras = ["toml"] }
 flake8 = "^3.7.9"
@@ -55,10 +56,9 @@ toml = "^0.10.0"
 tox = "^3.14.3"
 {% if "cli" in cookiecutter.features %}
 typer-cli = "^0.0.6"
-zipp = "^3.1.0"
 {% endif %}
 
 {% if "cli" in cookiecutter.features %}
 [tool.poetry.scripts]
-{{ cookiecutter.project_name }} = "{{ cookiecutter.package_name }}.main.__init__:app"
+{{ cookiecutter.project_name }} = "{{ cookiecutter.project_slug }}.__main__:app"
 {% endif %}
