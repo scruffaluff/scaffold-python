@@ -1,7 +1,7 @@
 {
   "name": "{{ cookiecutter.project_slug }}",
-  "version": "0.0.1",
-  "description": "{{ cookie",
+  "version": "{{ cookiecutter.project_version }}",
+  "description": "{{ cookiecutter.project_description }}",
   "scripts": {
     "format": "prettier --write **/*.{css,html,js,json,md,yaml,yml}"
   },

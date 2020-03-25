@@ -4,13 +4,12 @@
 .pytest_cache/*
 .tox/*
 .venv/*
-.vscode/*
-*.ipynb
 *.pyc
 **/__pycache__/*
 **/.ipynb_checkpoints/*
 **/*.egg-info/*
 dist/*
-doc/build/*
+node_modules/*
+package-lock.json
 poetry.lock
-examples/*
+site/*

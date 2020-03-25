@@ -9,9 +9,7 @@ before_script:
 test:
   stage: test
   script:
-  - poetry run tox -e doc
-  - poetry run tox -e format
-  - poetry run tox -e lint
+  - poetry run tox -e static
   - poetry run tox -e py36
 pages:
   stage: deploy
@@ -19,6 +17,6 @@ pages:
   - poetry run mkdocs build
   artifacts:
     paths:
-    - public
+    - site
   only:
     master

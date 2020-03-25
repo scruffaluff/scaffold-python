@@ -1,20 +1,24 @@
 # scaffold-python
 
-Scaffold Python is a [Cookiecutter](https://github.com/cookiecutter/cookiecutter) template project
-for generating Python application repository layouts. To create a new Python application project
-with the template first install [Cookiecutter](https://github.com/cookiecutter/cookiecutter). Then
-execute
+Scaffold Python is a
+[Cookiecutter](https://github.com/cookiecutter/cookiecutter) template project
+for generating Python application repository layouts. To create a new Python
+application project with the template first install
+[Cookiecutter](https://github.com/cookiecutter/cookiecutter). Then execute
 
 ```console
 cookiecutter https://github.com/wolfgangwazzlestrauss/scaffold-python
 ```
 
-Follow the interactive prompts, and a folder, with your selected `project_name`, will be generated in your current working directory.
+Follow the interactive prompts, and a folder, with your selected `project_name`,
+will be generated in your current working directory.
 
 
 ## Setup
 
-To develop with the generated project, install [Poetry](https://python-poetry.org/) and step into the project folder. Afterwards execute:
+To develop with the generated project, install
+[Poetry](https://python-poetry.org/) and step into the project folder.
+Afterwards execute:
 
 ```console
 poetry install
@@ -29,8 +33,10 @@ Then the development environment is configured and you are ready to code.
 
 The generated project configures the following tools for development usage:
 
+* [Bandit](https://github.com/PyCQA/bandit): Security linter.
 * [Black](https://github.com/psf/black): Opinionated code formatter.
-* [Coverage](https://coverage.readthedocs.io/en/coverage-5.0.3/): Test coverage measurer.
+* [Coverage](https://coverage.readthedocs.io/en/coverage-5.0.3/): Test coverage
+  measurer.
 * [Flake8](https://flake8.pycqa.org/en/latest/): Code linter.
 * [Mypy](http://mypy-lang.org/): Static type checker.
 * [Poetry](https://python-poetry.org/): Dependency manager and packager.
@@ -45,7 +51,7 @@ The generated project structure is as follows:
 ```
 {{project_name}}
 ├── CONTRIBUTING.md
-├── examples
+├── docs
 ├── .github
 │   └── workflows
 │       ├── build.yaml
@@ -58,7 +64,7 @@ The generated project structure is as follows:
 ├── pyproject.toml
 ├── README.md
 ├── src
-│   └── {{package_name}}
+│   └── {{project_slug}}
 │       ├── __init__.py
 │       └── py.typed
 ├── tests
@@ -72,4 +78,5 @@ The generated project structure is as follows:
 └── tox.ini
 ```
 
-Some of the files or directories may not be generated based on your chosen options.
+Some of the files or directories may not be generated based on your chosen
+options.

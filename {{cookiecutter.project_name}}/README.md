@@ -1,6 +1,6 @@
 # {{ cookiecutter.project_name }}
 
-![](https://img.shields.io/pypi/v/{{ cookiecutter.poject_name }})
+![](https://img.shields.io/pypi/v/{{ cookiecutter.project_name }})
 ![](https://img.shields.io/pypi/pyversions/{{ cookiecutter.project_name }}.svg)
 ![](https://github.com/wolfgangwazzlestrauss/{{ cookiecutter.project_name }}/workflows/build/badge.svg)
 ![](https://img.shields.io/badge/code%20style-black-000000.svg)

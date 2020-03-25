@@ -21,13 +21,13 @@ source = ["{{ cookiecutter.project_slug }}"]
 
 [tool.poetry]
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
-description = "{{ cookiecutter.package_description }}"
+description = "{{ cookiecutter.project_description }}"
 homepage = "{{ cookiecutter.project_homepage }}"
 keywords = []
 license = "MIT"
 name = "{{ cookiecutter.project_name }}"
 readme = "README.md"
-version = "{{ cookiecutter.package_version }}"
+version = "{{ cookiecutter.project_version }}"
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
