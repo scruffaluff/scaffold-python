@@ -51,18 +51,43 @@ The generated project structure is as follows:
 ```
 {{project_name}}
 ├── CONTRIBUTING.md
+├── .dockerignore
 ├── docs
+│   ├── css
+│   │   └── termynal.css
+│   ├── index.md
+│   ├── js
+│   │   ├── index.js
+│   │   ├── mermaid.min.js
+│   │   └── termynal.js
+│   └── src
+│       ├── cli
+│       │   └── index.md
+│       ├── developer
+│       │   └── index.md
+│       ├── reference
+│       │   └── index.md
+│       └── user
+│           └── index.md
 ├── .github
 │   └── workflows
 │       ├── build.yaml
+│       ├── pages.yaml
 │       └── publish.yaml
 ├── .gitignore
-├── .gitlab-ci.yaml
+├── .gitpod.yml
 ├── LICENSE.md
+├── mkdocs.yml
 ├── mypy.ini
+├── package.json
 ├── .pre-commit-config.yaml
+├── .prettierignore
 ├── pyproject.toml
 ├── README.md
+├── scripts
+│   ├── build_docs.py
+│   ├── clean.py
+│   └── sort_pyproject.py
 ├── src
 │   └── {{project_slug}}
 │       ├── __init__.py
@@ -73,9 +98,14 @@ The generated project structure is as follows:
 │   ├── integration
 │   │   └── __init__.py
 │   └── unit
-│       ├── __init__.py
-│       └── test_lib.py
-└── tox.ini
+│       └── __init__.py
+├── .theia
+│   ├── launch.json
+│   └── settings.json
+├── tox.ini
+└── .vscode
+    ├── launch.json
+    └── settings.json
 ```
 
 Some of the files or directories may not be generated based on your chosen

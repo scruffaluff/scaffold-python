@@ -6,9 +6,20 @@ import shutil
 from typing import Dict, List
 
 
-PATHS: Dict[str, List[pathlib.Path]] = {
-    "github": [pathlib.Path(".github")],
-    "gitlab": [pathlib.Path(".gitlab-ci.yaml")],
+PATHS: Dict[str, Dict[str, List[pathlib.Path]]] = {
+    "git_host": {
+        "github": [pathlib.Path(".github")],
+        "gitlab": [pathlib.Path(".gitlab-ci.yaml")],
+    },
+    "features": {
+        "cli": [
+            pathlib.Path("src/{{ cookiecutter.project_slug }}/__main__.py"),
+        ],
+        "prettier": [
+            pathlib.Path(".prettierignore"),
+            pathlib.Path("package.json"),
+        ],
+    },
 }
 
 
@@ -19,7 +30,7 @@ def clean_paths(platform: str) -> None:
         platform: Git hosting platform.
     """
 
-    for host, paths in PATHS.items():
+    for host, paths in PATHS["git_host"].items():
         if platform != host:
             for path in paths:
                 remove_path(path)

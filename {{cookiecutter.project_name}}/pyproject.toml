@@ -31,9 +31,9 @@ version = "{{ cookiecutter.project_version }}"
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
-{% if "cli" in cookiecutter.features %}
+{% if "cli" in cookiecutter.features -%}
 typer = "^0.0.11"
-{% endif %}
+{%- endif %}
 typing-extensions = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
@@ -54,11 +54,11 @@ pytest-testmon = "^1.0.2"
 pytest-xdist = "^1.31.0"
 toml = "^0.10.0"
 tox = "^3.14.3"
-{% if "cli" in cookiecutter.features %}
+{% if "cli" in cookiecutter.features -%}
 typer-cli = "^0.0.6"
-{% endif %}
+{%- endif %}
 
-{% if "cli" in cookiecutter.features %}
+{%- if "cli" in cookiecutter.features %}
 [tool.poetry.scripts]
 {{ cookiecutter.project_name }} = "{{ cookiecutter.project_slug }}.__main__:app"
-{% endif %}
+{% endif -%}
