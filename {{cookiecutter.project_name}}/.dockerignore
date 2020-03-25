@@ -1,0 +1,12 @@
+.git/*
+.github/*
+.gitignore
+.mypy_cache/*
+.pre-commit-config.yaml
+.pytest_cache/*
+.tox/*
+.venv/*
+*.egg-info
+**/__pycache__/*
+dist/*
+poetry.lock
