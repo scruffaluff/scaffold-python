@@ -9,7 +9,6 @@
 
 {{ cookiecutter.project_name }}
 
-
 ## Getting Started
 
 ### Installation
@@ -20,13 +19,11 @@
 pip install --user {{ cookiecutter.project_name }}
 ```
 
-
 ## Contributing
 
 For guidance on setting up a development environment and making a contribution
 to {{cookiecutter.project_name }}, see the [contributing
 guide](CONTRIBUTING.md).
-
 
 ## License
 

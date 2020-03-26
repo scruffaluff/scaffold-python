@@ -2,9 +2,9 @@ name: build
 on:
   push:
     branches:
-    - develop
-    - feature/*
-    - master
+      - develop
+      - feature/*
+      - master
 jobs:
   static:
     runs-on: ubuntu-latest
