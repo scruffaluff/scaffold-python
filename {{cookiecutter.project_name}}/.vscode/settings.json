@@ -1,3 +1,7 @@
 {
+  {%- if cookiecutter.os == "windows" %}
+  "python.pythonPath": ".venv\\Scripts\\python.exe"
+  {%- else %}
   "python.pythonPath": ".venv/bin/python"
+  {%- endif %}
 }

@@ -14,9 +14,12 @@
     "git_host": ["github", "gitlab"],
     "git_username": "wolfgangwazzlestrauss",
 
+    "os": ["linux", "macos", "windows"],
+
     "project_name": "scaffold-python",
     "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
     "project_description": "Scaffolding template for Python packages.",
     "project_version": "0.0.1",
-    "project_homepage": "https://{{ cookiecutter.git_host }}.com/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name }}"
+    "project_homepage": "https://{{ cookiecutter.git_host }}.com/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name.lower() }}",
+    "project_documentation": "https://{{ cookiecutter.git_username }}.{{ cookiecutter.git_host }}.io/{{ cookiecutter.project_name.lower() }}"
 }

@@ -9,7 +9,7 @@ from typing import Dict, List
 PATHS: Dict[str, Dict[str, List[pathlib.Path]]] = {
     "git_host": {
         "github": [pathlib.Path(".github")],
-        "gitlab": [pathlib.Path(".gitlab-ci.yaml")],
+        "gitlab": [pathlib.Path(".gitlab-ci.yml")],
     },
     "features": {
         "cli": [
