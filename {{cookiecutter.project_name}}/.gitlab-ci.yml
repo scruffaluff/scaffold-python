@@ -14,9 +14,9 @@ test:
 pages:
   stage: deploy
   script:
-  - poetry run mkdocs build
+  - poetry run mkdocs build -d public
   artifacts:
     paths:
-    - site
+      - public 
   only:
-    master
+    - master

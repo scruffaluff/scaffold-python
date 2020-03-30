@@ -37,12 +37,12 @@ def generate_cli_docs(repo_path: pathlib.Path) -> None:
         repo_path: Repository root path.
     """
 
-    cli_doc = repo_path / "docs/src/cli/index.md"
+    cli_doc = repo_path / "docs/src/user/cli.md"
 
     with cli_doc.open("w") as handle:
         try:
             subprocess.run(
-                args="typer src/yamltable/__main__.py utils docs",
+                args="typer src/{{ cookiecutter.project_slug }}/__main__.py utils docs",
                 shell=True,
                 check=True,
                 stdout=handle,

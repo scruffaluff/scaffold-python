@@ -3,16 +3,12 @@ extra:
   social:
     - type: home
       link: https://wolfgangwazzlestrauss.com
-    - type: github
+    - type: {{ cookiecutter.git_host }}
       link: https://{{ cookiecutter.git_host }}.com/{{ cookiecutter.git_username }}
     - type: inbox
       link: mailto://{{ cookiecutter.author_email }}
 extra_css:
-  - css/termynal.css
-extra_javascript:
-  - js/mermaid.min.js
-  - js/termynal.js
-  - js/index.js
+  - css/style.css
 markdown_extensions:
   - admonition
   - codehilite:
@@ -38,7 +34,6 @@ markdown_extensions:
       permalink: true
 nav:
   - Home: index.md
-  - Command Line: src/cli/index.md
   - User Guide: src/user/index.md
   - API Reference: src/reference/index.md
   - Developer Guide: src/developer/index.md
@@ -51,7 +46,7 @@ site_author: {{ cookiecutter.author_name }}
 site_description: |
   {{ cookiecutter.project_homepage }}
 site_name: {{ cookiecutter.project_name }}
-site_url: https://wolfgangwazzlestrauss.github.io/yamltable/index
+site_url: https://wolfgangwazzlestrauss.github.io/{{ cookiecutter.project_slug }}
 theme:
   favicon: img/favicon.ico
   logo: img/favicon.ico

@@ -7,6 +7,14 @@
 ![](https://img.shields.io/{{ cookiecutter.git_host }}/repo-size/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name }})
 ![](https://img.shields.io/{{ cookiecutter.git_host }}/license/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name }})
 
+---
+
+**Documentation**: https://{ cookiecutter.git_username }}.{{ cookiecutter.git_host }}.io/{{ cookiecutter.project_slug }}
+
+**Source Code**: {{ cookiecutter.project_homepage }}
+
+---
+
 {{ cookiecutter.project_name }}
 
 ## Getting Started
