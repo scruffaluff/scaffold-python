@@ -54,7 +54,7 @@ def test_no_trailing_blank_line(
     assert not text.endswith("\n\n")
 
 
-def test_package_name_invalid(cookies: plugin.Cookies) -> None:
+def test_project_slug_invalid(cookies: plugin.Cookies) -> None:
     """Check that cookiecutter rejects invalid package names."""
 
     res = cookies.bake(extra_context={"project_name": "$Mock?"})

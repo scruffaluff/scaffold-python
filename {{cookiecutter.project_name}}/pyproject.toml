@@ -57,9 +57,7 @@ toml = "^0.10.0"
 tox = "^3.14.3"
 {% if "cli" in cookiecutter.features -%}
 typer-cli = "^0.0.6"
-{%- endif %}
 
-{% if "cli" in cookiecutter.features %}
 [tool.poetry.scripts]
 {{ cookiecutter.project_name }} = "{{ cookiecutter.project_slug }}.__main__:app"
 {% endif -%}
