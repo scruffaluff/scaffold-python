@@ -2,24 +2,22 @@
     "author_name": "Macklan Weinstein",
     "author_email": "wolfgangwazzlestrauss@gmail.com",
 
-    "features": [
-        ["basic"], 
-        ["cli"], 
-        ["prettier"], 
-        ["cli", "django"],
-        ["cli", "prettier"],
-        ["cli", "django", "prettier"]
-    ],
-
-    "git_host": ["github", "gitlab"],
-    "git_username": "wolfgangwazzlestrauss",
-
-    "os": ["linux", "macos", "windows"],
+    "githost": ["github", "gitlab"],
+    "githost_username": "wolfgangwazzlestrauss",
 
     "project_name": "scaffold-python",
     "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
     "project_description": "Scaffolding template for Python packages.",
     "project_version": "0.0.1",
-    "project_homepage": "https://{{ cookiecutter.git_host }}.com/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name.lower() }}",
-    "project_documentation": "https://{{ cookiecutter.git_username }}.{{ cookiecutter.git_host }}.io/{{ cookiecutter.project_name.lower() }}"
+    "project_repopage": "https://{{ cookiecutter.githost }}.com/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name.lower() }}",
+    "project_docpage": "https://{{ cookiecutter.githost_username }}.{{ cookiecutter.githost }}.io/{{ cookiecutter.project_name.lower() }}",
+
+    "os": ["linux", "macos", "windows"],
+    "license": ["MIT", "private"],
+
+    "cli_support": ["yes", "no"],
+    "docker_support": ["yes", "no"],
+    "gitpod_support": ["yes", "no"],
+    "prettier_support": ["yes", "no"],
+    "pypi_support": ["yes", "no"]
 }

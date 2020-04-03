@@ -1,15 +1,15 @@
 # {{ cookiecutter.project_name }}
 
 ![](https://img.shields.io/pypi/v/{{ cookiecutter.project_name }})
-![](https://img.shields.io/{{ cookiecutter.git_host }}/license/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name }})
+![](https://img.shields.io/{{ cookiecutter.githost }}/license/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
 ![](https://github.com/wolfgangwazzlestrauss/{{ cookiecutter.project_name }}/workflows/build/badge.svg)
-![](https://img.shields.io/{{ cookiecutter.git_host }}/repo-size/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name }})
+![](https://img.shields.io/{{ cookiecutter.githost }}/repo-size/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
 
 ---
 
-**Documentation**: https://{ cookiecutter.git_username }}.{{ cookiecutter.git_host }}.io/{{ cookiecutter.project_slug }}
+**Documentation**: {{ cookiecutter.project_docpage }}
 
-**Source Code**: {{ cookiecutter.project_homepage }}
+**Source Code**: {{ cookiecutter.project_repopage }}
 
 ---
 

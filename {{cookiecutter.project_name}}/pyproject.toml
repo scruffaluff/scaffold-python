@@ -22,8 +22,8 @@ source = ["{{ cookiecutter.project_slug }}"]
 [tool.poetry]
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 description = "{{ cookiecutter.project_description }}"
-documentation = "{{ cookiecutter.project_documentation }}"
-homepage = "{{ cookiecutter.project_homepage }}"
+documentation = "{{ cookiecutter.project_docpage }}"
+homepage = "{{ cookiecutter.project_repopage }}"
 keywords = []
 license = "MIT"
 name = "{{ cookiecutter.project_name }}"
@@ -32,7 +32,7 @@ version = "{{ cookiecutter.project_version }}"
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
-{% if "cli" in cookiecutter.features -%}
+{% if cookiecutter.cli_support == "yes" -%}
 typer = "^0.0.11"
 {%- endif %}
 typing-extensions = "^3.7.4"
@@ -55,7 +55,7 @@ pytest-testmon = "^1.0.2"
 pytest-xdist = "^1.31.0"
 toml = "^0.10.0"
 tox = "^3.14.3"
-{% if "cli" in cookiecutter.features -%}
+{% if cookiecutter.cli_support == "yes" -%}
 typer-cli = "^0.0.6"
 
 [tool.poetry.scripts]

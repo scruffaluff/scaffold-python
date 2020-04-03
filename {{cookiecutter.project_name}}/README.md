@@ -4,14 +4,14 @@
 ![](https://img.shields.io/pypi/pyversions/{{ cookiecutter.project_name }}.svg)
 ![](https://github.com/wolfgangwazzlestrauss/{{ cookiecutter.project_name }}/workflows/build/badge.svg)
 ![](https://img.shields.io/badge/code%20style-black-000000.svg)
-![](https://img.shields.io/{{ cookiecutter.git_host }}/repo-size/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name }})
-![](https://img.shields.io/{{ cookiecutter.git_host }}/license/{{ cookiecutter.git_username }}/{{ cookiecutter.project_name }})
+![](https://img.shields.io/{{ cookiecutter.githost }}/repo-size/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
+![](https://img.shields.io/{{ cookiecutter.githost }}/license/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
 
 ---
 
-**Documentation**: https://{ cookiecutter.git_username }}.{{ cookiecutter.git_host }}.io/{{ cookiecutter.project_slug }}
+**Documentation**: {{ cookiecutter.project_docpage }}
 
-**Source Code**: {{ cookiecutter.project_homepage }}
+**Source Code**: {{ cookiecutter.project_repopage }}
 
 ---
 
@@ -24,7 +24,7 @@
 {{ cookiecutter.project_name }} can be installed for Python 3.6+ with
 
 ```bash
-pip install --user {{ cookiecutter.project_name }}
+pip install --user {{ cookiecutter.project_slug }}
 ```
 
 ## Contributing
@@ -35,5 +35,11 @@ guide](CONTRIBUTING.md).
 
 ## License
 
-Distributed under the terms of the [MIT license](LICENSE.md), {{
+{% if cookiecutter.license != "private" -%}
+Distributed under the terms of the [{{ cookiecutter.license }} license](LICENSE.md), {{
 cookiecutter.project_name }} is free and open source software.
+{% else %}
+{{ cookiecutter.project_name }} is proprietary software and prohibited from
+unauthorized redistribution. See the [license](LICENSE.md) for more
+information.
+{%- endif %}

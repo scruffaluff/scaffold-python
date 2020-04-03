@@ -11,6 +11,18 @@ jobs:
     steps:
       - name: Code repository checkout
         uses: actions/checkout@v1
+      {% if cookiecutter.prettier_support == "yes" %}
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.5
+      - name: Install Node dependencies
+        run: |
+          npm install
+      - name: Check format of configuration files
+        run: |
+          npm test
+      {% endif %}
       - name: Install Python
         uses: actions/setup-python@v1
         with:

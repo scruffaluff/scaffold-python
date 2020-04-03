@@ -3,44 +3,86 @@
 
 import pathlib
 import shutil
-from typing import Dict, List
+from typing import Dict, List, Union
 
 
-PATHS: Dict[str, Dict[str, List[pathlib.Path]]] = {
-    "git_host": {
+Paths = List[pathlib.Path]
+
+
+PATHS: Dict[str, Union[Paths, Dict[str, Paths]]] = {
+    "githost": {
         "github": [pathlib.Path(".github")],
         "gitlab": [pathlib.Path(".gitlab-ci.yml")],
     },
-    "features": {
-        "cli": [
-            pathlib.Path("src/{{ cookiecutter.project_slug }}/__main__.py"),
-        ],
-        "prettier": [
-            pathlib.Path(".prettierignore"),
-            pathlib.Path("package.json"),
-        ],
-    },
+    "cli_support": [
+        pathlib.Path("src/{{ cookiecutter.project_slug }}/__main__.py"),
+    ],
+    "docker_support": [
+        pathlib.Path(".dockerignore"),
+        pathlib.Path("Dockerfile"),
+    ],
+    "gitpod_support": [pathlib.Path(".theia"), pathlib.Path(".gitpod.yml")],
+    "prettier_support": [
+        pathlib.Path(".prettierignore"),
+        pathlib.Path("package.json"),
+    ],
+    "pypi_support": [pathlib.Path(".github/workflow/publish.yaml")],
 }
 
 
-def clean_paths(platform: str) -> None:
+def clean_bool(chosen: str, paths: Paths) -> None:
+    """Remove option paths if it was not chosen.
+
+    Args:
+        chosen: Whether option was chosen during scaffolding.
+    """
+
+    if "chosen" != "yes":
+        for path in paths:
+            remove_path(path)
+
+
+def clean_choice(choice: str, options: Dict[str, Paths]) -> None:
+    """Remove choice paths from unchosen options.
+
+    Args:
+        choice: Chosen option from list during scaffolding.
+    """
+
+    for option, paths in options.items():
+        if option != choice:
+            for path in paths:
+                remove_path(path)
+
+
+def clean_paths(context: Dict[str, str]) -> None:
     """Delete residual paths from project.
 
     Args:
         platform: Git hosting platform.
     """
 
-    for host, paths in PATHS["git_host"].items():
-        if platform != host:
-            for path in paths:
-                remove_path(path)
+    for key, val in PATHS.items():
+        if isinstance(val, dict):
+            clean_choice(context[key], val)
+        elif isinstance(val, list):
+            clean_bool(context[key], val)
+        else:
+            raise TypeError("Unsupported type in PATHS data.")
 
 
 def main() -> None:
     """Entrypoint for project post generation hooks."""
 
-    git_host = "{{ cookiecutter.git_host }}"
-    clean_paths(git_host)
+    context = {
+        "githost": "{{ cookiecutter.githost }}",
+        "cli_support": "{{ cookiecutter.cli_support }}",
+        "docker_support": "{{ cookiecutter.docker_support }}",
+        "gitpod_support": "{{ cookiecutter.gitpod_support }}",
+        "prettier_support": "{{ cookiecutter.prettier_support }}",
+        "pypi_support": "{{ cookiecutter.pypi_support }}",
+    }
+    clean_paths(context)
 
 
 def remove_path(path: pathlib.Path) -> None:
@@ -52,7 +94,7 @@ def remove_path(path: pathlib.Path) -> None:
 
     if path.is_dir():
         shutil.rmtree(path, ignore_errors=True)
-    else:
+    elif path.exists():
         path.unlink()
 
 

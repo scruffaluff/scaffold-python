@@ -3,12 +3,15 @@ extra:
   social:
     - type: home
       link: https://wolfgangwazzlestrauss.com
-    - type: {{ cookiecutter.git_host }}
-      link: https://{{ cookiecutter.git_host }}.com/{{ cookiecutter.git_username }}
+    - type: {{ cookiecutter.githost }}
+      link: https://{{ cookiecutter.githost }}.com/{{ cookiecutter.githost_username }}
     - type: inbox
       link: mailto://{{ cookiecutter.author_email }}
 extra_css:
   - css/style.css
+extra_javascript:
+  - https://unpkg.com/mermaid@8.4.8/dist/mermaid.min.js
+  - js/index.js
 markdown_extensions:
   - admonition
   - codehilite:
@@ -41,15 +44,13 @@ plugins:
   - mkdocstrings
   - search
 repo_name: {{ cookiecutter.project_name }}
-repo_url: {{ cookiecutter.project_homepage }}
+repo_url: {{ cookiecutter.project_repopage }}
 site_author: {{ cookiecutter.author_name }}
 site_description: |
-  {{ cookiecutter.project_homepage }}
+  {{ cookiecutter.project_description }}
 site_name: {{ cookiecutter.project_name }}
-site_url: https://wolfgangwazzlestrauss.github.io/{{ cookiecutter.project_slug }}
+site_url: {{ cookiecutter.project_docpage }}
 theme:
-  favicon: img/favicon.ico
-  logo: img/favicon.ico
   name: material
   palette:
     accent: cyan

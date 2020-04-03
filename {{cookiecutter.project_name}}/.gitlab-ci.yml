@@ -1,22 +1,44 @@
-image: "python:3.6"
 stages:
-- test
-- deploy
-before_script:
-- python -m pip install --upgrade pip
-- python -m pip install poetry
-- poetry install
-test:
+  - test
+  - deploy
+default:
+  before_script:
+    - python -m pip install --upgrade pip
+    - python -m pip install poetry
+    - poetry install
+node:13.12:
+  image: "node:13.12"
+  stage: test
+  before_script:
+    - npm install
+  script:
+    - npm test
+python:3.6:
+  image: "python:3.6"
   stage: test
   script:
-  - poetry run tox -e static
-  - poetry run tox -e py36
+    - poetry run tox -e static
+    - poetry run tox -e py36
+python:3.7:
+  image: "python:3.7"
+  stage: test
+  script:
+    - poetry run tox -e py37
+python:3.8:
+  image: "python:3.8"
+  stage: test
+  script:
+    - poetry run tox -e py38
 pages:
+  image: "python:3.6"
   stage: deploy
   script:
-  - poetry run mkdocs build -d public
+    - poetry run python scripts/docs.py build
   artifacts:
     paths:
-      - public 
-  only:
-    - master
+      - public
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      when: on_success
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      when: on_success

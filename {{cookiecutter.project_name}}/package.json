@@ -7,11 +7,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+{{ cookiecutter.project_homepage }}.git"
+    "url": "git+{{ cookiecutter.project_repopage }}.git"
   },
   "author": "Macklan Weinstein",
   "license": "MIT",
-  "homepage": "{{ cookiecutter.project_homepage }}#readme",
+  "homepage": "{{ cookiecutter.project_repopage }}",
   "devDependencies": {
     "prettier": "^1.19.1"
   },
