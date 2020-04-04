@@ -2,6 +2,7 @@
 
 
 import pathlib
+import re
 from typing import Any, Dict, List
 
 import pytest
@@ -27,7 +28,7 @@ def test_invalid_context(
             {"githost": "github", "pypi_support": "yes"},
             [".github/workflows/*.yaml"],
         ),
-        ({"githost": "gitlab", "prettier_support": "no"}, [".gitlab-ci.yaml"]),
+        ({"githost": "gitlab", "prettier_support": "no"}, [".gitlab-ci.yml"]),
     ],
 )
 def test_no_blank_lines(
@@ -38,9 +39,11 @@ def test_no_blank_lines(
     res = cookies.bake(extra_context=context)
     repo_path = pathlib.Path(res.project)
 
+    regex = re.compile(r"\n\s*\n")
     for glob in globs:
         for path in repo_path.glob(glob):
-            assert "\n\n" not in path.read_text()
+            text = path.read_text()
+            assert not regex.search(text)
 
 
 @pytest.mark.parametrize(
@@ -60,9 +63,34 @@ def test_no_double_blank_lines(
     res = cookies.bake(extra_context=context)
     repo_path = pathlib.Path(res.project)
 
+    regex = re.compile(r"\n\s*\n\s*\n")
     for glob in globs:
         for path in repo_path.glob(glob):
-            assert "\n\n\n" not in path.read_text()
+            text = path.read_text()
+            assert not regex.search(text)
+
+
+@pytest.mark.parametrize(
+    "context,globs",
+    [
+        ({"license": "MIT"}, ["LICENSE.md"]),
+        ({"license": "private"}, ["LICENSE.md"]),
+        ({"cli_support": "yes"}, ["pyproject.toml"]),
+    ],
+)
+def test_no_staring_blank_line(
+    context: Dict[str, Any], globs: List[str], cookies: plugin.Cookies
+) -> None:
+    """Check that generated files do not have a trailing blank line."""
+
+    res = cookies.bake(extra_context=context)
+    repo_path = pathlib.Path(res.project)
+
+    regex = re.compile(r"^\n\s*\n.*")
+    for glob in globs:
+        for path in repo_path.glob(glob):
+            text = path.read_text()
+            assert not regex.search(text)
 
 
 @pytest.mark.parametrize(

@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Code repository checkout
         uses: actions/checkout@v1
-      {% if cookiecutter.prettier_support == "yes" %}
+      {%- if cookiecutter.prettier_support == "yes" %}
       - name: Install Node
         uses: actions/setup-node@v1
         with:
@@ -22,7 +22,7 @@ jobs:
       - name: Check format of configuration files
         run: |
           npm test
-      {% endif %}
+      {% endif -%}
       - name: Install Python
         uses: actions/setup-python@v1
         with:
