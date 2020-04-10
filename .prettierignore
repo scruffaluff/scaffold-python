@@ -1,0 +1,11 @@
+.git/*
+.mypy_cache/*
+.pytest_cache/*
+.venv/*
+{{cookiecutter.project_name}}/*
+*.min.js
+node_modules/*
+package-lock.json
+poetry.lock
+scripts/.cache/*
+site/*

@@ -1,0 +1,8 @@
+[flake8]
+docstring-convention = google
+import-order-style = google
+max-complexity = 10
+max-line-length = 80
+per-file-ignores =
+    scripts/*:B008
+    **/__main__.py:B008

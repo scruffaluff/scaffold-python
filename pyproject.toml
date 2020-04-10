@@ -17,13 +17,20 @@ readme = "README.md"
 version = "0.0.1"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.1"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
 flake8 = "^3.7.9"
+flake8-bugbear = "^20.1.4"
+flake8-docstrings = "^1.5.0"
+flake8-import-order = "^0.18.1"
+mkdocs = "^1.1"
+mkdocs-material = "^4.6.3"
 mypy = "^0.761"
 pre-commit = "^1.21.0"
+pymdown-extensions = "^6.3"
 pytest = "^5.2"
 pytest-cookies = "^0.5.1"
 pytest-mock = "^2.0.0"
+typer = "^0.1.1"

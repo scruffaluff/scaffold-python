@@ -35,8 +35,8 @@ def clean_bool(chosen: str, paths: Paths) -> None:
 
     Args:
         chosen: Whether option was chosen during scaffolding.
+        paths: Paths to remove if option was not chosen.
     """
-
     if "chosen" != "yes":
         for path in paths:
             remove_path(path)
@@ -47,8 +47,8 @@ def clean_choice(choice: str, options: Dict[str, Paths]) -> None:
 
     Args:
         choice: Chosen option from list during scaffolding.
+        options: Path contexts for list options.
     """
-
     for option, paths in options.items():
         if option != choice:
             for path in paths:
@@ -59,9 +59,8 @@ def clean_paths(context: Dict[str, str]) -> None:
     """Delete residual paths from project.
 
     Args:
-        platform: Git hosting platform.
+        context: Chosen options from scaffolding prompt.
     """
-
     for key, val in PATHS.items():
         if isinstance(val, dict):
             clean_choice(context[key], val)
@@ -73,7 +72,6 @@ def clean_paths(context: Dict[str, str]) -> None:
 
 def main() -> None:
     """Entrypoint for project post generation hooks."""
-
     context = {
         "githost": "{{ cookiecutter.githost }}",
         "cli_support": "{{ cookiecutter.cli_support }}",
@@ -91,7 +89,6 @@ def remove_path(path: pathlib.Path) -> None:
     Args:
         path: File system path to delete.
     """
-
     if path.is_dir():
         shutil.rmtree(path, ignore_errors=True)
     elif path.exists():

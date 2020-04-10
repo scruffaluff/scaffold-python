@@ -1,3 +1,4 @@
+.coverage
 .DS_Store
 .mypy_cache/*
 .pytest_cache/*
@@ -8,5 +9,12 @@
 **/__pycache__/*
 **/.ipynb_checkpoints/*
 **/*.egg-info/*
+**/nohup.out
 dist/*
+docs/index.md
+docs/src/user/cli.md
+node_modules/*
+package-lock.json
 poetry.lock
+scripts/.cache/*
+site/*

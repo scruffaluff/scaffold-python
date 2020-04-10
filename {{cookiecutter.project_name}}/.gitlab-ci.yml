@@ -15,6 +15,11 @@ node:13.12:
   script:
     - npm test
 {% endif -%}
+static:
+  image: "python:3.6"
+  stage: test
+  script:
+    - poetry run tox -e static
 python:3.6:
   image: "python:3.6"
   stage: test

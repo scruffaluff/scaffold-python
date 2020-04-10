@@ -1,23 +1,23 @@
 {
-    "author_name": "Macklan Weinstein",
-    "author_email": "wolfgangwazzlestrauss@gmail.com",
+  "author_name": "Macklan Weinstein",
+  "author_email": "wolfgangwazzlestrauss@gmail.com",
 
-    "githost": ["github", "gitlab"],
-    "githost_username": "wolfgangwazzlestrauss",
+  "githost": ["github", "gitlab"],
+  "githost_username": "wolfgangwazzlestrauss",
 
-    "project_name": "scaffold-python",
-    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
-    "project_description": "Scaffolding template for Python packages.",
-    "project_version": "0.0.1",
-    "project_repopage": "https://{{ cookiecutter.githost }}.com/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name.lower() }}",
-    "project_docpage": "https://{{ cookiecutter.githost_username }}.{{ cookiecutter.githost }}.io/{{ cookiecutter.project_name.lower() }}",
+  "project_name": "scaffold-python",
+  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "project_description": "Scaffolding template for Python packages.",
+  "project_version": "0.0.1",
+  "project_repopage": "https://{{ cookiecutter.githost }}.com/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name.lower() }}",
+  "project_docpage": "https://{{ cookiecutter.githost_username }}.{{ cookiecutter.githost }}.io/{{ cookiecutter.project_name.lower() }}",
 
-    "os": ["linux", "macos", "windows"],
-    "license": ["MIT", "private"],
+  "os": ["linux", "macos", "windows"],
+  "license": ["MIT", "private"],
 
-    "cli_support": ["yes", "no"],
-    "docker_support": ["yes", "no"],
-    "gitpod_support": ["yes", "no"],
-    "prettier_support": ["yes", "no"],
-    "pypi_support": ["yes", "no"]
+  "cli_support": ["yes", "no"],
+  "docker_support": ["yes", "no"],
+  "gitpod_support": ["yes", "no"],
+  "prettier_support": ["yes", "no"],
+  "pypi_support": ["yes", "no"]
 }

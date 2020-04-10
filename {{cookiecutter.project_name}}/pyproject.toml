@@ -33,7 +33,7 @@ version = "{{ cookiecutter.project_version }}"
 [tool.poetry.dependencies]
 python = "^3.6.1"
 {% if cookiecutter.cli_support == "yes" -%}
-typer = "^0.0.11"
+typer = "^0.1.1"
 {%- endif %}
 typing-extensions = "^3.7.4"
 
@@ -42,21 +42,24 @@ bandit = "^1.6.2"
 black = "^19.10b0"
 coverage = { version = "^5.0.1", extras = ["toml"] }
 flake8 = "^3.7.9"
+flake8-bugbear = "^20.1.4"
+flake8-docstrings = "^1.5.0"
+flake8-import-order = "^0.18.1"
+mccabe = "^0.6.1"
 mkdocs = "^1.1"
 mkdocs-material = "^4.6.3"
 mkdocstrings = "^0.8.0"
 mypy = "^0.761"
 pre-commit = "^1.21.0"
+py-spy = "^0.3.3"
 pymdown-extensions = "^6.3"
 pytest = "^5.2"
 pytest-cov = "^2.8.1"
 pytest-mock = "^2.0.0"
-pytest-testmon = "^1.0.2"
-pytest-xdist = "^1.31.0"
 toml = "^0.10.0"
 tox = "^3.14.3"
 {% if cookiecutter.cli_support == "yes" -%}
-typer-cli = "^0.0.6"
+typer-cli = "^0.0.8"
 
 [tool.poetry.scripts]
 {{ cookiecutter.project_name }} = "{{ cookiecutter.project_slug }}.__main__:app"
