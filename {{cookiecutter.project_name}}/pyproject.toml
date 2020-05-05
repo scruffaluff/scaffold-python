@@ -7,8 +7,9 @@ line-length = 80
 
 [tool.coverage.report]
 exclude_lines = [
+    "if sys.version_info.*",
+    "pragma: no cover",
     "raise NotImplementedError",
-    "if sys.version_info.*"
 ]
 fail_under = 100
 show_missing = true
