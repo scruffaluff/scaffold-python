@@ -119,7 +119,6 @@ def test_no_trailing_blank_line(
             ["src/mock/__main__.py"],
         ),
         ({"docker_support": "no"}, [".dockerignore", "Dockerfile"]),
-        ({"gitpod_support": "no"}, [".theia", ".gitpod.yml"]),
         ({"prettier_support": "no"}, [".prettierignore", "package.json"]),
         ({"pypi_support": "no"}, [".github/workflow/publish.yaml"]),
     ],

@@ -100,7 +100,6 @@ subcontents are only generated for that chosen context.
 │       ├── pages.yaml
 │       └── publish.yaml
 ├── .gitignore
-├── .gitpod.yml  {gitpod_support: yes}
 ├── LICENSE.md
 ├── mkdocs.yml
 ├── mypy.ini
@@ -124,9 +123,6 @@ subcontents are only generated for that chosen context.
 │   │   └── __init__.py
 │   └── unit
 │       └── __init__.py
-├── .theia  {gitpod_support: yes}
-│   ├── launch.json
-│   └── settings.json
 ├── tox.ini
 └── .vscode
     ├── launch.json

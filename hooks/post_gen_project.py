@@ -21,7 +21,6 @@ PATHS: Dict[str, Union[Paths, Dict[str, Paths]]] = {
         pathlib.Path(".dockerignore"),
         pathlib.Path("Dockerfile"),
     ],
-    "gitpod_support": [pathlib.Path(".theia"), pathlib.Path(".gitpod.yml")],
     "prettier_support": [
         pathlib.Path(".prettierignore"),
         pathlib.Path("package.json"),
@@ -76,7 +75,6 @@ def main() -> None:
         "githost": "{{ cookiecutter.githost }}",
         "cli_support": "{{ cookiecutter.cli_support }}",
         "docker_support": "{{ cookiecutter.docker_support }}",
-        "gitpod_support": "{{ cookiecutter.gitpod_support }}",
         "prettier_support": "{{ cookiecutter.prettier_support }}",
         "pypi_support": "{{ cookiecutter.pypi_support }}",
     }
