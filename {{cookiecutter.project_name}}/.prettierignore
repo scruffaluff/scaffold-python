@@ -1,10 +1,10 @@
-.git/*
-.mypy_cache/*
-.pytest_cache/*
-.tox/*
-.venv/*
+.git/
+.mypy_cache/
+.pytest_cache/
+.tox/
+.venv/
 *.min.js
-node_modules/*
+node_modules/
 package-lock.json
 poetry.lock
-site/*
+site/
