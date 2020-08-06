@@ -3,10 +3,23 @@
 
 import pathlib
 import re
+import subprocess
 from typing import Any, Dict, List
 
 import pytest
 from pytest_cookies import plugin
+
+
+def test_black_format(baked_project: pathlib.Path) -> None:
+    """Generated files must pass Black format checker."""
+
+    res = subprocess.run(
+        f"black -l 80 --check {baked_project}", capture_output=True, shell=True,
+    )
+
+    expected = 0
+    actual = res.returncode
+    assert actual == expected, res.stderr
 
 
 @pytest.mark.parametrize(
