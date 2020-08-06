@@ -15,8 +15,8 @@
 
 Scaffold Python is a
 [Cookiecutter](https://github.com/cookiecutter/cookiecutter) template project
-for generating Python repository layouts. To create a new Python
-application project with the template first install
+for generating Python repository layouts. To create a new Python application
+project with the template first install
 [Cookiecutter](https://github.com/cookiecutter/cookiecutter). Then execute
 
 ```console
