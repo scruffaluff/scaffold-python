@@ -9,6 +9,8 @@ from typing import Any, Dict, List
 import pytest
 from pytest_cookies import plugin
 
+from tests.util import file_matches
+
 
 def test_black_format(baked_project: pathlib.Path) -> None:
     """Generated files must pass Black format checker."""
@@ -33,73 +35,33 @@ def test_invalid_context(
     assert res.exit_code == -1
 
 
-@pytest.mark.parametrize(
-    "context,globs",
-    [
-        (
-            {"githost": "github", "pypi_support": "yes"},
-            [".github/workflows/*.yaml"],
-        ),
-        ({"githost": "gitlab", "prettier_support": "no"}, [".gitlab-ci.yml"]),
-    ],
-)
-def test_no_blank_lines(
-    context: Dict[str, Any], globs: List[str], cookies: plugin.Cookies
-) -> None:
-    """Check that specific files do not have blank lines."""
-    res = cookies.bake(extra_context=context)
-    repo_path = pathlib.Path(res.project)
+def test_no_blank_lines(baked_project: pathlib.Path) -> None:
+    """Project files do not have whitespace only lines."""
 
-    regex = re.compile(r"\n\s*\n")
-    for glob in globs:
-        for path in repo_path.glob(glob):
-            text = path.read_text()
-            assert not regex.search(text)
+    regex = re.compile(r"^\s+$")
+    error_msg = "File {}, line {}: {} has whitespace."
+
+    for path in file_matches(baked_project, r"^.*$"):
+        for idx, line in enumerate(path.read_text().split("\n")):
+            assert not regex.match(line), error_msg.format(path, idx, line)
 
 
-@pytest.mark.parametrize(
-    "context,globs",
-    [
-        ({"license": "MIT"}, ["LICENSE.md"]),
-        ({"license": "private"}, ["LICENSE.md"]),
-        ({"cli_support": "yes"}, ["pyproject.toml"]),
-        ({"cli_support": "no"}, ["pyproject.toml"]),
-    ],
-)
-def test_no_double_blank_lines(
-    context: Dict[str, Any], globs: List[str], cookies: plugin.Cookies
-) -> None:
-    """Check that generated files do not have double blank lines."""
-    res = cookies.bake(extra_context=context)
-    repo_path = pathlib.Path(res.project)
+def test_no_contiguous_blank_lines(baked_project: pathlib.Path) -> None:
+    """Project files do not have subsequent empty lines."""
 
-    regex = re.compile(r"\n\s*\n\s*\n")
-    for glob in globs:
-        for path in repo_path.glob(glob):
-            text = path.read_text()
-            assert not regex.search(text)
+    regex = re.compile(r"^\s+$")
+    for path in file_matches(baked_project, r"^.*$"):
+        text = path.read_text()
+        assert not regex.match(text), f"File {path} has contiguous blank lines."
 
 
-@pytest.mark.parametrize(
-    "context,globs",
-    [
-        ({"license": "MIT"}, ["LICENSE.md"]),
-        ({"license": "private"}, ["LICENSE.md"]),
-        ({"cli_support": "yes"}, ["pyproject.toml"]),
-    ],
-)
-def test_no_staring_blank_line(
-    context: Dict[str, Any], globs: List[str], cookies: plugin.Cookies
-) -> None:
-    """Check that generated files do not have a trailing blank line."""
-    res = cookies.bake(extra_context=context)
-    repo_path = pathlib.Path(res.project)
+def test_no_starting_blank_line(baked_project: pathlib.Path) -> None:
+    """Check that generated files do not start with a blank line."""
 
-    regex = re.compile(r"^\n\s*\n.*")
-    for glob in globs:
-        for path in repo_path.glob(glob):
-            text = path.read_text()
-            assert not regex.search(text)
+    regex = re.compile(r"^\s*$")
+    for path in file_matches(baked_project, r"^.*(?<!\.typed)$"):
+        text = path.read_text().split("\n")[0]
+        assert not regex.match(text), f"File {path} begins with a blank line."
 
 
 @pytest.mark.parametrize(
