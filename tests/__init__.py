@@ -31,6 +31,7 @@ def test_invalid_context(
     context: Dict[str, Any], cookies: plugin.Cookies
 ) -> None:
     """Check that cookiecutter rejects invalid context arguments."""
+
     res = cookies.bake(extra_context=context)
     assert res.exit_code == -1
 
@@ -76,6 +77,7 @@ def test_no_trailing_blank_line(
     context: Dict[str, Any], globs: List[str], cookies: plugin.Cookies
 ) -> None:
     """Check that generated files do not have a trailing blank line."""
+
     res = cookies.bake(extra_context=context)
     repo_path = pathlib.Path(res.project)
 
@@ -102,6 +104,7 @@ def test_removed_paths(
     context: Dict[str, Any], paths: List[str], cookies: plugin.Cookies
 ) -> None:
     """Check that specific paths are removed after scaffolding."""
+
     res = cookies.bake(extra_context=context)
 
     project_path = pathlib.Path(res.project)
@@ -124,6 +127,7 @@ def test_removed_text(
     context: Dict[str, Any], path: str, text: str, cookies: plugin.Cookies
 ) -> None:
     """Check that generated files do not have double blank lines."""
+
     res = cookies.bake(extra_context=context)
     repo_path = pathlib.Path(res.project)
 
@@ -151,5 +155,6 @@ def test_removed_text(
 )
 def test_scaffold(context: Dict[str, Any], cookies: plugin.Cookies) -> None:
     """Check that various configurations generate successfully."""
+
     res = cookies.bake(extra_context=context)
     assert res.exit_code == 0
