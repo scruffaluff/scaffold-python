@@ -5,10 +5,10 @@ import pathlib
 import re
 from typing import Iterator
 
+from pytest_cookies.plugin import Result
 
-def file_matches(
-    dir_path: pathlib.Path, regex_str: str
-) -> Iterator[pathlib.Path]:
+
+def file_matches(bake: Result, regex_str: str) -> Iterator[pathlib.Path]:
     """Find all files in a directory whose name matches a regex.
 
     Args:
@@ -19,7 +19,9 @@ def file_matches(
         Matching file paths.
     """
 
+    project_path = pathlib.Path(bake.project)
     regex = re.compile(regex_str)
-    for path in dir_path.rglob("*"):
+
+    for path in project_path.rglob("*"):
         if path.is_file() and regex.match(path.name):
             yield path

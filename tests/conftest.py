@@ -1,8 +1,6 @@
 """Reusable testing fixtures."""
 
 
-import pathlib
-
 from _pytest.fixtures import SubRequest
 import pytest
 from pytest_cookies import plugin
@@ -29,8 +27,9 @@ from pytest_cookies import plugin
         {"pypi_support": "yes"},
     ],
 )
-def baked_project(cookies: plugin.Cookies, request: SubRequest) -> pathlib.Path:
+def baked_project(
+    cookies: plugin.Cookies, request: SubRequest
+) -> plugin.Result:
     """Cookiecutter projects baked from various parameters."""
 
-    res = cookies.bake(extra_context=request.param)
-    return pathlib.Path(res.project)
+    return cookies.bake(extra_context=request.param)

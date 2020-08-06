@@ -12,11 +12,13 @@ from pytest_cookies import plugin
 from tests.util import file_matches
 
 
-def test_black_format(baked_project: pathlib.Path) -> None:
+def test_black_format(baked_project: plugin.Result) -> None:
     """Generated files must pass Black format checker."""
 
     res = subprocess.run(
-        f"black -l 80 --check {baked_project}", capture_output=True, shell=True,
+        f"black -l 80 --check {baked_project.project}",
+        capture_output=True,
+        shell=True,
     )
 
     expected = 0
@@ -36,7 +38,7 @@ def test_invalid_context(
     assert res.exit_code == -1
 
 
-def test_no_blank_lines(baked_project: pathlib.Path) -> None:
+def test_no_blank_lines(baked_project: plugin.Result) -> None:
     """Project files do not have whitespace only lines."""
 
     regex = re.compile(r"^\s+$")
@@ -47,7 +49,7 @@ def test_no_blank_lines(baked_project: pathlib.Path) -> None:
             assert not regex.match(line), error_msg.format(path, idx, line)
 
 
-def test_no_contiguous_blank_lines(baked_project: pathlib.Path) -> None:
+def test_no_contiguous_blank_lines(baked_project: plugin.Result) -> None:
     """Project files do not have subsequent empty lines."""
 
     regex = re.compile(r"^\s+$")
@@ -56,7 +58,7 @@ def test_no_contiguous_blank_lines(baked_project: pathlib.Path) -> None:
         assert not regex.match(text), f"File {path} has contiguous blank lines."
 
 
-def test_no_starting_blank_line(baked_project: pathlib.Path) -> None:
+def test_no_starting_blank_line(baked_project: plugin.Result) -> None:
     """Check that generated files do not start with a blank line."""
 
     regex = re.compile(r"^\s*$")

@@ -26,10 +26,8 @@ jobs:
           poetry install -v
       - name: Build and test Python code
         run: |
-          poetry run flake8 scripts
           poetry run flake8 hooks
           poetry run flake8 tests
-          poetry run mypy scripts
           poetry run mypy hooks
           poetry run mypy tests
           poetry run pytest
