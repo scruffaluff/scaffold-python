@@ -17,7 +17,8 @@ def test_black_format(baked_project: plugin.Result) -> None:
 
     res = subprocess.run(
         f"black -l 80 --check {baked_project.project}",
-        capture_output=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         shell=True,
     )
 

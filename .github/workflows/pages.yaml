@@ -20,6 +20,8 @@ jobs:
           poetry install -v
       - name: Build documentation
         run: |
+          mkdir docs
+          cp README.md docs/index.md
           poetry run mkdocs build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
