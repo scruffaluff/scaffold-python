@@ -1,11 +1,11 @@
 copyright: Copyright &copy; 2020 Macklan Weinstein
 extra:
   social:
-    - type: home
+    - icon: fontawesome/solid/home
       link: https://wolfgangwazzlestrauss.com
-    - type: github
+    - icon: fontawesome/brands/github
       link: https://github.com/wolfgangwazzlestrauss
-    - type: inbox
+    - icon: fontawesome/solid/envelope
       link: mailto://wolfgangwazzlestrauss@gmail.com
 markdown_extensions:
   - admonition

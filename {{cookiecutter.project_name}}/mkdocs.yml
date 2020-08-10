@@ -1,11 +1,9 @@
 copyright: Copyright &copy; 2020 {{ cookiecutter.author_name }}
 extra:
   social:
-    - type: home
-      link: https://wolfgangwazzlestrauss.com
-    - type: {{ cookiecutter.githost }}
+    - icon: fontawesome/solid/{{ cookiecutter.githost }}
       link: https://{{ cookiecutter.githost }}.com/{{ cookiecutter.githost_username }}
-    - type: inbox
+    - icon: fontawesome/solid/envelope
       link: mailto://{{ cookiecutter.author_email }}
 extra_css:
   - css/style.css
