@@ -14,10 +14,8 @@ from tests.util import file_matches, run_command
 def test_black_format(baked_project: plugin.Result) -> None:
     """Generated files must pass Black format checker."""
 
-    proj_dir = baked_project.project
-    res = run_command(
-        command=f"black -l 80 --check {proj_dir}", work_dir=proj_dir
-    )
+    proj_dir = pathlib.Path(baked_project.project)
+    res = run_command(command="black -l 80 --check .", work_dir=proj_dir)
 
     expected = 0
     actual = res.returncode
@@ -27,7 +25,7 @@ def test_black_format(baked_project: plugin.Result) -> None:
 def test_flake8_lints(baked_project: plugin.Result) -> None:
     """Generated files must pass Flake8 lints."""
 
-    proj_dir = baked_project.project
+    proj_dir = pathlib.Path(baked_project.project)
     src_dir = proj_dir / "src"
     test_dir = proj_dir / "tests"
 
@@ -53,7 +51,7 @@ def test_invalid_context(
 def test_mypy_type_checks(baked_project: plugin.Result) -> None:
     """Generated files must pass Mypy type checks."""
 
-    proj_dir = baked_project.project
+    proj_dir = pathlib.Path(baked_project.project)
     src_dir = proj_dir / "src"
     test_dir = proj_dir / "tests"
 
@@ -101,6 +99,20 @@ def test_no_trailing_blank_line(baked_project: plugin.Result) -> None:
         assert not text.endswith("\n\n"), f"File {path} ends with a blank line."
 
 
+def test_pytest_test(cookies: plugin.Cookies) -> None:
+    """Generated files must pass Pytest unit tests."""
+
+    res = cookies.bake(extra_context={})
+    proj_dir = pathlib.Path(res.project)
+    res = run_command(
+        command="poetry install && poetry run pytest", work_dir=proj_dir
+    )
+
+    expected = 0
+    actual = res.returncode
+    assert actual == expected, res.stderr
+
+
 @pytest.mark.parametrize(
     "context,paths",
     [
@@ -123,11 +135,9 @@ def test_removed_paths(
     res = cookies.bake(extra_context=context)
 
     project_path = pathlib.Path(res.project)
-    scaffold_paths = [path for path in project_path.rglob("*")]
-
     for path in paths:
         remove_path = project_path / path
-        assert remove_path not in scaffold_paths
+        assert not remove_path.exists()
 
 
 @pytest.mark.parametrize(
