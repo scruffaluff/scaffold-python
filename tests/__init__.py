@@ -14,7 +14,10 @@ from tests.util import file_matches, run_command
 def test_black_format(baked_project: plugin.Result) -> None:
     """Generated files must pass Black format checker."""
 
-    res = run_command(f"black -l 80 --check {baked_project.project}")
+    proj_dir = baked_project.project
+    res = run_command(
+        command=f"black -l 80 --check {proj_dir}", work_dir=proj_dir
+    )
 
     expected = 0
     actual = res.returncode
@@ -24,9 +27,11 @@ def test_black_format(baked_project: plugin.Result) -> None:
 def test_flake8_lints(baked_project: plugin.Result) -> None:
     """Generated files must pass Flake8 lints."""
 
-    src_dir = baked_project.project / "src"
-    test_dir = baked_project.project / "tests"
-    res = run_command(f"flake8 {src_dir} {test_dir}")
+    proj_dir = baked_project.project
+    src_dir = proj_dir / "src"
+    test_dir = proj_dir / "tests"
+
+    res = run_command(command=f"flake8 {src_dir} {test_dir}", work_dir=proj_dir)
 
     expected = 0
     actual = res.returncode
@@ -48,9 +53,11 @@ def test_invalid_context(
 def test_mypy_type_checks(baked_project: plugin.Result) -> None:
     """Generated files must pass Mypy type checks."""
 
-    src_dir = baked_project.project / "src"
-    test_dir = baked_project.project / "tests"
-    res = run_command(f"mypy {src_dir} {test_dir}")
+    proj_dir = baked_project.project
+    src_dir = proj_dir / "src"
+    test_dir = proj_dir / "tests"
+
+    res = run_command(command=f"mypy {src_dir} {test_dir}", work_dir=proj_dir)
 
     expected = 0
     actual = res.returncode

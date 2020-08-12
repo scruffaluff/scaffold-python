@@ -1,12 +1,31 @@
 """Utility functions for testing."""
 
 
+import contextlib
+import os
 import pathlib
 import re
 import subprocess
-from typing import Iterator
+from typing import Iterator, Optional
 
 from pytest_cookies.plugin import Result
+
+
+@contextlib.contextmanager
+def chdir(dest_dir: pathlib.Path) -> Iterator[None]:
+    """Context manager for changing the current working directory.
+
+    Args:
+        dest_dir: Directory to temporarily make the current directory.
+    """
+
+    src_dir = pathlib.Path.cwd()
+
+    try:
+        os.chdir(dest_dir)
+        yield
+    finally:
+        os.chdir(src_dir)
 
 
 def file_matches(bake: Result, regex_str: str) -> Iterator[pathlib.Path]:
@@ -28,11 +47,14 @@ def file_matches(bake: Result, regex_str: str) -> Iterator[pathlib.Path]:
             yield path
 
 
-def run_command(command: str) -> subprocess.CompletedProcess:
-    """Execute shell command and capture output.
+def run_command(
+    command: str, work_dir: Optional[pathlib.Path] = None
+) -> subprocess.CompletedProcess:
+    """Execute shell command in another directory and capture output.
 
     Args:
         command: Shell command to execute.
+        work_dir: Location to make temporary working directory for command.
 
     Raises:
         CalledProcessError: If shell command returns a non-zero exit code.
@@ -41,6 +63,15 @@ def run_command(command: str) -> subprocess.CompletedProcess:
         Completed shell process information.
     """
 
-    return subprocess.run(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
-    )
+    if work_dir is None:
+        return subprocess.run(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
+        )
+    else:
+        with chdir(work_dir):
+            return subprocess.run(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                shell=True,
+            )
