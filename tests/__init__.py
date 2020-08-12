@@ -68,25 +68,12 @@ def test_no_starting_blank_line(baked_project: plugin.Result) -> None:
         assert not regex.match(text), f"File {path} begins with a blank line."
 
 
-@pytest.mark.parametrize(
-    "context,globs",
-    [
-        ({"license": "MIT"}, ["LICENSE.md"]),
-        ({"license": "private"}, ["LICENSE.md"]),
-        ({"cli_support": "yes"}, ["pyproject.toml"]),
-    ],
-)
-def test_no_trailing_blank_line(
-    context: Dict[str, Any], globs: List[str], cookies: plugin.Cookies
-) -> None:
+def test_no_trailing_blank_line(baked_project: plugin.Result) -> None:
     """Check that generated files do not have a trailing blank line."""
 
-    res = cookies.bake(extra_context=context)
-    repo_path = pathlib.Path(res.project)
-
-    for glob in globs:
-        for path in repo_path.glob(glob):
-            assert not path.read_text().endswith("\n\n")
+    for path in file_matches(baked_project, r"^.*$"):
+        text = path.read_text()
+        assert not text.endswith("\n\n"), f"File {path} ends with a blank line."
 
 
 @pytest.mark.parametrize(

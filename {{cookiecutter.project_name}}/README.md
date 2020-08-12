@@ -42,4 +42,4 @@ cookiecutter.project_name }} is free and open source software.
 {{ cookiecutter.project_name }} is proprietary software and prohibited from
 unauthorized redistribution. See the [license](LICENSE.md) for more
 information.
-{%- endif %}
+{%- endif -%}
