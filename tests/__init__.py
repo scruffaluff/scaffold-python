@@ -3,28 +3,34 @@
 
 import pathlib
 import re
-import subprocess
 from typing import Any, Dict, List
 
 import pytest
 from pytest_cookies import plugin
 
-from tests.util import file_matches
+from tests.util import file_matches, run_command
 
 
 def test_black_format(baked_project: plugin.Result) -> None:
     """Generated files must pass Black format checker."""
 
-    res = subprocess.run(
-        f"black -l 80 --check {baked_project.project}",
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        shell=True,
-    )
+    res = run_command(f"black -l 80 --check {baked_project.project}")
 
     expected = 0
     actual = res.returncode
     assert actual == expected, res.stderr
+
+
+def test_flake8_lints(baked_project: plugin.Result) -> None:
+    """Generated files must pass Flake8 lints."""
+
+    src_dir = baked_project.project / "src"
+    test_dir = baked_project.project / "tests"
+    res = run_command(f"flake8 {src_dir} {test_dir}")
+
+    expected = 0
+    actual = res.returncode
+    assert actual == expected, res.stdout
 
 
 @pytest.mark.parametrize(
@@ -37,6 +43,18 @@ def test_invalid_context(
 
     res = cookies.bake(extra_context=context)
     assert res.exit_code == -1
+
+
+def test_mypy_type_checks(baked_project: plugin.Result) -> None:
+    """Generated files must pass Mypy type checks."""
+
+    src_dir = baked_project.project / "src"
+    test_dir = baked_project.project / "tests"
+    res = run_command(f"mypy {src_dir} {test_dir}")
+
+    expected = 0
+    actual = res.returncode
+    assert actual == expected, res.stdout
 
 
 def test_no_blank_lines(baked_project: plugin.Result) -> None:
@@ -103,26 +121,6 @@ def test_removed_paths(
     for path in paths:
         remove_path = project_path / path
         assert remove_path not in scaffold_paths
-
-
-@pytest.mark.parametrize(
-    "context,path,text",
-    [
-        ({"license": "private"}, "LICENSE.md", "free of charge"),
-        ({"cli_support": "no"}, "pyproject.toml", "typer-cli"),
-        ({"prettier_support": "no"}, ".github/workflows/build.yaml", "npm"),
-    ],
-)
-def test_removed_text(
-    context: Dict[str, Any], path: str, text: str, cookies: plugin.Cookies
-) -> None:
-    """Check that generated files do not have double blank lines."""
-
-    res = cookies.bake(extra_context=context)
-    repo_path = pathlib.Path(res.project)
-
-    contents = (repo_path / path).read_text()
-    assert text not in contents
 
 
 @pytest.mark.parametrize(
