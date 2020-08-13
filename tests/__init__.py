@@ -54,13 +54,13 @@ def test_mkdocs_build(cookies: plugin.Cookies) -> None:
     res = cookies.bake(extra_context={})
     proj_dir = pathlib.Path(res.project)
     res = run_command(
-        command="poetry install && poetry run python scripts/build_docs.py",
+        command="poetry install && poetry run python scripts/docs.py",
         work_dir=proj_dir,
     )
 
     expected = 0
     actual = res.returncode
-    assert actual == expected, res.stderr
+    assert actual == expected, res.stdout
 
 
 def test_mypy_type_checks(baked_project: plugin.Result) -> None:
@@ -125,7 +125,7 @@ def test_pytest_test(cookies: plugin.Cookies) -> None:
 
     expected = 0
     actual = res.returncode
-    assert actual == expected, res.stderr
+    assert actual == expected, res.stdout
 
 
 @pytest.mark.parametrize(

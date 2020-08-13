@@ -1,7 +1,7 @@
 copyright: Copyright &copy; 2020 {{ cookiecutter.author_name }}
 extra:
   social:
-    - icon: fontawesome/solid/{{ cookiecutter.githost }}
+    - icon: fontawesome/brands/{{ cookiecutter.githost }}
       link: https://{{ cookiecutter.githost }}.com/{{ cookiecutter.githost_username }}
     - icon: fontawesome/solid/envelope
       link: mailto://{{ cookiecutter.author_email }}
@@ -49,6 +49,8 @@ site_description: |
 site_name: {{ cookiecutter.project_name }}
 site_url: {{ cookiecutter.project_docpage }}
 theme:
+  featues:
+    - tabs
   name: material
   palette:
     accent: cyan
