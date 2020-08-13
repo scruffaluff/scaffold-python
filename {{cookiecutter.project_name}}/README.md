@@ -1,8 +1,12 @@
 # {{ cookiecutter.project_name }}
 
+{% if cookiecutter.pypi_support != "yes" -%}
 ![](https://img.shields.io/pypi/v/{{ cookiecutter.project_name }})
 ![](https://img.shields.io/pypi/pyversions/{{ cookiecutter.project_name }}.svg)
-![](https://github.com/wolfgangwazzlestrauss/{{ cookiecutter.project_name }}/workflows/build/badge.svg)
+{%- endif -%}
+{% if cookiecutter.githost != "github" -%}
+![]({{ cookiecutter.project_repopage }}/workflows/build/badge.svg)
+{%- endif -%}
 ![](https://img.shields.io/badge/code%20style-black-000000.svg)
 ![](https://img.shields.io/{{ cookiecutter.githost }}/repo-size/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
 ![](https://img.shields.io/{{ cookiecutter.githost }}/license/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
