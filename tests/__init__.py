@@ -48,6 +48,18 @@ def test_invalid_context(
     assert res.exit_code == -1
 
 
+def test_mkdocs_build(cookies: plugin.Cookies) -> None:
+    """MkDocs must be able to build documentation for baked project."""
+
+    res = cookies.bake(extra_context={})
+    proj_dir = pathlib.Path(res.project)
+    res = run_command(command="python scripts/build_docs.py", work_dir=proj_dir)
+
+    expected = 0
+    actual = res.returncode
+    assert actual == expected, res.stderr
+
+
 def test_mypy_type_checks(baked_project: plugin.Result) -> None:
     """Generated files must pass Mypy type checks."""
 

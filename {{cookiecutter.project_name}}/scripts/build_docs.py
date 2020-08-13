@@ -29,7 +29,7 @@ def copy_index(repo_path: pathlib.Path) -> None:
 
     shutil.copy(src=src_path, dst=dest_path)
 
-
+{% if cookiecutter.cli_support != "yes" %}
 def generate_cli_docs(repo_path: pathlib.Path) -> None:
     """Create documentation for the command line interface.
 
@@ -54,13 +54,15 @@ def generate_cli_docs(repo_path: pathlib.Path) -> None:
             )
             sys.exit(1)
 
-
+{% endif %}
 def main() -> None:
     """Entrypoint for documentation building."""
 
     repo_path = pathlib.Path(__file__).parents[1]
     copy_index(repo_path)
+    {% if cookiecutter.cli_support != "yes" -%}
     generate_cli_docs(repo_path)
+    {% endif -%}
     build_docs()
 
 
