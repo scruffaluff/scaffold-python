@@ -49,11 +49,14 @@ def test_invalid_context(
 
 
 def test_mkdocs_build(cookies: plugin.Cookies) -> None:
-    """MkDocs must be able to build documentation for baked project."""
+    """Mkdocs must be able to build documentation for baked project."""
 
     res = cookies.bake(extra_context={})
     proj_dir = pathlib.Path(res.project)
-    res = run_command(command="python scripts/build_docs.py", work_dir=proj_dir)
+    res = run_command(
+        command="poetry install && poetry run python scripts/build_docs.py",
+        work_dir=proj_dir,
+    )
 
     expected = 0
     actual = res.returncode
