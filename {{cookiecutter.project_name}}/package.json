@@ -13,7 +13,7 @@
   "license": "MIT",
   "homepage": "{{ cookiecutter.project_repopage }}",
   "devDependencies": {
-    "prettier": "^1.19.1"
+    "prettier": "^2.0.5"
   },
   "prettier": {
     "arrowParens": "always",

@@ -63,15 +63,8 @@ def run_command(
         Completed shell process information.
     """
 
-    if work_dir is None:
+    work_dir = pathlib.Path.cwd() if work_dir is None else work_dir
+    with chdir(work_dir):
         return subprocess.run(
             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
         )
-    else:
-        with chdir(work_dir):
-            return subprocess.run(
-                command,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                shell=True,
-            )
