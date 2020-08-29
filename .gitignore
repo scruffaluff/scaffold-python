@@ -4,7 +4,7 @@
 .pytest_cache/
 .tox/
 .venv/
-.vscode/settings.json
+.vscode/
 *.pyc
 **/__pycache__/
 **/.ipynb_checkpoints/

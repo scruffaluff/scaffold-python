@@ -4,42 +4,42 @@ stages:
 default:
   before_script:
     - python -m pip install --upgrade pip
-    - python -m pip install poetry
-    - poetry install
+    - python -m pip install tox
 {% if cookiecutter.prettier_support == "yes" %}
-node:13.12:
-  image: "node:13.12"
+node:14:
+  image: "node:14"
   stage: test
   before_script:
     - npm install
   script:
-    - npm test
+    - npm run lint
 {% endif -%}
 static:
-  image: "python:3.6"
+  image: "python:3.8"
   stage: test
   script:
-    - poetry run tox -e static
+    - tox -e static
 python:3.6:
   image: "python:3.6"
   stage: test
   script:
-    - poetry run tox -e static
-    - poetry run tox -e py36
+    - tox -e py36
 python:3.7:
   image: "python:3.7"
   stage: test
   script:
-    - poetry run tox -e py37
+    - tox -e py37
 python:3.8:
   image: "python:3.8"
   stage: test
   script:
-    - poetry run tox -e py38
+    - tox -e py38
 pages:
   image: "python:3.6"
   stage: deploy
   script:
+    - python -m pip install poetry
+    - poetry install -v
     - poetry run python scripts/docs.py build
   artifacts:
     paths:
