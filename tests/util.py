@@ -68,3 +68,30 @@ def run_command(
         return subprocess.run(
             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
         )
+
+
+def show(match: re.Match) -> None:
+    """Show lines surrounding regex match.
+
+    Args:
+        match: Regex match.
+        text: Text parsed by regular expression.
+    """
+
+    text = match.string
+    start, stop = match.span()
+
+    m = re.match(r"\n.*$", text[:start])
+    if m is None:
+        before = ""
+    else:
+        before = m.string[m.start() : m.end()]
+
+    m = re.match(r"^.*\n", text[stop:])
+    if m is None:
+        after = ""
+    else:
+        after = m.string[m.start() : m.end()]
+
+    lines = before + text[start:stop] + after
+    print(lines)

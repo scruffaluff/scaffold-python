@@ -8,7 +8,9 @@ from typing import Any, Dict, List
 import pytest
 from pytest_cookies import plugin
 
-from tests.util import file_matches, run_command
+# Ingoring unused import for show_match. Function is imported for convenient
+# test debugging.
+from tests.util import file_matches, run_command, show  # noqa: F401
 
 
 def test_black_format(baked_project: plugin.Result) -> None:
@@ -85,16 +87,19 @@ def test_no_blank_lines(baked_project: plugin.Result) -> None:
 
     for path in file_matches(baked_project, r"^.*$"):
         for idx, line in enumerate(path.read_text().split("\n")):
-            assert not regex.match(line), error_msg.format(path, idx, line)
+            match = regex.match(line)
+            assert match is None, error_msg.format(path, idx, line)
 
 
 def test_no_contiguous_blank_lines(baked_project: plugin.Result) -> None:
     """Project files do not have subsequent empty lines."""
 
-    regex = re.compile(r"^\s+$")
-    for path in file_matches(baked_project, r"^.*$"):
+    regex = re.compile(r"\n\s*\n\s*\n")
+    for path in file_matches(baked_project, r"^.*(?<!.py)$"):
         text = path.read_text()
-        assert not regex.match(text), f"File {path} has contiguous blank lines."
+
+        match = regex.search(text)
+        assert match is None, f"File {path} has contiguous blank lines."
 
 
 def test_no_starting_blank_line(baked_project: plugin.Result) -> None:
@@ -109,9 +114,12 @@ def test_no_starting_blank_line(baked_project: plugin.Result) -> None:
 def test_no_trailing_blank_line(baked_project: plugin.Result) -> None:
     """Check that generated files do not have a trailing blank line."""
 
+    regex = re.compile(r"\n\s*$")
     for path in file_matches(baked_project, r"^.*$"):
         text = path.read_text()
-        assert not text.endswith("\n\n"), f"File {path} ends with a blank line."
+
+        match = regex.match(text)
+        assert match is None, f"File {path} ends with a blank line."
 
 
 def test_pytest_test(cookies: plugin.Cookies) -> None:
@@ -178,3 +186,13 @@ def test_scaffold(context: Dict[str, Any], cookies: plugin.Cookies) -> None:
 
     res = cookies.bake(extra_context=context)
     assert res.exit_code == 0
+
+
+def test_toml_blank_lines(baked_project: plugin.Result) -> None:
+    """Check that TOML files do not have blank lines not followed by a [."""
+
+    regex = re.compile(r"\n\s*\n[^[]")
+    for path in file_matches(baked_project, r"^.*\.toml$"):
+        text = path.read_text()
+        match = regex.search(text)
+        assert match is None, f"TOML file {path} contains blank lines."

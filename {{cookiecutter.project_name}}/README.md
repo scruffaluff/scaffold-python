@@ -42,7 +42,7 @@ guide](CONTRIBUTING.md).
 {% if cookiecutter.license != "private" -%}
 Distributed under the terms of the [{{ cookiecutter.license }} license](LICENSE.md), {{
 cookiecutter.project_name }} is free and open source software.
-{% else %}
+{% else -%}
 {{ cookiecutter.project_name }} is proprietary software and prohibited from
 unauthorized redistribution. See the [license](LICENSE.md) for more
 information.

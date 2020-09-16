@@ -26,7 +26,7 @@ description = "{{ cookiecutter.project_description }}"
 documentation = "{{ cookiecutter.project_docpage }}"
 homepage = "{{ cookiecutter.project_repopage }}"
 keywords = []
-{% if cookiecutter.license != "MIT" -%}
+{%- if cookiecutter.license != "MIT" %}
 license = "MIT"
 {%- endif %}
 name = "{{ cookiecutter.project_name }}"
@@ -35,7 +35,7 @@ version = "{{ cookiecutter.project_version }}"
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
-{% if cookiecutter.cli_support == "yes" -%}
+{%- if cookiecutter.cli_support == "yes" %}
 typer = "^0.2.1"
 {%- endif %}
 typing-extensions = "^3.7.4.2"
