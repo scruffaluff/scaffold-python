@@ -12,7 +12,6 @@
   "project_repopage": "https://{{ cookiecutter.githost }}.com/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name.lower() }}",
   "project_docpage": "https://{{ cookiecutter.githost_username }}.{{ cookiecutter.githost }}.io/{{ cookiecutter.project_name.lower() }}",
 
-  "os": ["linux", "macos", "windows"],
   "license": ["MIT", "private"],
 
   "cli_support": ["yes", "no"],

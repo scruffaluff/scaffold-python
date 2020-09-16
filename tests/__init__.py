@@ -168,9 +168,6 @@ def test_removed_paths(
     [
         {"githost": "github"},
         {"githost": "gitlab"},
-        {"os": "linux"},
-        {"os": "macos"},
-        {"os": "windows"},
         {"cli_support": "yes"},
         {"cli_support": "no"},
         {"docker_support": "yes"},
