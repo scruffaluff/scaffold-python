@@ -6,7 +6,7 @@ import os
 import pathlib
 import re
 import subprocess
-from typing import Iterator, Optional
+from typing import Any, Iterator, Optional
 
 from pytest_cookies.plugin import Result
 
@@ -70,7 +70,8 @@ def run_command(
         )
 
 
-def show(match: re.Match) -> None:
+# Type re.Match does not exist in Python 3.6.
+def show(match: Any) -> None:
     """Show lines surrounding regex match.
 
     Args:
