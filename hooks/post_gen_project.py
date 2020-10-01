@@ -17,10 +17,6 @@ PATHS: Dict[str, Union[Paths, Dict[str, Paths]]] = {
     "cli_support": [
         pathlib.Path("src/{{ cookiecutter.project_slug }}/__main__.py"),
     ],
-    "docker_support": [
-        pathlib.Path(".dockerignore"),
-        pathlib.Path("Dockerfile"),
-    ],
     "prettier_support": [
         pathlib.Path(".prettierignore"),
         pathlib.Path("package.json"),
@@ -78,7 +74,6 @@ def main() -> None:
     context = {
         "githost": "{{ cookiecutter.githost }}",
         "cli_support": "{{ cookiecutter.cli_support }}",
-        "docker_support": "{{ cookiecutter.docker_support }}",
         "prettier_support": "{{ cookiecutter.prettier_support }}",
         "pypi_support": "{{ cookiecutter.pypi_support }}",
     }

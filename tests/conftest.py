@@ -10,8 +10,6 @@ from pytest_cookies import plugin
     params=[
         {"cli_support": "no"},
         {"cli_support": "yes"},
-        {"docker_support": "no"},
-        {"docker_support": "yes"},
         {"githost": "github", "pypi_support": "yes"},
         {"githost": "github"},
         {"githost": "gitlab", "prettier_support": "no"},

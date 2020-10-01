@@ -15,7 +15,6 @@
   "license": ["MIT", "private"],
 
   "cli_support": ["yes", "no"],
-  "docker_support": ["yes", "no"],
   "prettier_support": ["yes", "no"],
   "pypi_support": ["yes", "no"]
 }

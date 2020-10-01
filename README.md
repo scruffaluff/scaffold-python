@@ -110,7 +110,6 @@ subcontents are only generated for that chosen context.
 ├── README.md
 ├── scripts
 │   ├── clean.py
-│   ├── docker.py  {docker_support: yes}
 │   └── docs.py
 ├── src
 │   └── {{project_slug}}
