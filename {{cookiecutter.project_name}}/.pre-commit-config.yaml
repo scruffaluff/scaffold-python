@@ -1,6 +1,10 @@
+# Pre-commit, https://pre-commit.com/, configuration file for Git hooks.
+#
+# To initialize hooks within a Git repository, execute pre-commit install.
+
 repos:
   - repo: https://github.com/ambv/black
-    rev: 19.10b0
+    rev: 20.08b1
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/pre-commit-hooks
