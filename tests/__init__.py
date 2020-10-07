@@ -39,7 +39,8 @@ def test_flake8_lints(baked_project: plugin.Result) -> None:
 
 
 @pytest.mark.parametrize(
-    "context", [{"project_name": "$Mock?"}],
+    "context",
+    [{"project_name": "$Mock?"}],
 )
 def test_invalid_context(
     context: Dict[str, Any], cookies: plugin.Cookies

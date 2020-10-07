@@ -66,7 +66,10 @@ def run_command(
     work_dir = pathlib.Path.cwd() if work_dir is None else work_dir
     with chdir(work_dir):
         return subprocess.run(
-            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True,
         )
 
 
