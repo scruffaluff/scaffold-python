@@ -97,8 +97,8 @@ subcontents are only generated for that chosen context.
 ├── .github  {githost: github}
 │   └── workflows
 │       ├── build.yaml
-│       ├── pages.yaml
-│       └── publish.yaml
+│       ├── package.yaml
+│       └── pages.yaml
 ├── .gitignore
 ├── LICENSE.md
 ├── mkdocs.yml
@@ -109,7 +109,6 @@ subcontents are only generated for that chosen context.
 ├── pyproject.toml
 ├── README.md
 ├── scripts
-│   ├── clean.py
 │   └── docs.py
 ├── src
 │   └── {{project_slug}}

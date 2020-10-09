@@ -147,7 +147,7 @@ def test_pytest_test(cookies: plugin.Cookies) -> None:
             ["src/mock/__main__.py"],
         ),
         ({"prettier_support": "no"}, [".prettierignore", "package.json"]),
-        ({"pypi_support": "no"}, [".github/workflow/publish.yaml"]),
+        ({"pypi_support": "no"}, [".github/workflow/package.yaml"]),
     ],
 )
 def test_removed_paths(
