@@ -1,8 +1,17 @@
+# GitHub Actions workflow to build a package and publish to PyPI.
+#
+# Requires a GitHub secret, named PYPI_PASSWORD, for the repository. For
+# information on how to create and use GitHub secrets, see
+# https://docs.github.com/en/actions/reference/encrypted-secrets.
+#
+# For a reference of workflow file syntax, see
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions.
+
 name: publish
 on:
   push:
     tags:
-      - v[0-9]+.[0-9]+.[0-9]+
+      - "?[0-9]+.[0-9]+.[0-9]+"
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -12,7 +21,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -22,7 +31,7 @@ jobs:
         run: |
           poetry build
       - name: Publish package to PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@v1
         with:
           user: __token__
-          password: {{ "${{ secrets.pypi_password }}" }}
+          password: {{ "${{ secrets.PYPI_PASSWORD }}" }}

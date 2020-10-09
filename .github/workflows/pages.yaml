@@ -1,3 +1,12 @@
+# GitHub Actions workflow to build a website and publish to GitHub pages.
+#
+# Requires a GitHub secret, named PAGES_TOKEN, for the repository. For
+# information on how to create and use GitHub secrets, see
+# https://docs.github.com/en/actions/reference/encrypted-secrets.
+#
+# For a reference of workflow file syntax, see
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions.
+
 name: pages
 on:
   push:
@@ -8,9 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Code repository checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Install Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Install dependencies
