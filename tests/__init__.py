@@ -3,6 +3,7 @@
 
 import pathlib
 import re
+import sys
 from typing import Any, Dict, List
 
 import pytest
@@ -51,6 +52,10 @@ def test_invalid_context(
     assert res.exit_code == -1
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="Poetry install command hits permission errors for temporary paths.",
+)
 def test_mkdocs_build(cookies: plugin.Cookies) -> None:
     """Mkdocs must be able to build documentation for baked project."""
 
@@ -58,12 +63,10 @@ def test_mkdocs_build(cookies: plugin.Cookies) -> None:
     proj_dir = pathlib.Path(res.project)
     expected = 0
 
-    proc = run_command(command="python -m poetry install", work_dir=proj_dir)
+    proc = run_command(command="poetry install", work_dir=proj_dir)
     assert proc.returncode == expected, proc.stdout
 
-    proc = run_command(
-        command="python -m poetry run mkdocs build", work_dir=proj_dir
-    )
+    proc = run_command(command="poetry run mkdocs build", work_dir=proj_dir)
     assert proc.returncode == expected, proc.stdout
 
 
