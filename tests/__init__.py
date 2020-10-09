@@ -56,14 +56,15 @@ def test_mkdocs_build(cookies: plugin.Cookies) -> None:
 
     res = cookies.bake(extra_context={})
     proj_dir = pathlib.Path(res.project)
-    res = run_command(
-        command="python scripts/docs.py",
-        work_dir=proj_dir,
-    )
-
     expected = 0
-    actual = res.returncode
-    assert actual == expected, res.stdout
+
+    proc = run_command(command="python -m poetry install", work_dir=proj_dir)
+    assert proc.returncode == expected, proc.stdout
+
+    proc = run_command(
+        command="python -m poetry run mkdocs build", work_dir=proj_dir
+    )
+    assert proc.returncode == expected, proc.stdout
 
 
 def test_mypy_type_checks(baked_project: plugin.Result) -> None:
