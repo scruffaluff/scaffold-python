@@ -127,18 +127,22 @@ def test_no_trailing_blank_line(baked_project: plugin.Result) -> None:
         assert match is None, f"File {path} ends with a blank line."
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="Poetry install command hits permission errors for temporary paths.",
+)
 def test_pytest_test(cookies: plugin.Cookies) -> None:
     """Generated files must pass Pytest unit tests."""
 
     res = cookies.bake(extra_context={})
     proj_dir = pathlib.Path(res.project)
-    res = run_command(
-        command="poetry install && poetry run pytest", work_dir=proj_dir
-    )
-
     expected = 0
-    actual = res.returncode
-    assert actual == expected, res.stdout
+
+    proc = run_command(command="poetry install", work_dir=proj_dir)
+    assert proc.returncode == expected, proc.stdout
+
+    proc = run_command(command="poetry run pytest", work_dir=proj_dir)
+    assert proc.returncode == expected, proc.stdout
 
 
 @pytest.mark.parametrize(
