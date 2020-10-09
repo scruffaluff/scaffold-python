@@ -1,14 +1,14 @@
 exclude: "{{cookiecutter.project_name}}/*"
 repos:
   - repo: https://github.com/ambv/black
-    rev: 19.10b0
+    rev: 20.8b1
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.4.0
+    rev: v3.2.0
     hooks:
       - id: flake8
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.761
+    rev: v0.782
     hooks:
       - id: mypy

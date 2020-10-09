@@ -1,17 +1,9 @@
 {
-  "name": "{{ cookiecutter.project_slug }}",
-  "version": "{{ cookiecutter.project_version }}",
-  "description": "{{ cookiecutter.project_description }}",
+  "private": true,
   "scripts": {
-    "format": "prettier --write **/*.{css,html,js,json,md,yaml,yml}"
+    "format": "prettier --write **/*.{css,html,js,json,md,ts,vue,yaml,yml}",
+    "test": "prettier --check **/*.{css,html,js,json,md,ts,vue,yaml,yml}"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+{{ cookiecutter.project_repopage }}.git"
-  },
-  "author": "Macklan Weinstein",
-  "license": "MIT",
-  "homepage": "{{ cookiecutter.project_repopage }}",
   "devDependencies": {
     "prettier": "^2.0.5"
   },

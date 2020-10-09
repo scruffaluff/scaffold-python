@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "format": "prettier --write **/*.{css,html,js,json,md,ts,yaml,yml}",
-    "test": "prettier --check **/*.{css,html,js,json,md,ts,yaml,yml}"
+    "format": "prettier --write **/*.{css,html,js,json,md,ts,vue,yaml,yml}",
+    "test": "prettier --check **/*.{css,html,js,json,md,ts,vue,yaml,yml}"
   },
   "devDependencies": {
     "prettier": "^2.0.5"
