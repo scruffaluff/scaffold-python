@@ -11,51 +11,51 @@ on:
       - feature/*
       - master
 jobs:
-  static:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Code repository checkout
+      - name: Checkout code repository
         uses: actions/checkout@v2
       {%- if cookiecutter.prettier_support == "yes" %}
-      - name: Install Node
+      - name: Install Node interpreter
         uses: actions/setup-node@v1
         with:
           node-version: 14
       - name: Install Node dependencies
         run: |
           npm install
-      - name: Check format of configuration files
+      - name: Static lint configuration files
         run: |
-          npm run lint
+          npm run lint-test
       {% endif -%}
-      - name: Install Python
+      - name: Install Python interpreter
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install tox
-      - name: Build and static test with tox
+      - name: Static lint code
         run: |
           tox -e static
-  test:
+  build:
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
         python: [3.6, 3.7, 3.8, 3.9]
     runs-on: {{ "${{ matrix.os }}" }}
     steps:
-      - name: Code repository checkout
+      - name: Checkout code repository
         uses: actions/checkout@v2
-      - name: Install Python
+      - name: Install Python interpreter
         uses: actions/setup-python@v2
         with:
           python-version: {{ "${{ matrix.python }}" }}
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install tox
-      - name: Build and test with tox
+      - name: Build and test code
         run: |
           tox -e py
