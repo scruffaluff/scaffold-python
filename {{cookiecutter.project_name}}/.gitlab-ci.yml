@@ -1,51 +1,97 @@
+# GitLab Continuous Integration to build and deploy repository.
+#
+# For a reference of the CI file syntax, see
+# https://docs.gitlab.com/ee/ci/yaml/.
+
+# Workflow rules define whether or not the CI pipeline is run.
+# The rules are required to ensure that every job is run for detached pipelines.
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH =~ /^.*$/
+
+# Jobs of the same stage run in parallel. Jobs of the next stage only run after
+# all current jobs have completed successfully.
 stages:
-  - test
+  - build
   - deploy
+
+# Contains settings that apply to all jobs unless overridden.
 default:
   before_script:
     - python -m pip install --upgrade pip
     - python -m pip install tox
-{% if cookiecutter.prettier_support == "yes" %}
-node:14:
+
+{% if cookiecutter.prettier_support == "yes" -%}
+config:
   image: "node:14"
-  stage: test
+  stage: build
   before_script:
     - npm install
   script:
-    - npm run lint
+    - npm run lint-test
 {% endif -%}
-static:
-  image: "python:3.8"
-  stage: test
+lint:
+  image: "python:3.9"
+  stage: build
   script:
     - tox -e static
 python:3.6:
   image: "python:3.6"
-  stage: test
+  stage: build
   script:
     - tox -e py36
 python:3.7:
   image: "python:3.7"
-  stage: test
+  stage: build
   script:
     - tox -e py37
 python:3.8:
   image: "python:3.8"
-  stage: test
+  stage: build
   script:
     - tox -e py38
+python:3.9:
+  image: "python:3.9"
+  stage: build
+  script:
+    - tox -e py39
+
 pages:
-  image: "python:3.6"
+  image: "python:3.9"
   stage: deploy
   script:
     - python -m pip install poetry
     - poetry install -v
-    - poetry run python scripts/docs.py build
+    - poetry run python scripts/docs.py
+    - mv site public
+  # GitLab Pages uploads files inside the public folder after the job completes.
   artifacts:
     paths:
       - public
+  # Makes the job only run on the master and develop branches.
   rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
+    - if: $CI_COMMIT_REF_NAME == "master"
       when: on_success
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"
+      when: on_success
+
+package:
+  image: "python:3.9"
+  stage: deploy
+  script:
+    - python -m pip install poetry
+    - poetry install -v
+    - poetry build
+    {% if cookiecutter.pypi_support == "yes" -%}
+    - poetry publish -u __token__ -p password
+    {% endif -%}
+  # Uploads packages as release files for Git tag.
+  artifacts:
+    paths:
+      - dist/{{ cookiecutter.project_slug }}-$CI_COMMIT_TAG-py-none-any.whl
+  # Makes the job only run on release commit tags, i.e. 1.0.4 or v0.4.1.
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v?[0-9]+\.[0-9]+\.[0-9]+$/
       when: on_success
