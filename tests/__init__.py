@@ -57,7 +57,7 @@ def test_mkdocs_build(cookies: plugin.Cookies) -> None:
     res = cookies.bake(extra_context={})
     proj_dir = pathlib.Path(res.project)
     res = run_command(
-        command="poetry install && poetry run python scripts/docs.py",
+        command="python scripts/docs.py",
         work_dir=proj_dir,
     )
 
