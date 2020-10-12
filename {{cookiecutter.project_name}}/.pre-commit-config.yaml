@@ -15,9 +15,9 @@ repos:
     rev: v0.782
     hooks:
       - id: mypy
-  {%- if cookiecutter.prettier_support == "yes" -%}
+{%- if cookiecutter.prettier_support == "yes" %}
   - repo: https://github.com/prettier/prettier
     rev: "2.1.2"
     hooks:
       - id: prettier
-  {%- endif -%}
+{% endif -%}

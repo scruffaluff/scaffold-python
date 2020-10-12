@@ -153,6 +153,19 @@ def test_no_trailing_blank_line(baked_project: plugin.Result) -> None:
         assert match is None, f"File {path} ends with a blank line."
 
 
+def test_prettier_format(cookies: plugin.Cookies) -> None:
+    """Generated files must pass Prettier format checker."""
+
+    res = cookies.bake(extra_context={})
+    proj_dir = pathlib.Path(res.project)
+
+    proc = run_command(command="npm install", work_dir=proj_dir)
+    assert proc.returncode == 0, proc.stdout
+
+    proc = run_command(command="npm run lint-test", work_dir=proj_dir)
+    assert proc.returncode == 0, proc.stdout
+
+
 @pytest.mark.skipif(
     sys.platform == "win32",
     reason="Poetry install command hits permission errors for temporary paths.",
