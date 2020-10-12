@@ -24,8 +24,8 @@ def copy_index(repo_path: pathlib.Path) -> None:
         repo_path: Repository root path.
     """
 
-    src_path = repo_path / "docs/index.md"
-    dest_path = repo_path / "README.md"
+    src_path = repo_path / "README.md"
+    dest_path = repo_path / "docs/index.md"
 
     shutil.copy(src=src_path, dst=dest_path)
 

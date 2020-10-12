@@ -8,9 +8,7 @@ named __main__.py.
 import typer
 
 
-app = typer.Typer(
-    help="{{ cookiecutter.project_description }}"
-)
+app = typer.Typer(help="{{ cookiecutter.project_description }}")
 
 
 if __name__ == "__main__":

@@ -33,7 +33,7 @@ def clean_bool(chosen: str, paths: Paths) -> None:
         paths: Paths to remove if option was not chosen.
     """
 
-    if "chosen" != "yes":
+    if chosen != "yes":
         for path in paths:
             remove_path(path)
 

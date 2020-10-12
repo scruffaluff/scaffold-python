@@ -25,6 +25,32 @@ def test_black_format(baked_project: plugin.Result) -> None:
     assert actual == expected, res.stderr
 
 
+@pytest.mark.parametrize(
+    "context,paths",
+    [
+        ({"githost": "github"}, [".github"]),
+        ({"githost": "gitlab"}, [".gitlab-ci.yml"]),
+        (
+            {"project_slug": "mock", "cli_support": "yes"},
+            ["src/mock/__main__.py"],
+        ),
+        ({"prettier_support": "yes"}, [".prettierignore", "package.json"]),
+        ({"pypi_support": "yes"}, [".github/workflows/package.yaml"]),
+    ],
+)
+def test_existing_paths(
+    context: Dict[str, Any], paths: List[str], cookies: plugin.Cookies
+) -> None:
+    """Check that specific paths exist after scaffolding."""
+
+    res = cookies.bake(extra_context=context)
+
+    project_path = pathlib.Path(res.project)
+    for path in paths:
+        file_path = project_path / path
+        assert file_path.exists()
+
+
 def test_flake8_lints(baked_project: plugin.Result) -> None:
     """Generated files must pass Flake8 lints."""
 
@@ -155,7 +181,7 @@ def test_pytest_test(cookies: plugin.Cookies) -> None:
             ["src/mock/__main__.py"],
         ),
         ({"prettier_support": "no"}, [".prettierignore", "package.json"]),
-        ({"pypi_support": "no"}, [".github/workflow/package.yaml"]),
+        ({"pypi_support": "no"}, [".github/workflows/package.yaml"]),
     ],
 )
 def test_removed_paths(

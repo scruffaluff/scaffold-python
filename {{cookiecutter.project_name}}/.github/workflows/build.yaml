@@ -38,7 +38,7 @@ jobs:
           python -m pip install tox
       - name: Static lint code
         run: |
-          tox -e static
+          tox -e lint
   build:
     strategy:
       matrix:
