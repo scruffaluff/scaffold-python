@@ -153,6 +153,10 @@ def test_no_trailing_blank_line(baked_project: plugin.Result) -> None:
         assert match is None, f"File {path} ends with a blank line."
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="Cookiecutter does not generate files with Windows line endings.",
+)
 def test_prettier_format(cookies: plugin.Cookies) -> None:
     """Generated files must pass Prettier format checker."""
 
