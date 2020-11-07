@@ -50,7 +50,7 @@ site_name: {{ cookiecutter.project_name }}
 site_url: {{ cookiecutter.project_docpage }}
 theme:
   featues:
-    - tabs
+    - navigation.tabs
   name: material
   palette:
     accent: cyan

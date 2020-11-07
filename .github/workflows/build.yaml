@@ -37,10 +37,12 @@ jobs:
           poetry install -v
       - name: Static lint code
         run: |
-          poetry run flake8 hooks
-          poetry run flake8 tests
-          poetry run mypy hooks
-          poetry run mypy tests
+          poetry run black --check .
+          poetry run flake8 hooks/ tests/
+          poetry run mypy hooks/ tests/
+          mkdir docs \
+            && cp README.md docs/index.md \
+            && poetry run mkdocs build --strict
   build:
     strategy:
       fail-fast: false

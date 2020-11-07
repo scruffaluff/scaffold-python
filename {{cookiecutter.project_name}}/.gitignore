@@ -20,7 +20,7 @@
 **/*.egg-info/
 dist/
 docs/index.md
-docs/src/user/cli.md
+docs/api/cli.md
 environment.yml
 f1
 flit.ini

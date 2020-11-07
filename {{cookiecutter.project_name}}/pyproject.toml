@@ -67,3 +67,18 @@ typer-cli = "^0.0.10"
 [tool.poetry.scripts]
 {{ cookiecutter.project_name }} = "{{ cookiecutter.project_slug }}.__main__:app"
 {% endif -%}
+
+[tool.pytest.ini_options]
+addopts = "-sv"
+markers = [
+    "functional: mark as functional test.",
+    "integration: mark as integration test.",
+    "unit: mark as unit test.",
+]
+python_classes = "Test*"
+python_files = [
+    "__init__.py",
+    "test_*.py",
+]
+python_functions = ["test_*"]
+testpaths = ["tests"]
