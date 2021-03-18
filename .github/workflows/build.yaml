@@ -4,15 +4,17 @@
 # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions.
 
 name: build
+
 on:
   push:
     branches:
       - develop
       - feature/*
       - master
+
 jobs:
   lint:
-     name: Run linter tests on project files
+    name: Run linter tests on project files
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
