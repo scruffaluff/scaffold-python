@@ -1,9 +1,20 @@
+# Prettier configuration file for ignoring paths.
+#
+# For more information, visit https://prettier.io/docs/en/ignore.html.
+
+.benchmarks/
 .git/
 .mypy_cache/
 .pytest_cache/
 .tox/
 .venv/
+*.ipynb
 *.min.js
+*.py
+*.pyc
+**/__pycache__/
+**/.ipynb_checkpoints/
+**/*.egg-info/
 node_modules/
 package-lock.json
 poetry.lock

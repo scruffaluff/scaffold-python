@@ -34,7 +34,7 @@ def test_black_format(baked_project: plugin.Result) -> None:
             {"project_slug": "mock", "cli_support": "yes"},
             ["src/mock/__main__.py"],
         ),
-        ({"prettier_support": "yes"}, [".prettierignore", "package.json"]),
+        ({"prettier_support": "yes"}, [".prettierignore", ".prettierrc.yaml"]),
         ({"pypi_support": "yes"}, [".github/workflows/package.yaml"]),
     ],
 )
@@ -166,10 +166,7 @@ def test_prettier_format(cookies: plugin.Cookies) -> None:
     res = cookies.bake(extra_context={})
     proj_dir = pathlib.Path(res.project)
 
-    proc = run_command(command="npm install", work_dir=proj_dir)
-    assert proc.returncode == 0, proc.stdout
-
-    proc = run_command(command="npm run prettier:test", work_dir=proj_dir)
+    proc = run_command(command="prettier --write .", work_dir=proj_dir)
     assert proc.returncode == 0, proc.stdout
 
 
@@ -200,7 +197,7 @@ def test_pytest_test(cookies: plugin.Cookies) -> None:
             {"project_slug": "mock", "cli_support": "no"},
             ["src/mock/__main__.py"],
         ),
-        ({"prettier_support": "no"}, [".prettierignore", "package.json"]),
+        ({"prettier_support": "no"}, [".prettierignore", ".prettierrc.yaml"]),
         ({"pypi_support": "no"}, [".github/workflows/package.yaml"]),
     ],
 )

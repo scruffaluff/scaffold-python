@@ -19,7 +19,7 @@ PATHS: Dict[str, Union[Paths, Dict[str, Paths]]] = {
     ],
     "prettier_support": [
         pathlib.Path(".prettierignore"),
-        pathlib.Path("package.json"),
+        pathlib.Path(".prettierrc.yaml"),
     ],
     "pypi_support": [pathlib.Path(".github/workflows/package.yaml")],
 }

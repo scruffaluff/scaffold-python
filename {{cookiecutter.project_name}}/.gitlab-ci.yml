@@ -27,9 +27,9 @@ config:
   image: "node:14"
   stage: build
   before_script:
-    - npm install
+    - npm install -g prettier
   script:
-    - npm run prettier:test
+    - prettier --check .
 {% endif -%}
 lint:
   image: "python:3.9"
