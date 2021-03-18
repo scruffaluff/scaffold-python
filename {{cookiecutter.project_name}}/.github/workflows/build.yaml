@@ -21,12 +21,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14
-      - name: Install Node dependencies
-        run: |
-          npm install
-      - name: Static lint configuration files
-        run: |
-          npm run prettier:test
+      - name: Install Prettier formatter
+        run: npm install -g prettier
+      - name: Check configuration file formatting
+        run: prettier --check .
       {% endif -%}
       - name: Install Python interpreter
         uses: actions/setup-python@v2
@@ -34,7 +32,7 @@ jobs:
           python-version: 3.9
       - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip poetry setuptools wheel
           python -m pip install tox
       - name: Static lint code
         run: |
@@ -54,7 +52,7 @@ jobs:
           python-version: {{ "${{ matrix.python }}" }}
       - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip poetry setuptools wheel
           python -m pip install tox
       - name: Build and test code
         run: |

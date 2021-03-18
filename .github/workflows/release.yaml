@@ -1,0 +1,34 @@
+# GitHub Actions workflow file.
+#
+# For more information, visit
+# https://docs.github.com/actions/learn-github-actions.
+
+name: release
+
+# Make workflow run only for pushed SemVer tags.
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  release:
+    name: Create a GitHub release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract Git tag
+        id: extract_tag
+        shell: bash
+        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/tags/})"
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Scaffold Python ${{ steps.extract_tag.outputs.tag }}
+          body: >-
+            See the
+            [changelog](https://github.com/wolfgangwazzlestrauss/scaffold-python/blob/${{
+            steps.extract_tag.outputs.tag }}/CHANGELOG.md) for more information.

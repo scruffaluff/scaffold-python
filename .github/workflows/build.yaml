@@ -12,6 +12,7 @@ on:
       - master
 jobs:
   lint:
+     name: Run linter tests on project files
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
@@ -20,20 +21,17 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14
-      - name: Install Node dependencies
-        run: |
-          npm install
-      - name: Static lint configuration files
-        run: |
-          npm run prettier:test
+      - name: Install Prettier formatter
+        run: npm install -g prettier
+      - name: Check configuration file formatting
+        run: prettier --check .
       - name: Install Python interpreter
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install poetry
+          python -m pip install --upgrade pip poetry setuptools wheel
           poetry install -v
       - name: Static lint code
         run: |
@@ -43,6 +41,7 @@ jobs:
           mkdir docs \
             && cp README.md docs/index.md \
             && poetry run mkdocs build --strict
+
   build:
     strategy:
       fail-fast: false
@@ -59,9 +58,7 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install poetry
+          python -m pip install --upgrade pip poetry setuptools wheel
           poetry install -v
       - name: Build and test code
-        run: |
-          poetry run pytest
+        run: poetry run pytest
