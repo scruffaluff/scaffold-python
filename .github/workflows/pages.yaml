@@ -1,9 +1,5 @@
 # GitHub Actions workflow to build a website and publish to GitHub pages.
 #
-# Requires a GitHub secret, named PAGES_TOKEN, for the repository. For
-# information on how to create and use GitHub secrets, see
-# https://docs.github.com/en/actions/reference/encrypted-secrets.
-#
 # For a reference of workflow file syntax, see
 # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions.
 
@@ -35,5 +31,5 @@ jobs:
       - name: Upload documenation
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.PAGES_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
