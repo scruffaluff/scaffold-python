@@ -1,11 +1,11 @@
 {
   "private": true,
   "scripts": {
-    "lint-format": "prettier --write '**/*.{css,html,js,json,md,ts,vue,yaml,yml}'",
-    "lint-test": "prettier --check '**/*.{css,html,js,json,md,ts,vue,yaml,yml}'"
+    "prettier:format": "prettier --write '**/*.{css,html,js,json,md,ts,vue,yaml,yml}'",
+    "prettier:test": "prettier --check '**/*.{css,html,js,json,md,ts,vue,yaml,yml}'"
   },
   "devDependencies": {
-    "prettier": "^2.0.5"
+    "prettier": "^2.2.1"
   },
   "prettier": {
     "arrowParens": "always",

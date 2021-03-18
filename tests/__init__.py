@@ -166,7 +166,7 @@ def test_prettier_format(cookies: plugin.Cookies) -> None:
     proc = run_command(command="npm install", work_dir=proj_dir)
     assert proc.returncode == 0, proc.stdout
 
-    proc = run_command(command="npm run lint-test", work_dir=proj_dir)
+    proc = run_command(command="npm run prettier:test", work_dir=proj_dir)
     assert proc.returncode == 0, proc.stdout
 
 

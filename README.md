@@ -35,8 +35,8 @@ Afterwards execute:
 ```console
 poetry install
 poetry shell
+black .
 git init
-pre-commit install
 ```
 
 Then the development environment is configured and you are ready to code.
@@ -59,7 +59,6 @@ Every generated project configures the following tools for development usage:
 - [MkDocs](https://www.mkdocs.org/): Documentation static site generator.
 - [Mypy](http://mypy-lang.org/): Static type checker.
 - [Poetry](https://python-poetry.org/): Dependency manager and packager.
-- [Pre-Commit](https://pre-commit.com/): Git pre-commit hooks manager.
 - [Pytest](https://docs.pytest.org/en/latest/): Testing framework.
 - [Tox](https://tox.readthedocs.io/en/latest/): Test automator.
 
@@ -78,22 +77,20 @@ subcontents are only generated for that chosen context.
 
 ```
 {{project_name}}
-├── CONTRIBUTING.md
 ├── .dockerignore
 ├── docs
+|   ├── api
+│   |   └── index.md
+|   ├── contrib
+│   |   └── index.md
 │   ├── css
-│   │   └── termynal.css
-│   ├── index.md
-│   ├── js
-│   │   ├── index.js
-│   │   └── termynal.js
-│   └── src
-│       ├── developer
-│       │   └── index.md
-│       ├── reference
-│       │   └── index.md
-│       └── user
-│           └── index.md
+│   │   └── mkdocstrings.css
+│   ├── install
+│   │   └── index.md
+│   └── learn
+│       └── index.md
+├── examples
+│   └── __init__.py
 ├── .github  {githost: github}
 │   └── workflows
 │       ├── build.yaml
@@ -104,15 +101,16 @@ subcontents are only generated for that chosen context.
 ├── mkdocs.yml
 ├── mypy.ini
 ├── package.json  {prettier_support: yes}
-├── .pre-commit-config.yaml
 ├── .prettierignore  {prettier_support: yes}
 ├── pyproject.toml
 ├── README.md
 ├── scripts
-│   └── docs.py
+|   ├── __init__.py
+│   └── build_docs.py
 ├── src
 │   └── {{project_slug}}
 │       ├── __init__.py
+|       ├── __main__.py  {cli_support: yes}
 │       └── py.typed
 ├── tests
 │   ├── conftest.py
@@ -121,8 +119,16 @@ subcontents are only generated for that chosen context.
 │   │   └── __init__.py
 │   └── unit
 │       └── __init__.py
-├── tox.ini
-└── .vscode
-    ├── launch.json
-    └── settings.json
+└── tox.ini
 ```
+
+## Continous Integration
+
+Projects generated with this scaffolding repository come with configured
+pipeline for GitHub CI workflows and GitLab CI pipelines.
+
+### Linting and Testing
+
+### Documentation Publishing
+
+### Package Publishing

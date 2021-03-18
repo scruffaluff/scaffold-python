@@ -20,8 +20,7 @@ stages:
 # Contains settings that apply to all jobs unless overridden.
 default:
   before_script:
-    - python -m pip install --upgrade pip
-    - python -m pip install tox
+    - python -m pip install --upgrade pip poetry setuptools wheel
 
 {% if cookiecutter.prettier_support == "yes" -%}
 config:
@@ -30,41 +29,43 @@ config:
   before_script:
     - npm install
   script:
-    - npm run lint-test
+    - npm run prettier:test
 {% endif -%}
 lint:
   image: "python:3.9"
   stage: build
   script:
-    - tox -e lint
+    - poetry run bandit -ilr src/
+    - poetry run black --check .
+    - poetry run python scripts/build_docs.py
+    - poetry run flake8 examples/ scripts/ src/ tests/
+    - poetry run mypy examples/ scripts/ src/ tests/
 python:3.6:
   image: "python:3.6"
   stage: build
   script:
-    - tox -e py36
+    - poetry run pytest --cov
 python:3.7:
   image: "python:3.7"
   stage: build
   script:
-    - tox -e py37
+    - poetry run pytest --cov
 python:3.8:
   image: "python:3.8"
   stage: build
   script:
-    - tox -e py38
+    - poetry run pytest --cov
 python:3.9:
   image: "python:3.9"
   stage: build
   script:
-    - tox -e py39
+    - poetry run pytest --cov
 
 pages:
   image: "python:3.9"
   stage: deploy
   script:
-    - python -m pip install poetry
-    - poetry install -v
-    - poetry run python scripts/docs.py
+    - poetry run python scripts/build_docs.py
     - mv site public
   # GitLab Pages uploads files inside the public folder after the job completes.
   artifacts:
@@ -81,8 +82,6 @@ package:
   image: "python:3.9"
   stage: deploy
   script:
-    - python -m pip install poetry
-    - poetry install -v
     - poetry build
     {% if cookiecutter.pypi_support == "yes" -%}
     - poetry publish -u __token__ -p password
