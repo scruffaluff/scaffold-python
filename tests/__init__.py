@@ -166,7 +166,7 @@ def test_prettier_format(cookies: plugin.Cookies) -> None:
     res = cookies.bake(extra_context={})
     proj_dir = pathlib.Path(res.project)
 
-    proc = run_command(command="prettier --write .", work_dir=proj_dir)
+    proc = run_command(command="prettier --check .", work_dir=proj_dir)
     assert proc.returncode == 0, proc.stdout
 
 
