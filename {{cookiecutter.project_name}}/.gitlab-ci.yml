@@ -24,7 +24,7 @@ default:
 
 {% if cookiecutter.prettier_support == "yes" -%}
 config:
-  image: "node:14"
+  image: "node:16"
   stage: build
   before_script:
     - npm install -g prettier

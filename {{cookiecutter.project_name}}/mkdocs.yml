@@ -1,4 +1,8 @@
-copyright: Copyright &copy; 2020 {{ cookiecutter.author_name }}
+# MkDocs static site generator configuration file.
+#
+# For more information, visit https://www.mkdocs.org/user-guide/configuration/.
+
+copyright: Copyright &copy; 2021 {{ cookiecutter.author_name }}
 extra:
   social:
     - icon: fontawesome/brands/{{ cookiecutter.githost }}

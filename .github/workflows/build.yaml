@@ -5,11 +5,16 @@
 
 name: build
 
+# Make workflow run only for commits pushed or pull requests made to the develop
+# and master branches.
 on:
   push:
     branches:
       - develop
-      - feature/*
+      - master
+  pull_request:
+    branches:
+      - develop
       - master
 
 jobs:
@@ -22,7 +27,7 @@ jobs:
       - name: Install Node interpreter
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
       - name: Install Prettier formatter
         run: npm install -g prettier
       - name: Check configuration file formatting
@@ -57,7 +62,7 @@ jobs:
       - name: Install Node interpreter
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
       - name: Install Prettier formatter
         run: npm install -g prettier
       - name: Install Python interpreter
