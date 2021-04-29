@@ -12,7 +12,7 @@ extra:
 extra_css:
   - css/style.css
 extra_javascript:
-  - https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js
+  - https://unpkg.com/mermaid@8.9.3/dist/mermaid.min.js
   - js/index.js
 markdown_extensions:
   - admonition

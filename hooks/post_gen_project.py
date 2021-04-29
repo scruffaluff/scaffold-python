@@ -1,4 +1,4 @@
-"""Project post generation hooks."""
+"""Project post-generation hooks."""
 
 
 import pathlib

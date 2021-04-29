@@ -20,5 +20,4 @@ docs/index.md
 docs/src/user/cli.md
 node_modules/
 package-lock.json
-poetry.lock
 site/

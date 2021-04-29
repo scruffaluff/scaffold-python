@@ -1,4 +1,4 @@
-"""Tests for scaffold-python."""
+"""Tests for Scaffold Python."""
 
 
 import pathlib

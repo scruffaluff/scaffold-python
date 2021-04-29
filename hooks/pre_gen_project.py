@@ -1,4 +1,4 @@
-"""Project post generation hooks."""
+"""Project pre-generation hooks."""
 
 
 import re
