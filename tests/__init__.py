@@ -35,7 +35,7 @@ def test_black_format(baked_project: plugin.Result) -> None:
             ["src/mock/__main__.py"],
         ),
         ({"prettier_support": "yes"}, [".prettierignore", ".prettierrc.yaml"]),
-        ({"pypi_support": "yes"}, [".github/workflows/package.yaml"]),
+        ({"pypi_support": "yes"}, [".github/workflows/release.yaml"]),
     ],
 )
 def test_existing_paths(

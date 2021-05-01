@@ -13,13 +13,18 @@ on:
 
 jobs:
   release:
-    name: Create a GitHub release
+    name: Get Git tag and make GitHub release
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.extract_tag.outputs.tag }}
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
-      - name: Extract Git tag
+      - name: Extract tag
         id: extract_tag
         shell: bash
         run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/tags/})"
+      - name: Checkout code repository
+        uses: actions/checkout@v2
       - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1
