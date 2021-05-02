@@ -5,19 +5,10 @@
 
 name: build
 
-# Make workflow run only for commits pushed or pull requests made to the
-# develop, main, and master branches.
+# Trigger workflow on any push or pull request.
 on:
-  push:
-    branches:
-      - develop
-      - main
-      - master
-  pull_request:
-    branches:
-      - develop
-      - main
-      - master
+  - pull_request
+  - push
 
 jobs:
   lint:

@@ -18,11 +18,11 @@ def test_black_format(baked_project: plugin.Result) -> None:
     """Generated files must pass Black format checker."""
 
     proj_dir = pathlib.Path(baked_project.project)
-    res = run_command(command="black -l 80 --check .", work_dir=proj_dir)
+    proc = run_command(command="black -l 80 --check .", work_dir=proj_dir)
 
     expected = 0
-    actual = res.returncode
-    assert actual == expected, res.stderr
+    actual = proc.returncode
+    assert actual == expected, proc.stderr.decode("utf-8")
 
 
 @pytest.mark.parametrize(
@@ -58,11 +58,12 @@ def test_flake8_lints(baked_project: plugin.Result) -> None:
     src_dir = proj_dir / "src"
     test_dir = proj_dir / "tests"
 
-    res = run_command(command=f"flake8 {src_dir} {test_dir}", work_dir=proj_dir)
+    proc = run_command(command=f"flake8 {src_dir} {test_dir}", work_dir=proj_dir)
 
     expected = 0
-    actual = res.returncode
-    assert actual == expected, res.stdout
+    actual = proc.returncode
+    # Flake8 prints errors to stdout instead of stderr.
+    assert actual == expected, proc.stdout.decode("utf-8")
 
 
 @pytest.mark.parametrize(
@@ -90,10 +91,11 @@ def test_mkdocs_build(cookies: plugin.Cookies) -> None:
     expected = 0
 
     proc = run_command(command="poetry install", work_dir=proj_dir)
-    assert proc.returncode == expected, proc.stdout
+    # Poetry prints errors to stdout instead of stderr.
+    assert proc.returncode == expected, proc.stdout.decode("utf-8")
 
     proc = run_command(command="poetry run mkdocs build", work_dir=proj_dir)
-    assert proc.returncode == expected, proc.stdout
+    assert proc.returncode == expected, proc.stderr.decode("utf-8")
 
 
 def test_mypy_type_checks(baked_project: plugin.Result) -> None:
@@ -103,11 +105,12 @@ def test_mypy_type_checks(baked_project: plugin.Result) -> None:
     src_dir = proj_dir / "src"
     test_dir = proj_dir / "tests"
 
-    res = run_command(command=f"mypy {src_dir} {test_dir}", work_dir=proj_dir)
+    proc = run_command(command=f"mypy {src_dir} {test_dir}", work_dir=proj_dir)
 
     expected = 0
-    actual = res.returncode
-    assert actual == expected, res.stdout
+    actual = proc.returncode
+    # Mypy prints errors to stdout instead of stderr.
+    assert actual == expected, proc.stdout.decode("utf-8")
 
 
 def test_no_blank_lines(baked_project: plugin.Result) -> None:
@@ -182,10 +185,12 @@ def test_pytest_test(cookies: plugin.Cookies) -> None:
     expected = 0
 
     proc = run_command(command="poetry install", work_dir=proj_dir)
-    assert proc.returncode == expected, proc.stdout
+    # Poetry prints errors to stdout instead of stderr.
+    assert proc.returncode == expected, proc.stdout.decode("utf-8")
 
     proc = run_command(command="poetry run pytest", work_dir=proj_dir)
-    assert proc.returncode == expected, proc.stdout
+    # Pytest prints errors to stdout instead of stderr.
+    assert proc.returncode == expected, proc.stdout.decode("utf-8")
 
 
 @pytest.mark.parametrize(
