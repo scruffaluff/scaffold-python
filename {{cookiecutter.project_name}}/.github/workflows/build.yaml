@@ -5,13 +5,10 @@
 
 name: build
 
+# Make workflow run for any pull requests made or commits pushed.
 on:
-  push:
-    branches:
-      - develop
-      - feature/*
-      - main
-      - master
+  - pull_request
+  - push
 
 jobs:
   lint:
@@ -39,7 +36,7 @@ jobs:
         with:
           path: .venv
           key: >-
-            {{ "python-3.9_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }}" }}
+            {% raw -%} python-3.9_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip poetry setuptools wheel
@@ -54,30 +51,31 @@ jobs:
           poetry run mypy examples/ scripts/ src/ tests/
 
   test:
-    name: {{ "Run test suite for ${{ matrix.os }}" }}
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
-        python: [3.6, 3.7, 3.8, 3.9]
-    runs-on: {{ "${{ matrix.os }}" }}
+    # GitHub contains function does not support literal arrays. For more
+    # information, visit
+    # https://github.community/t/passing-an-array-literal-to-contains-function-causes-syntax-error/17213.
+    if: >-
+      {% raw -%} ${{ contains(fromJson('["refs/head/develop", "refs/head/main",
+      "refs/head/master"]'), github.ref) }} {%- endraw %}
+    name: Run test suite for Python 3.9 on Ubuntu
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
         uses: actions/checkout@v2
       - name: Install Python interpreter
         uses: actions/setup-python@v2
         with:
-          python-version: {{ "${{ matrix.python }}" }}
+          python-version: 3.9
       - name: Cache Python packages
         uses: actions/cache@v2
         with:
           path: .venv
           key: >-
-            {{ "python-${{ matrix.python }}_${{ runner.os }}_poetry-${{
-            hashFiles('poetry.lock') }}" }}
-      - name: Install Python dependencies
+            {% raw -%} python-3.9_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
+      - name: Install Python packages
         run: |
           python -m pip install --upgrade pip poetry setuptools wheel
           poetry config virtualenvs.in-project true
           poetry install -v
-      - name: Build and test code
-        run: poetry run pytest --cov
+      - name: Run test suite
+        run: poetry run pytest

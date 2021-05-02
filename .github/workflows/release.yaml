@@ -5,7 +5,7 @@
 
 name: release
 
-# Make workflow run only for pushed SemVer tags.
+# Trigger workflow on SemVer compatible tags.
 on:
   push:
     tags:

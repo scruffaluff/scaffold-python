@@ -5,7 +5,7 @@
 
 name: pages
 
-# Make workflow run only for commits pushed to the main and master branches.
+# Trigger workflow on push to the main and master branches.
 on:
   push:
     branches:
@@ -28,7 +28,7 @@ jobs:
         with:
           path: .venv
           key: >-
-            {{ "python-3.9_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }}" }}
+            {% raw -%} python-3.9_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
       - name: Install Python packages
         run: |
           python -m pip install --upgrade pip poetry setuptools wheel
@@ -39,5 +39,5 @@ jobs:
       - name: Publish documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: {{ "${{ secrets.GITHUB_TOKEN }}" }}
+          github_token: {% raw -%} ${{ secrets.GITHUB_TOKEN }} {%- endraw %}
           publish_dir: site

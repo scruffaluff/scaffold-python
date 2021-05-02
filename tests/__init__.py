@@ -167,7 +167,7 @@ def test_prettier_format(cookies: plugin.Cookies) -> None:
     proj_dir = pathlib.Path(res.project)
 
     proc = run_command(command="prettier --check .", work_dir=proj_dir)
-    assert proc.returncode == 0, proc.stdout
+    assert proc.returncode == 0, proc.stderr.decode("utf-8")
 
 
 @pytest.mark.skipif(

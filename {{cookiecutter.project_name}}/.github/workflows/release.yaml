@@ -5,14 +5,41 @@
 
 name: release
 
-# Make workflow run only for pushed SemVer compatible tags.
+# Trigger workflow on SemVer compatible tags.
 on:
   push:
     tags:
       - "v?[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
+  release:
+    name: Get Git tag and make GitHub release
+    runs-on: ubuntu-latest
+    outputs:
+      tag: {% raw -%} ${{ steps.extract_tag.outputs.tag }} {%- endraw %}
+      upload_url: {% raw -%}  ${{ steps.create_release.outputs.upload_url }} {%- endraw %}
+    steps:
+      - name: Extract tag
+        id: extract_tag
+        shell: bash
+        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/tags/})"
+      - name: Checkout code repository
+        uses: actions/checkout@v2
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: {% raw -%} ${{ secrets.GITHUB_TOKEN }} {%- endraw %}
+        with:
+          tag_name: {% raw -%} ${{ github.ref }} {%- endraw %}
+          release_name: {{ cookiecutter.project_name }} {% raw -%} ${{ steps.extract_tag.outputs.tag }} {%- endraw %}
+          body: >-
+            See the
+            [changelog]({{ cookiecutter.project_repopage }}/blob/{% raw -%} ${{
+            steps.extract_tag.outputs.tag }} {%- endraw %}/CHANGELOG.md) for more information.
+
   package:
+    name: Build and publish Python package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
@@ -24,12 +51,26 @@ jobs:
       - name: Install Python packages
         run: |
           python -m pip install --upgrade pip poetry setuptools wheel
-          poetry config virtualenvs.in-project true
-          poetry install -v
-      - name: Build package
+          poetry install --no-dev
+      - name: Build Python package
         run: poetry build
+      - name: Upload package to GitHub release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: {% raw -%} ${{ secrets.GITHUB_TOKEN }} {%- endraw %}
+        with:
+          upload_url: {% raw -%} ${{ steps.create_release.outputs.upload_url }} {%- endraw %}
+          asset_path: >-
+            dist/{{ cookiecutter.project_slug }} {%- raw -%} -${{ steps.extract_tag.outputs.tag
+            }}-py3-none-any.whl {%- endraw %}
+          asset_name: >-
+            {{ cookiecutter.project_slug }} {%- raw -%} -${{ steps.extract_tag.outputs.tag
+            }}-py3-none-any.whl {%- endraw %}
+          asset_content_type: application/octet-stream
+      # Use PyPI publish action over Poetry publish to prevent PyPI password
+      # from being printed in CI logs.
       - name: Upload package to PyPI
         uses: pypa/gh-action-pypi-publish@v1
         with:
           user: __token__
-          password: {{ "${{ secrets.PYPI_PASSWORD }}" }}
+          password: {% raw -%} ${{ secrets.PYPI_PASSWORD }} {%- endraw %}
