@@ -58,7 +58,9 @@ def test_flake8_lints(baked_project: plugin.Result) -> None:
     src_dir = proj_dir / "src"
     test_dir = proj_dir / "tests"
 
-    proc = run_command(command=f"flake8 {src_dir} {test_dir}", work_dir=proj_dir)
+    proc = run_command(
+        command=f"flake8 {src_dir} {test_dir}", work_dir=proj_dir
+    )
 
     expected = 0
     actual = proc.returncode

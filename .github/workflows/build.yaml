@@ -53,7 +53,7 @@ jobs:
     # information, visit
     # https://github.community/t/passing-an-array-literal-to-contains-function-causes-syntax-error/17213.
     if: >-
-      ${{ contains(fromJson('["refs/head/develop", "refs/head/main",
+      ${{ !contains(fromJson('["refs/head/develop", "refs/head/main",
       "refs/head/master"]'), github.ref) }}
     name: Run test suite for Python 3.9 on Ubuntu
     runs-on: ubuntu-latest
