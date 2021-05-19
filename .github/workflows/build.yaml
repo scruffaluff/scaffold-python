@@ -7,8 +7,12 @@ name: build
 
 # Trigger workflow on any push or pull request.
 on:
-  - pull_request
-  - push
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - "**"
 
 jobs:
   lint:
@@ -44,24 +48,24 @@ jobs:
           poetry run black --check .
           poetry run flake8 hooks/ tests/
           poetry run mypy hooks/ tests/
-          mkdir docs \
-            && cp README.md docs/index.md \
-            && poetry run mkdocs build --strict
+          mkdir docs
+          cp README.md docs/index.md
+          poetry run mkdocs build --strict
 
   test:
     # GitHub contains function does not support literal arrays. For more
     # information, visit
     # https://github.community/t/passing-an-array-literal-to-contains-function-causes-syntax-error/17213.
     if: >-
-      ${{ !contains(fromJson('["refs/head/develop", "refs/head/main",
-      "refs/head/master"]'), github.ref) }}
+      ${{ !contains(fromJson('["refs/heads/develop", "refs/heads/main",
+      "refs/heads/master"]'), github.ref) }}
     name: Run test suite for Python 3.9 on Ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
         uses: actions/checkout@v2
       - name: Install Node interpreter
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 16
       - name: Install Prettier formatter

@@ -5,10 +5,14 @@
 
 name: build
 
-# Make workflow run for any pull requests made or commits pushed.
+# Trigger workflow on any push or pull request.
 on:
-  - pull_request
-  - push
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - "**"
 
 jobs:
   lint:
@@ -19,7 +23,7 @@ jobs:
         uses: actions/checkout@v2
       {%- if cookiecutter.prettier_support == "yes" %}
       - name: Install Node interpreter
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 16
       - name: Install Prettier formatter
@@ -37,12 +41,12 @@ jobs:
           path: .venv
           key: >-
             {% raw -%} python-3.9_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
-      - name: Install Python dependencies
+      - name: Install Python packages
         run: |
           python -m pip install --upgrade pip poetry setuptools wheel
           poetry config virtualenvs.in-project true
           poetry install -v
-      - name: Static lint code
+      - name: Run linter checks
         run: |
           poetry run bandit -ilr src/
           poetry run black --check .
@@ -55,8 +59,8 @@ jobs:
     # information, visit
     # https://github.community/t/passing-an-array-literal-to-contains-function-causes-syntax-error/17213.
     if: >-
-      {% raw -%} ${{ contains(fromJson('["refs/head/develop", "refs/head/main",
-      "refs/head/master"]'), github.ref) }} {%- endraw %}
+      {% raw -%} ${{ !contains(fromJson('["refs/heads/develop", "refs/heads/main",
+      "refs/heads/master"]'), github.ref) }} {%- endraw %}
     name: Run test suite for Python 3.9 on Ubuntu
     runs-on: ubuntu-latest
     steps:
