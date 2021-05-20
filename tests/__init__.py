@@ -205,7 +205,6 @@ def test_pytest_test(cookies: plugin.Cookies) -> None:
             ["src/mock/__main__.py"],
         ),
         ({"prettier_support": "no"}, [".prettierignore", ".prettierrc.yaml"]),
-        ({"pypi_support": "no"}, [".github/workflows/package.yaml"]),
     ],
 )
 def test_removed_paths(
@@ -239,6 +238,64 @@ def test_scaffold(context: Dict[str, Any], cookies: plugin.Cookies) -> None:
 
     res = cookies.bake(extra_context=context)
     assert res.exit_code == 0
+
+
+@pytest.mark.parametrize(
+    "context,paths,text,exist",
+    [
+        (
+            {"githost": "gitlab", "prettier_support": "yes"},
+            [".gitlab-ci.yml"],
+            "prettier",
+            True,
+        ),
+        (
+            {"githost": "github", "prettier_support": "yes"},
+            [".github/workflows/build.yaml"],
+            "prettier",
+            True,
+        ),
+        (
+            {"githost": "gitlab", "prettier_support": "no"},
+            [".gitlab-ci.yml"],
+            "prettier",
+            False,
+        ),
+        (
+            {"githost": "github", "prettier_support": "no"},
+            [".github/workflows/build.yaml"],
+            "prettier",
+            False,
+        ),
+        (
+            {"githost": "github", "pypi_support": "yes"},
+            [".github/workflows/release.yaml"],
+            "pypi",
+            True,
+        ),
+        (
+            {"githost": "github", "pypi_support": "no"},
+            [".github/workflows/release.yaml"],
+            "pypi",
+            False,
+        ),
+    ],
+)
+def test_text_existence(
+    context: Dict[str, Any],
+    paths: List[str],
+    text: str,
+    exist: bool,
+    cookies: plugin.Cookies,
+) -> None:
+    """Check for existence of text in files."""
+
+    res = cookies.bake(extra_context=context)
+
+    project_path = pathlib.Path(res.project)
+    for path in paths:
+        text_exists = text in (project_path / path).read_text()
+        assert text_exists == exist
 
 
 def test_toml_blank_lines(baked_project: plugin.Result) -> None:

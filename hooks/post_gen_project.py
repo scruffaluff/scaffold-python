@@ -21,7 +21,6 @@ PATHS: Dict[str, Union[Paths, Dict[str, Paths]]] = {
         pathlib.Path(".prettierignore"),
         pathlib.Path(".prettierrc.yaml"),
     ],
-    "pypi_support": [pathlib.Path(".github/workflows/package.yaml")],
 }
 
 

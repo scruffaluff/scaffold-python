@@ -77,7 +77,17 @@ subcontents are only generated for that chosen context.
 
 ```
 {{project_name}}
+├── .github  {githost: github}
+│   └── workflows
+│       ├── build.yaml
+|       ├── pages.yaml
+│       ├── release.yaml
+│       └── test.yaml
 ├── .dockerignore
+├── .gitignore
+├── .prettierignore  {prettier_support: yes}
+├── .prettierrc.yaml  {prettier_support: yes}
+├── CONTRIBUTING.md
 ├── docs
 |   ├── api
 │   |   └── index.md
@@ -91,17 +101,9 @@ subcontents are only generated for that chosen context.
 │       └── index.md
 ├── examples
 │   └── __init__.py
-├── .github  {githost: github}
-│   └── workflows
-│       ├── build.yaml
-│       ├── package.yaml
-│       └── pages.yaml
-├── .gitignore
 ├── LICENSE.md
 ├── mkdocs.yml
 ├── mypy.ini
-├── package.json  {prettier_support: yes}
-├── .prettierignore  {prettier_support: yes}
 ├── pyproject.toml
 ├── README.md
 ├── scripts
