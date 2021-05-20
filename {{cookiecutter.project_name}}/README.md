@@ -5,7 +5,7 @@
 ![](https://img.shields.io/pypi/pyversions/{{ cookiecutter.project_name }}.svg)
 {%- endif -%}
 {% if cookiecutter.githost != "github" -%}
-![]({{ cookiecutter.project_repopage }}/workflows/build/badge.svg)
+![]({{ cookiecutter.project_repository }}/workflows/build/badge.svg)
 {%- endif -%}
 ![](https://img.shields.io/badge/code%20style-black-000000.svg)
 ![](https://img.shields.io/{{ cookiecutter.githost }}/repo-size/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
@@ -13,9 +13,9 @@
 
 ---
 
-**Documentation**: {{ cookiecutter.project_docpage }}
+**Documentation**: {{ cookiecutter.project_homepage }}
 
-**Source Code**: {{ cookiecutter.project_repopage }}
+**Source Code**: {{ cookiecutter.project_repository }}
 
 ---
 

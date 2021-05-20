@@ -22,9 +22,9 @@
 **/__pycache__/
 **/.ipynb_checkpoints/
 **/*.egg-info/
+/docs/api/cli.md
+/docs/index.md
 dist/
-docs/index.md
-docs/api/cli.md
 environment.yml
 f1
 flit.ini

@@ -35,9 +35,9 @@ jobs:
           release_name: {{ cookiecutter.project_name }} {% raw -%} ${{ steps.extract_tag.outputs.tag }} {%- endraw %}
           body: >-
             See the
-            [changelog]({{ cookiecutter.project_repopage }}/blob/{% raw -%} ${{
+            [changelog]({{ cookiecutter.project_repository }}/blob/{% raw -%} ${{
             steps.extract_tag.outputs.tag }} {%- endraw %}/CHANGELOG.md) for more information.
-
+{% if cookiecutter.pypi_support == "yes" %}
   package:
     name: Build and publish Python package
     runs-on: ubuntu-latest
@@ -74,3 +74,4 @@ jobs:
         with:
           user: __token__
           password: {% raw -%} ${{ secrets.PYPI_PASSWORD }} {%- endraw %}
+{% endif -%}

@@ -15,9 +15,9 @@
 **/.ipynb_checkpoints/
 **/*.egg-info/
 **/nohup.out
+/docs/index.md
+/docs/src/user/cli.md
 dist/
-docs/index.md
-docs/src/user/cli.md
 node_modules/
 package-lock.json
 site/
