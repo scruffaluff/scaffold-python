@@ -1,13 +1,15 @@
 # {{ cookiecutter.project_name }}
-
-{% if cookiecutter.pypi_support != "yes" -%}
+{% if cookiecutter.pypi_support == "yes" %}
 ![](https://img.shields.io/pypi/v/{{ cookiecutter.project_name }})
-![](https://img.shields.io/pypi/pyversions/{{ cookiecutter.project_name }}.svg)
+![](https://img.shields.io/pypi/pyversions/{{ cookiecutter.project_name }})
 {%- endif -%}
-{% if cookiecutter.githost != "github" -%}
-![]({{ cookiecutter.project_repository }}/workflows/build/badge.svg)
-{%- endif -%}
-![](https://img.shields.io/badge/code%20style-black-000000.svg)
+{%- if cookiecutter.githost == "github" %}
+![](https://img.shields.io/github/workflow/status/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }}/build)
+{% endif -%}
+{%- if cookiecutter.githost == "gitlab" %}
+![](https://img.shields.io/gitlab/pipeline/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }}/master)
+{% endif -%}
+![](https://img.shields.io/badge/code%20style-black-000000)
 ![](https://img.shields.io/{{ cookiecutter.githost }}/repo-size/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
 ![](https://img.shields.io/{{ cookiecutter.githost }}/license/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
 

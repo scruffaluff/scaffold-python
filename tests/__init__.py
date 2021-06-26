@@ -14,6 +14,28 @@ from pytest_cookies import plugin
 from tests.util import file_matches, run_command, show  # noqa: F401
 
 
+@pytest.mark.parametrize(
+    "context",
+    [
+        {"githost": "github"},
+        {"githost": "gitlab"},
+        {"pypi_support": "yes"},
+        {"pypi_support": "no"},
+    ],
+)
+def test_badges_separate_lines(
+    context: Dict[str, Any], cookies: plugin.Cookies
+) -> None:
+    """Readme files must have all badge links on separate lines."""
+
+    res = cookies.bake(extra_context=context)
+    readme = pathlib.Path(res.project) / "README.md"
+
+    regex = re.compile("img\.shields\.io")
+    for line in readme.read_text().split("\n"):
+        assert len(regex.findall(line)) < 2
+
+
 def test_black_format(baked_project: plugin.Result) -> None:
     """Generated files must pass Black format checker."""
 
@@ -276,6 +298,12 @@ def test_scaffold(context: Dict[str, Any], cookies: plugin.Cookies) -> None:
         (
             {"githost": "github", "pypi_support": "no"},
             [".github/workflows/release.yaml"],
+            "pypi",
+            False,
+        ),
+        (
+            {"githost": "github", "pypi_support": "no"},
+            ["README.md"],
             "pypi",
             False,
         ),

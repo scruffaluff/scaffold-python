@@ -76,11 +76,11 @@ pages:
   artifacts:
     paths:
       - public
-  # Makes the job only run on the master and develop branches.
+  # Makes the job only run on the main and master branches.
   rules:
-    - if: $CI_COMMIT_REF_NAME == "master"
+    - if: $CI_COMMIT_REF_NAME =~ /^(main|master)$/
       when: on_success
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(main|master)$/
       when: on_success
 
 package:
