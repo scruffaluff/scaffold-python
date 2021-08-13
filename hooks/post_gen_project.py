@@ -1,25 +1,25 @@
 """Project post-generation hooks."""
 
 
-import pathlib
+from pathlib import Path
 import shutil
 from typing import Dict, List, Union
 
 
-Paths = List[pathlib.Path]
+Paths = List[Path]
 
 
 PATHS: Dict[str, Union[Paths, Dict[str, Paths]]] = {
     "githost": {
-        "github": [pathlib.Path(".github")],
-        "gitlab": [pathlib.Path(".gitlab-ci.yml")],
+        "github": [Path(".github")],
+        "gitlab": [Path(".gitlab-ci.yml")],
     },
     "cli_support": [
-        pathlib.Path("src/{{ cookiecutter.project_slug }}/__main__.py"),
+        Path("src/{{ cookiecutter.project_slug }}/__main__.py"),
     ],
     "prettier_support": [
-        pathlib.Path(".prettierignore"),
-        pathlib.Path(".prettierrc.yaml"),
+        Path(".prettierignore"),
+        Path(".prettierrc.yaml"),
     ],
 }
 
@@ -79,7 +79,7 @@ def main() -> None:
     clean_paths(context)
 
 
-def remove_path(path: pathlib.Path) -> None:
+def remove_path(path: Path) -> None:
     """Delete file system path.
 
     Args:

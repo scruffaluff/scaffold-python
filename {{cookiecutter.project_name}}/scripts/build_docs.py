@@ -1,9 +1,10 @@
 """Copy index file and build documentation."""
 
 
-import pathlib
+from pathlib import Path
 import shutil
 import subprocess
+from subprocess import CalledProcessError
 import sys
 
 
@@ -12,12 +13,12 @@ def build_docs() -> None:
 
     try:
         subprocess.run(args="mkdocs build", shell=True, check=True)
-    except subprocess.CalledProcessError:
+    except CalledProcessError:
         print("Failed to build project documentation.", sys.stderr)
         sys.exit(1)
 
 
-def copy_index(repo_path: pathlib.Path) -> None:
+def copy_index(repo_path: Path) -> None:
     """Sync documentation index with repository README file.
 
     Args:
@@ -30,7 +31,7 @@ def copy_index(repo_path: pathlib.Path) -> None:
     shutil.copy(src=src_path, dst=dest_path)
 
 {% if cookiecutter.cli_support != "yes" %}
-def generate_cli_docs(repo_path: pathlib.Path) -> None:
+def generate_cli_docs(repo_path: Path) -> None:
     """Create documentation for the command line interface.
 
     Args:
@@ -47,7 +48,7 @@ def generate_cli_docs(repo_path: pathlib.Path) -> None:
                 check=True,
                 stdout=handle,
             )
-        except subprocess.CalledProcessError:
+        except CalledProcessError:
             print(
                 "Failed to build command line interface documentation.",
                 sys.stderr,
@@ -58,7 +59,7 @@ def generate_cli_docs(repo_path: pathlib.Path) -> None:
 def main() -> None:
     """Entrypoint for documentation building."""
 
-    repo_path = pathlib.Path(__file__).parents[1]
+    repo_path = Path(__file__).parents[1]
     copy_index(repo_path)
     {% if cookiecutter.cli_support != "yes" -%}
     generate_cli_docs(repo_path)

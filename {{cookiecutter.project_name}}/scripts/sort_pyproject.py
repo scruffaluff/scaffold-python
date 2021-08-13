@@ -1,14 +1,14 @@
 """Sort repository's pyproject.toml file."""
 
 
-import collections
-import pathlib
+from collections import OrderedDict
+from pathlib import Path
 from typing import Any, MutableMapping
 
 import toml
 
 
-def sort_nested_dict(mmap: MutableMapping[str, Any]) -> collections.OrderedDict:
+def sort_nested_dict(mmap: MutableMapping[str, Any]) -> OrderedDict:
     """Sorted nested dictionary by key.
 
     Args:
@@ -22,13 +22,13 @@ def sort_nested_dict(mmap: MutableMapping[str, Any]) -> collections.OrderedDict:
         if isinstance(val, dict):
             mmap[key] = sort_nested_dict(val)
 
-    return collections.OrderedDict(sorted(mmap.items()))
+    return OrderedDict(sorted(mmap.items()))
 
 
 def main() -> None:
     """Entrypoint for pyproject.toml file sorting."""
 
-    repo_path = pathlib.Path(__file__).parents[1]
+    repo_path = Path(__file__).parents[1]
     file_path = repo_path / "pyproject.toml"
 
     with file_path.open("r") as handle:

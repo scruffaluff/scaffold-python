@@ -5,10 +5,10 @@ named __main__.py.
 """
 
 
-import typer
+from typer import Typer
 
 
-app = typer.Typer(help="{{ cookiecutter.project_description }}")
+app = Typer(help="{{ cookiecutter.project_description }}")
 
 
 if __name__ == "__main__":
