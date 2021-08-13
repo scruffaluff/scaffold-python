@@ -3,7 +3,7 @@
 
 import contextlib
 import os
-import pathlib
+from pathlib import Path
 import re
 import subprocess
 from typing import Any, Iterator, Optional
@@ -12,43 +12,43 @@ from pytest_cookies.plugin import Result
 
 
 @contextlib.contextmanager
-def chdir(dest_dir: pathlib.Path) -> Iterator[None]:
+def chdir(dest_dir: Path) -> Iterator[None]:
     """Context manager for changing the current working directory.
 
     Args:
         dest_dir: Directory to temporarily make the current directory.
     """
 
-    src_dir = pathlib.Path.cwd()
+    # Needs to be called before try statement since current directory can change
+    # inside a context manager.
+    source_directory = Path.cwd()
 
     try:
         os.chdir(dest_dir)
         yield
     finally:
-        os.chdir(src_dir)
+        os.chdir(source_directory)
 
 
-def file_matches(bake: Result, regex_str: str) -> Iterator[pathlib.Path]:
+def file_matches(baked_project: Result, regex_str: str) -> Iterator[Path]:
     """Find all files in a directory whose name matches a regex.
 
     Args:
-        dir_path: Directory to search for files.
+        baked_project: Directory to search for files.
         regex_str: Regex string for file names to satisfy.
 
     Yields:
         Matching file paths.
     """
 
-    project_path = bake.project_path
     regex = re.compile(regex_str)
-
-    for path in project_path.rglob("*"):
+    for path in baked_project.project_path.rglob("*"):
         if path.is_file() and regex.match(path.name):
             yield path
 
 
 def run_command(
-    command: str, work_dir: Optional[pathlib.Path] = None
+    command: str, work_dir: Optional[Path] = None
 ) -> subprocess.CompletedProcess:
     """Execute shell command in another directory and capture output.
 
@@ -63,8 +63,8 @@ def run_command(
         Completed shell process information.
     """
 
-    work_dir = pathlib.Path.cwd() if work_dir is None else work_dir
-    with chdir(work_dir):
+    directory = Path.cwd() if work_dir is None else work_dir
+    with chdir(directory):
         return subprocess.run(
             command,
             stdout=subprocess.PIPE,

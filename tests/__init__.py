@@ -1,13 +1,12 @@
 """Tests for Scaffold Python."""
 
 
-import pathlib
 import re
 import sys
 from typing import Any, Dict, List
 
 import pytest
-from pytest_cookies import plugin
+from pytest_cookies.plugin import Cookies, Result
 
 # Ingoring unused import for show_match. Function is imported for convenient
 # test debugging.
@@ -24,27 +23,28 @@ from tests.util import file_matches, run_command, show  # noqa: F401
     ],
 )
 def test_badges_separate_lines(
-    context: Dict[str, Any], cookies: plugin.Cookies
+    context: Dict[str, Any], cookies: Cookies
 ) -> None:
     """Readme files must have all badge links on separate lines."""
 
-    res = cookies.bake(extra_context=context)
-    readme = res.project_path / "README.md"
+    result = cookies.bake(extra_context=context)
+    readme = result.project_path / "README.md"
 
     regex = re.compile(r"img\.shields\.io")
     for line in readme.read_text().split("\n"):
         assert len(regex.findall(line)) < 2
 
 
-def test_black_format(baked_project: plugin.Result) -> None:
+def test_black_format(baked_project: Result) -> None:
     """Generated files must pass Black format checker."""
 
-    proj_dir = baked_project.project_path
-    proc = run_command(command="black -l 80 --check .", work_dir=proj_dir)
+    process = run_command(
+        command="black -l 80 --check .", work_dir=baked_project.project_path
+    )
 
     expected = 0
-    actual = proc.returncode
-    assert actual == expected, proc.stderr.decode("utf-8")
+    actual = process.returncode
+    assert actual == expected, process.stderr.decode("utf-8")
 
 
 @pytest.mark.parametrize(
@@ -61,86 +61,84 @@ def test_black_format(baked_project: plugin.Result) -> None:
     ],
 )
 def test_existing_paths(
-    context: Dict[str, Any], paths: List[str], cookies: plugin.Cookies
+    context: Dict[str, Any], paths: List[str], cookies: Cookies
 ) -> None:
     """Check that specific paths exist after scaffolding."""
 
-    res = cookies.bake(extra_context=context)
-
-    project_path = res.project_path
+    result = cookies.bake(extra_context=context)
     for path in paths:
-        file_path = project_path / path
+        file_path = result.project_path / path
         assert file_path.exists()
 
 
-def test_flake8_lints(baked_project: plugin.Result) -> None:
+def test_flake8_lints(baked_project: Result) -> None:
     """Generated files must pass Flake8 lints."""
 
-    proj_dir = baked_project.project_path
-    src_dir = proj_dir / "src"
-    test_dir = proj_dir / "tests"
+    src_dir = baked_project.project_path / "src"
+    test_dir = baked_project.project_path / "tests"
 
-    proc = run_command(
-        command=f"flake8 {src_dir} {test_dir}", work_dir=proj_dir
+    process = run_command(
+        command=f"flake8 {src_dir} {test_dir}",
+        work_dir=baked_project.project_path,
     )
 
     expected = 0
-    actual = proc.returncode
+    actual = process.returncode
     # Flake8 prints errors to stdout instead of stderr.
-    assert actual == expected, proc.stdout.decode("utf-8")
+    assert actual == expected, process.stdout.decode("utf-8")
 
 
 @pytest.mark.parametrize(
     "context",
     [{"project_name": "$Mock?"}],
 )
-def test_invalid_context(
-    context: Dict[str, Any], cookies: plugin.Cookies
-) -> None:
+def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
     """Check that cookiecutter rejects invalid context arguments."""
 
-    res = cookies.bake(extra_context=context)
-    assert res.exit_code == -1
+    result = cookies.bake(extra_context=context)
+    assert result.exit_code == -1
 
 
 @pytest.mark.skipif(
     sys.platform == "win32",
     reason="Poetry install command hits permission errors for temporary paths.",
 )
-def test_mkdocs_build(cookies: plugin.Cookies) -> None:
+def test_mkdocs_build(cookies: Cookies) -> None:
     """Mkdocs must be able to build documentation for baked project."""
 
-    res = cookies.bake(extra_context={})
-    proj_dir = res.project_path
+    result = cookies.bake(extra_context={})
     expected = 0
 
-    proc = run_command(command="poetry install", work_dir=proj_dir)
+    process = run_command(
+        command="poetry install", work_dir=result.project_path
+    )
     # Poetry prints errors to stdout instead of stderr.
-    assert proc.returncode == expected, proc.stdout.decode("utf-8")
+    assert process.returncode == expected, process.stdout.decode("utf-8")
 
-    proc = run_command(command="poetry run mkdocs build", work_dir=proj_dir)
-    assert proc.returncode == expected, proc.stderr.decode("utf-8")
+    process = run_command(
+        command="poetry run mkdocs build", work_dir=result.project_path
+    )
+    assert process.returncode == expected, process.stderr.decode("utf-8")
 
 
-def test_mypy_type_checks(baked_project: plugin.Result) -> None:
+def test_mypy_type_checks(baked_project: Result) -> None:
     """Generated files must pass Mypy type checks."""
 
-    proj_dir = baked_project.project_path
-    src_dir = proj_dir / "src"
-    test_dir = proj_dir / "tests"
+    src_dir = baked_project.project_path / "src"
+    test_dir = baked_project.project_path / "tests"
 
-    proc = run_command(
+    process = run_command(
         command=f"mypy --install-types --non-interactive {src_dir} {test_dir}",
-        work_dir=proj_dir,
+        work_dir=baked_project.project_path,
     )
 
     expected = 0
-    actual = proc.returncode
+    actual = process.returncode
     # Mypy prints errors to stdout instead of stderr.
-    assert actual == expected, proc.stdout.decode("utf-8")
+    assert actual == expected, process.stdout.decode("utf-8")
 
 
-def test_no_blank_lines(baked_project: plugin.Result) -> None:
+def test_no_blank_lines(baked_project: Result) -> None:
     """Project files do not have whitespace only lines."""
 
     regex = re.compile(r"^\s+$")
@@ -152,7 +150,7 @@ def test_no_blank_lines(baked_project: plugin.Result) -> None:
             assert match is None, error_msg.format(path, idx, line)
 
 
-def test_no_contiguous_blank_lines(baked_project: plugin.Result) -> None:
+def test_no_contiguous_blank_lines(baked_project: Result) -> None:
     """Project files do not have subsequent empty lines."""
 
     regex = re.compile(r"\n\s*\n\s*\n")
@@ -163,7 +161,7 @@ def test_no_contiguous_blank_lines(baked_project: plugin.Result) -> None:
         assert match is None, f"File {path} has contiguous blank lines."
 
 
-def test_no_starting_blank_line(baked_project: plugin.Result) -> None:
+def test_no_starting_blank_line(baked_project: Result) -> None:
     """Check that generated files do not start with a blank line."""
 
     regex = re.compile(r"^\s*$")
@@ -172,7 +170,7 @@ def test_no_starting_blank_line(baked_project: plugin.Result) -> None:
         assert not regex.match(text), f"File {path} begins with a blank line."
 
 
-def test_no_trailing_blank_line(baked_project: plugin.Result) -> None:
+def test_no_trailing_blank_line(baked_project: Result) -> None:
     """Check that generated files do not have a trailing blank line."""
 
     regex = re.compile(r"\n\s*$")
@@ -190,34 +188,37 @@ def test_no_trailing_blank_line(baked_project: plugin.Result) -> None:
     returns nonzero exit codes on success for MacOS.
     """,
 )
-def test_prettier_format(cookies: plugin.Cookies) -> None:
+def test_prettier_format(cookies: Cookies) -> None:
     """Generated files must pass Prettier format checker."""
 
-    res = cookies.bake(extra_context={})
-    proj_dir = res.project_path
+    result = cookies.bake(extra_context={})
+    proj_dir = result.project_path
 
-    proc = run_command(command="prettier --check .", work_dir=proj_dir)
-    assert proc.returncode == 0, proc.stderr.decode("utf-8")
+    process = run_command(command="prettier --check .", work_dir=proj_dir)
+    assert process.returncode == 0, process.stderr.decode("utf-8")
 
 
 @pytest.mark.skipif(
     sys.platform == "win32",
     reason="Poetry install command hits permission errors for temporary paths.",
 )
-def test_pytest_test(cookies: plugin.Cookies) -> None:
+def test_pytest_test(cookies: Cookies) -> None:
     """Generated files must pass Pytest unit tests."""
 
-    res = cookies.bake(extra_context={})
-    proj_dir = res.project_path
+    result = cookies.bake(extra_context={})
     expected = 0
 
-    proc = run_command(command="poetry install", work_dir=proj_dir)
+    process = run_command(
+        command="poetry install", work_dir=result.project_path
+    )
     # Poetry prints errors to stdout instead of stderr.
-    assert proc.returncode == expected, proc.stdout.decode("utf-8")
+    assert process.returncode == expected, process.stdout.decode("utf-8")
 
-    proc = run_command(command="poetry run pytest", work_dir=proj_dir)
+    process = run_command(
+        command="poetry run pytest", work_dir=result.project_path
+    )
     # Pytest prints errors to stdout instead of stderr.
-    assert proc.returncode == expected, proc.stdout.decode("utf-8")
+    assert process.returncode == expected, process.stdout.decode("utf-8")
 
 
 @pytest.mark.parametrize(
@@ -233,15 +234,13 @@ def test_pytest_test(cookies: plugin.Cookies) -> None:
     ],
 )
 def test_removed_paths(
-    context: Dict[str, Any], paths: List[str], cookies: plugin.Cookies
+    context: Dict[str, Any], paths: List[str], cookies: Cookies
 ) -> None:
     """Check that specific paths are removed after scaffolding."""
 
-    res = cookies.bake(extra_context=context)
-
-    project_path = res.project_path
+    result = cookies.bake(extra_context=context)
     for path in paths:
-        remove_path = project_path / path
+        remove_path = result.project_path / path
         assert not remove_path.exists()
 
 
@@ -258,11 +257,11 @@ def test_removed_paths(
         {"pypi_support": "no"},
     ],
 )
-def test_scaffold(context: Dict[str, Any], cookies: plugin.Cookies) -> None:
+def test_scaffold(context: Dict[str, Any], cookies: Cookies) -> None:
     """Check that various configurations generate successfully."""
 
-    res = cookies.bake(extra_context=context)
-    assert res.exit_code == 0
+    result = cookies.bake(extra_context=context)
+    assert result.exit_code == 0
 
 
 @pytest.mark.parametrize(
@@ -317,19 +316,17 @@ def test_text_existence(
     paths: List[str],
     text: str,
     exist: bool,
-    cookies: plugin.Cookies,
+    cookies: Cookies,
 ) -> None:
     """Check for existence of text in files."""
 
-    res = cookies.bake(extra_context=context)
-
-    project_path = res.project_path
+    result = cookies.bake(extra_context=context)
     for path in paths:
-        text_exists = text in (project_path / path).read_text()
+        text_exists = text in (result.project_path / path).read_text()
         assert text_exists == exist
 
 
-def test_toml_blank_lines(baked_project: plugin.Result) -> None:
+def test_toml_blank_lines(baked_project: Result) -> None:
     """Check that TOML files do not have blank lines not followed by a [."""
 
     regex = re.compile(r"\n\s*\n[^[]")

@@ -3,7 +3,7 @@
 
 from _pytest.fixtures import SubRequest
 import pytest
-from pytest_cookies import plugin
+from pytest_cookies.plugin import Cookies, Result
 
 
 @pytest.fixture(
@@ -22,9 +22,7 @@ from pytest_cookies import plugin
         {"pypi_support": "yes"},
     ],
 )
-def baked_project(
-    cookies: plugin.Cookies, request: SubRequest
-) -> plugin.Result:
+def baked_project(cookies: Cookies, request: SubRequest) -> Result:
     """Cookiecutter projects baked from various parameters."""
 
     return cookies.bake(extra_context=request.param)
