@@ -29,9 +29,9 @@ def test_badges_separate_lines(
     """Readme files must have all badge links on separate lines."""
 
     res = cookies.bake(extra_context=context)
-    readme = pathlib.Path(res.project) / "README.md"
+    readme = res.project_path / "README.md"
 
-    regex = re.compile("img\.shields\.io")
+    regex = re.compile(r"img\.shields\.io")
     for line in readme.read_text().split("\n"):
         assert len(regex.findall(line)) < 2
 
@@ -39,7 +39,7 @@ def test_badges_separate_lines(
 def test_black_format(baked_project: plugin.Result) -> None:
     """Generated files must pass Black format checker."""
 
-    proj_dir = pathlib.Path(baked_project.project)
+    proj_dir = baked_project.project_path
     proc = run_command(command="black -l 80 --check .", work_dir=proj_dir)
 
     expected = 0
@@ -67,7 +67,7 @@ def test_existing_paths(
 
     res = cookies.bake(extra_context=context)
 
-    project_path = pathlib.Path(res.project)
+    project_path = res.project_path
     for path in paths:
         file_path = project_path / path
         assert file_path.exists()
@@ -76,7 +76,7 @@ def test_existing_paths(
 def test_flake8_lints(baked_project: plugin.Result) -> None:
     """Generated files must pass Flake8 lints."""
 
-    proj_dir = pathlib.Path(baked_project.project)
+    proj_dir = baked_project.project_path
     src_dir = proj_dir / "src"
     test_dir = proj_dir / "tests"
 
@@ -111,7 +111,7 @@ def test_mkdocs_build(cookies: plugin.Cookies) -> None:
     """Mkdocs must be able to build documentation for baked project."""
 
     res = cookies.bake(extra_context={})
-    proj_dir = pathlib.Path(res.project)
+    proj_dir = res.project_path
     expected = 0
 
     proc = run_command(command="poetry install", work_dir=proj_dir)
@@ -125,11 +125,14 @@ def test_mkdocs_build(cookies: plugin.Cookies) -> None:
 def test_mypy_type_checks(baked_project: plugin.Result) -> None:
     """Generated files must pass Mypy type checks."""
 
-    proj_dir = pathlib.Path(baked_project.project)
+    proj_dir = baked_project.project_path
     src_dir = proj_dir / "src"
     test_dir = proj_dir / "tests"
 
-    proc = run_command(command=f"mypy {src_dir} {test_dir}", work_dir=proj_dir)
+    proc = run_command(
+        command=f"mypy --install-types --non-interactive {src_dir} {test_dir}",
+        work_dir=proj_dir,
+    )
 
     expected = 0
     actual = proc.returncode
@@ -191,7 +194,7 @@ def test_prettier_format(cookies: plugin.Cookies) -> None:
     """Generated files must pass Prettier format checker."""
 
     res = cookies.bake(extra_context={})
-    proj_dir = pathlib.Path(res.project)
+    proj_dir = res.project_path
 
     proc = run_command(command="prettier --check .", work_dir=proj_dir)
     assert proc.returncode == 0, proc.stderr.decode("utf-8")
@@ -205,7 +208,7 @@ def test_pytest_test(cookies: plugin.Cookies) -> None:
     """Generated files must pass Pytest unit tests."""
 
     res = cookies.bake(extra_context={})
-    proj_dir = pathlib.Path(res.project)
+    proj_dir = res.project_path
     expected = 0
 
     proc = run_command(command="poetry install", work_dir=proj_dir)
@@ -236,7 +239,7 @@ def test_removed_paths(
 
     res = cookies.bake(extra_context=context)
 
-    project_path = pathlib.Path(res.project)
+    project_path = res.project_path
     for path in paths:
         remove_path = project_path / path
         assert not remove_path.exists()
@@ -320,7 +323,7 @@ def test_text_existence(
 
     res = cookies.bake(extra_context=context)
 
-    project_path = pathlib.Path(res.project)
+    project_path = res.project_path
     for path in paths:
         text_exists = text in (project_path / path).read_text()
         assert text_exists == exist

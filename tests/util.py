@@ -39,7 +39,7 @@ def file_matches(bake: Result, regex_str: str) -> Iterator[pathlib.Path]:
         Matching file paths.
     """
 
-    project_path = pathlib.Path(bake.project)
+    project_path = bake.project_path
     regex = re.compile(regex_str)
 
     for path in project_path.rglob("*"):

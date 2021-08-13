@@ -2,22 +2,22 @@
 #
 # For more information, visit https://git-scm.com/docs/gitignore.
 
+__pycache__/
 .coverage
 .DS_Store
 .env
+.ipynb_checkpoints/
 .mypy_cache/
 .pytest_cache/
 .tox/
 .venv/
 .vscode/
+*.egg-info/
 *.pyc
-**/__pycache__/
-**/.ipynb_checkpoints/
-**/*.egg-info/
-**/nohup.out
 /docs/index.md
 /docs/src/user/cli.md
 dist/
 node_modules/
+nohup.out
 package-lock.json
 site/

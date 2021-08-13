@@ -40,7 +40,7 @@ lint:
     - poetry run black --check .
     - poetry run python scripts/build_docs.py
     - poetry run flake8 examples/ scripts/ src/ tests/
-    - poetry run mypy examples/ scripts/ src/ tests/
+    - poetry run mypy --install-types --non-interactive examples/ scripts/ src/ tests/
 
 python:3.6:
   image: "python:3.6"

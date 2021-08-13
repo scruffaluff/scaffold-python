@@ -47,7 +47,7 @@ jobs:
         run: |
           poetry run black --check .
           poetry run flake8 hooks/ tests/
-          poetry run mypy hooks/ tests/
+          poetry run mypy --install-types --non-interactive hooks/ tests/
           mkdir docs
           cp README.md docs/index.md
           poetry run mkdocs build --strict
