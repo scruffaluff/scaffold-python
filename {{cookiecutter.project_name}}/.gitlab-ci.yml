@@ -42,12 +42,6 @@ lint:
     - poetry run flake8 examples/ scripts/ src/ tests/
     - poetry run mypy --install-types --non-interactive examples/ scripts/ src/ tests/
 
-python:3.6:
-  image: "python:3.6"
-  stage: build
-  script:
-    - poetry run pytest --cov
-
 python:3.7:
   image: "python:3.7"
   stage: build
@@ -62,6 +56,12 @@ python:3.8:
 
 python:3.9:
   image: "python:3.9"
+  stage: build
+  script:
+    - poetry run pytest --cov
+
+python:3.10:
+  image: "python:3.10"
   stage: build
   script:
     - poetry run pytest --cov

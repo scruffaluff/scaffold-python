@@ -9,6 +9,7 @@
 .env
 .hypothesis/
 .mypy_cache/
+.pdbrc
 .pytest_cache/
 .python-version
 .tox/
@@ -24,6 +25,7 @@
 **/*.egg-info/
 /docs/api/cli.md
 /docs/index.md
+/tmp/
 dist/
 environment.yml
 f1

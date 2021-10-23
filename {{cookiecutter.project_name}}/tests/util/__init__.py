@@ -15,7 +15,6 @@ def find_test_files(test_dir: pathlib.Path) -> Iterator[pathlib.Path]:
     Returns:
         Test paths relative to test_dir.
     """
-
     regex = re.compile(r"^(__init__|test_.*).py$")
     for file_path in test_dir.rglob("*"):
         if regex.match(file_path.name):
@@ -34,6 +33,5 @@ def remove_name_prefix(path: pathlib.Path, prefix: str) -> pathlib.Path:
     Returns:
         Path without name prefix.
     """
-
     name = path.name[path.name.startswith(prefix) and len(prefix) :]
     return path.parent / name

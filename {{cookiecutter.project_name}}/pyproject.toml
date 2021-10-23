@@ -31,7 +31,7 @@ description = "{{ cookiecutter.project_description }}"
 documentation = "{{ cookiecutter.project_homepage }}"
 homepage = "{{ cookiecutter.project_repository }}"
 keywords = []
-{%- if cookiecutter.license != "MIT" %}
+{%- if cookiecutter.license == "MIT" %}
 license = "MIT"
 {%- endif %}
 name = "{{ cookiecutter.project_name }}"
@@ -39,34 +39,32 @@ readme = "README.md"
 version = "{{ cookiecutter.project_version }}"
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7.0"
 {%- if cookiecutter.cli_support == "yes" %}
-rich = "10.7.0"
-typer = "^0.3.2"
+typer = "^0.3.0"
 {%- endif %}
-typing-extensions = "^3.10.0.0"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.0"
-black = "^21.7b0"
-coverage = { version = "^5.5.0", extras = ["toml"] }
-flake8 = "^3.9.2"
-flake8-bugbear = "^21.4.3"
+black = "^21.9b0"
+coverage = { version = "^6.0.0", extras = ["toml"] }
+flake8 = "^4.0.0"
+flake8-bugbear = "^21.9.0"
 flake8-docstrings = "^1.6.0"
 flake8-import-order = "^0.18.1"
 mccabe = "^0.6.1"
-mkdocs = "^1.2.2"
-mkdocs-material = "^7.2.4"
-mkdocstrings = "^0.15.2"
+mkdocs = "^1.2.0"
+mkdocs-material = "^7.3.0"
+mkdocstrings = "^0.16.2"
 mypy = "^0.910"
 pdbpp = "^0.10.3"
-py-spy = "^0.3.8"
-pymdown-extensions = "^8.2.0"
-pytest = "^6.2.4"
-pytest-cov = "^2.12.1"
-pytest-mock = "^3.6.1"
+py-spy = "^0.3.0"
+pymdown-extensions = "^9.0.0"
+pytest = "^6.2.0"
+pytest-cov = "^3.0.0"
+pytest-mock = "^3.6.0"
 toml = "^0.10.2"
-tox = "^3.24.1"
+tox = "^3.24.0"
 {% if cookiecutter.cli_support == "yes" -%}
 typer-cli = "^0.0.12"
 

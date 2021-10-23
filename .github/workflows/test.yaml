@@ -26,12 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        python: [3.6, 3.7, 3.8, 3.9]
-        exclude:
-          # The Windows GitHub runner's Python 3.6 encounters permission issues
-          # when installing packages with PIP.
-          - os: windows-latest
-            python: 3.6
+        python: ["3.7", "3.8", "3.9", "3.10"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code repository

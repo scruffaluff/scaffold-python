@@ -14,7 +14,6 @@ REPO_PATH = pathlib.Path(__file__).parents[1]
 
 def test_matching_structure() -> None:
     """Test directories match structure of src directory."""
-
     src_path = REPO_PATH / "src/{{ cookiecutter.project_slug }}"
     test_path = REPO_PATH / "tests"
 
@@ -35,7 +34,6 @@ def test_matching_structure() -> None:
 
 def test_version() -> None:
     """Check that all the version tags are in sync."""
-
     toml_path = REPO_PATH / "pyproject.toml"
     expected = toml.load(toml_path)["tool"]["poetry"]["version"]
 

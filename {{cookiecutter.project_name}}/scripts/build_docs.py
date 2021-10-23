@@ -10,7 +10,6 @@ import sys
 
 def build_docs() -> None:
     """Build documentation with MkDocs."""
-
     try:
         subprocess.run(args="mkdocs build", shell=True, check=True)
     except CalledProcessError:
@@ -24,7 +23,6 @@ def copy_index(repo_path: Path) -> None:
     Args:
         repo_path: Repository root path.
     """
-
     src_path = repo_path / "README.md"
     dest_path = repo_path / "docs/index.md"
 
@@ -37,7 +35,6 @@ def generate_cli_docs(repo_path: Path) -> None:
     Args:
         repo_path: Repository root path.
     """
-
     cli_doc = repo_path / "docs/src/user/cli.md"
 
     with cli_doc.open("w") as handle:
@@ -58,7 +55,6 @@ def generate_cli_docs(repo_path: Path) -> None:
 {% endif %}
 def main() -> None:
     """Entrypoint for documentation building."""
-
     repo_path = Path(__file__).parents[1]
     copy_index(repo_path)
     {% if cookiecutter.cli_support != "yes" -%}

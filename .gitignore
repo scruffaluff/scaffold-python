@@ -8,6 +8,7 @@ __pycache__/
 .env
 .ipynb_checkpoints/
 .mypy_cache/
+.pdbrc
 .pytest_cache/
 .tox/
 .venv/
@@ -16,6 +17,7 @@ __pycache__/
 *.pyc
 /docs/index.md
 /docs/src/user/cli.md
+/tmp/
 dist/
 node_modules/
 nohup.out
