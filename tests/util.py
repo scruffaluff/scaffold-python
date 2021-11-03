@@ -18,7 +18,6 @@ def chdir(dest_dir: Path) -> Iterator[None]:
     Args:
         dest_dir: Directory to temporarily make the current directory.
     """
-
     # Needs to be called before try statement since current directory can change
     # inside a context manager.
     source_directory = Path.cwd()
@@ -40,7 +39,6 @@ def file_matches(baked_project: Result, regex_str: str) -> Iterator[Path]:
     Yields:
         Matching file paths.
     """
-
     regex = re.compile(regex_str)
     for path in baked_project.project_path.rglob("*"):
         if path.is_file() and regex.match(path.name):
@@ -62,7 +60,6 @@ def run_command(
     Returns:
         Completed shell process information.
     """
-
     directory = Path.cwd() if work_dir is None else work_dir
     with chdir(directory):
         return subprocess.run(
@@ -81,7 +78,6 @@ def show(match: Any) -> None:
         match: Regex match.
         text: Text parsed by regular expression.
     """
-
     text = match.string
     start, stop = match.span()
 

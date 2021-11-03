@@ -26,7 +26,6 @@ def test_badges_separate_lines(
     context: Dict[str, Any], cookies: Cookies
 ) -> None:
     """Readme files must have all badge links on separate lines."""
-
     result = cookies.bake(extra_context=context)
     readme = result.project_path / "README.md"
 
@@ -37,7 +36,6 @@ def test_badges_separate_lines(
 
 def test_black_format(baked_project: Result) -> None:
     """Generated files must pass Black format checker."""
-
     process = run_command(
         command="black -l 80 --check .", work_dir=baked_project.project_path
     )
@@ -64,7 +62,6 @@ def test_existing_paths(
     context: Dict[str, Any], paths: List[str], cookies: Cookies
 ) -> None:
     """Check that specific paths exist after scaffolding."""
-
     result = cookies.bake(extra_context=context)
     for path in paths:
         file_path = result.project_path / path
@@ -73,7 +70,6 @@ def test_existing_paths(
 
 def test_flake8_lints(baked_project: Result) -> None:
     """Generated files must pass Flake8 lints."""
-
     src_dir = baked_project.project_path / "src"
     test_dir = baked_project.project_path / "tests"
 
@@ -88,13 +84,42 @@ def test_flake8_lints(baked_project: Result) -> None:
     assert actual == expected, process.stdout.decode("utf-8")
 
 
+# Flake8 E501 is disabled since Black autoformats the line to be too long.
+@pytest.mark.parametrize(
+    "context,expected",
+    [
+        (
+            {
+                "githost": "gitlab",
+                "project_repository": "https://gitlab.com/user/repository",
+            },
+            "https://user.gitlab.io/repository",
+        ),
+        (
+            {
+                "githost": "gitlab",
+                "project_repository": "https://gitlab.com/group/subgroup/repository",  # noqa: E501
+            },
+            "https://group.gitlab.io/subgroup/repository",
+        ),
+    ],
+)
+def test_homepage_context(
+    context: Dict[str, Any], expected: str, cookies: Cookies
+) -> None:
+    """Default homepage is generated from repository URL."""
+    result = cookies.bake(extra_context=context)
+
+    actual = result.context["project_homepage"]
+    assert actual == expected
+
+
 @pytest.mark.parametrize(
     "context",
     [{"project_name": "$Mock?"}],
 )
 def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
     """Check that cookiecutter rejects invalid context arguments."""
-
     result = cookies.bake(extra_context=context)
     assert result.exit_code == -1
 
@@ -105,7 +130,6 @@ def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
 )
 def test_mkdocs_build(cookies: Cookies) -> None:
     """Mkdocs must be able to build documentation for baked project."""
-
     result = cookies.bake(extra_context={})
     expected = 0
 
@@ -123,7 +147,6 @@ def test_mkdocs_build(cookies: Cookies) -> None:
 
 def test_mypy_type_checks(baked_project: Result) -> None:
     """Generated files must pass Mypy type checks."""
-
     src_dir = baked_project.project_path / "src"
     test_dir = baked_project.project_path / "tests"
 
@@ -140,7 +163,6 @@ def test_mypy_type_checks(baked_project: Result) -> None:
 
 def test_no_blank_lines(baked_project: Result) -> None:
     """Project files do not have whitespace only lines."""
-
     regex = re.compile(r"^\s+$")
     error_msg = "File {}, line {}: {} has whitespace."
 
@@ -152,7 +174,6 @@ def test_no_blank_lines(baked_project: Result) -> None:
 
 def test_no_contiguous_blank_lines(baked_project: Result) -> None:
     """Project files do not have subsequent empty lines."""
-
     regex = re.compile(r"\n\s*\n\s*\n")
     for path in file_matches(baked_project, r"^.*(?<!.py)$"):
         text = path.read_text()
@@ -163,7 +184,6 @@ def test_no_contiguous_blank_lines(baked_project: Result) -> None:
 
 def test_no_starting_blank_line(baked_project: Result) -> None:
     """Check that generated files do not start with a blank line."""
-
     regex = re.compile(r"^\s*$")
     for path in file_matches(baked_project, r"^.*(?<!\.typed)$"):
         text = path.read_text().split("\n")[0]
@@ -172,7 +192,6 @@ def test_no_starting_blank_line(baked_project: Result) -> None:
 
 def test_no_trailing_blank_line(baked_project: Result) -> None:
     """Check that generated files do not have a trailing blank line."""
-
     regex = re.compile(r"\n\s*$")
     for path in file_matches(baked_project, r"^.*$"):
         text = path.read_text()
@@ -190,7 +209,6 @@ def test_no_trailing_blank_line(baked_project: Result) -> None:
 )
 def test_prettier_format(cookies: Cookies) -> None:
     """Generated files must pass Prettier format checker."""
-
     result = cookies.bake(extra_context={})
     proj_dir = result.project_path
 
@@ -204,7 +222,6 @@ def test_prettier_format(cookies: Cookies) -> None:
 )
 def test_pytest_test(cookies: Cookies) -> None:
     """Generated files must pass Pytest unit tests."""
-
     result = cookies.bake(extra_context={})
     expected = 0
 
@@ -237,7 +254,6 @@ def test_removed_paths(
     context: Dict[str, Any], paths: List[str], cookies: Cookies
 ) -> None:
     """Check that specific paths are removed after scaffolding."""
-
     result = cookies.bake(extra_context=context)
     for path in paths:
         remove_path = result.project_path / path
@@ -259,7 +275,6 @@ def test_removed_paths(
 )
 def test_scaffold(context: Dict[str, Any], cookies: Cookies) -> None:
     """Check that various configurations generate successfully."""
-
     result = cookies.bake(extra_context=context)
     assert result.exit_code == 0
 
@@ -319,7 +334,6 @@ def test_text_existence(
     cookies: Cookies,
 ) -> None:
     """Check for existence of text in files."""
-
     result = cookies.bake(extra_context=context)
     for path in paths:
         text_exists = text in (result.project_path / path).read_text()
@@ -328,7 +342,6 @@ def test_text_existence(
 
 def test_toml_blank_lines(baked_project: Result) -> None:
     """Check that TOML files do not have blank lines not followed by a [."""
-
     regex = re.compile(r"\n\s*\n[^[]")
     for path in file_matches(baked_project, r"^.*\.toml$"):
         text = path.read_text()

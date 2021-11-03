@@ -10,7 +10,7 @@
   "project_description": "Scaffolding template for Python packages.",
   "project_version": "0.1.0",
   "project_repository": "https://{{ cookiecutter.githost }}.com/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name.lower() }}",
-  "project_homepage": "https://{{ cookiecutter.githost_username }}.{{ cookiecutter.githost }}.io/{{ cookiecutter.project_name.lower() }}",
+  "project_homepage": "https://{{ cookiecutter.project_repository.split('/')[3] }}.{{ cookiecutter.githost }}.io/{{ '/'.join(cookiecutter.project_repository.split('/')[4:]) }}",
 
   "license": ["MIT", "private"],
 

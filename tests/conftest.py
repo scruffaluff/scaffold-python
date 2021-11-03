@@ -24,5 +24,4 @@ from pytest_cookies.plugin import Cookies, Result
 )
 def baked_project(cookies: Cookies, request: SubRequest) -> Result:
     """Cookiecutter projects baked from various parameters."""
-
     return cookies.bake(extra_context=request.param)
