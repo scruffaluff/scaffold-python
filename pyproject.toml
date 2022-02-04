@@ -12,9 +12,9 @@ extend-exclude = "{{cookiecutter.project_name}}/*"
 line-length = 80
 
 [tool.poetry]
-authors = ["Macklan Weinstein <wolfgangwazzlestrauss@gmail.com>"]
+authors = ["Macklan Weinstein <macklan.weinstein@gmail.com>"]
 description = "Python project template for scaffolding."
-homepage = "https://github.com/wolfgangwazzlestrauss/scaffold-python"
+homepage = "https://github.com/scruffaluff/scaffold-python"
 keywords = []
 license = "MIT"
 name = "scaffold-python"

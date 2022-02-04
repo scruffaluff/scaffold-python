@@ -1,15 +1,15 @@
 # Scaffold Python
 
-![](https://github.com/wolfgangwazzlestrauss/scaffold-python/workflows/build/badge.svg)
+![](https://github.com/scruffaluff/scaffold-python/workflows/build/badge.svg)
 ![](https://img.shields.io/badge/code%20style-black-000000.svg)
-![](https://img.shields.io/github/repo-size/wolfgangwazzlestrauss/scaffold-python)
-![](https://img.shields.io/github/license/wolfgangwazzlestrauss/scaffold-python)
+![](https://img.shields.io/github/repo-size/scruffaluff/scaffold-python)
+![](https://img.shields.io/github/license/scruffaluff/scaffold-python)
 
 ---
 
-**Documentation**: https://wolfgangwazzlestrauss.github.io/scaffold-python
+**Documentation**: https://scruffaluff.github.io/scaffold-python
 
-**Source Code**: https://github.com/wolfgangwazzlestrauss/scaffold-python
+**Source Code**: https://github.com/scruffaluff/scaffold-python
 
 ---
 
@@ -20,7 +20,7 @@ project with the template first install
 [Cookiecutter](https://github.com/cookiecutter/cookiecutter). Then execute
 
 ```console
-cookiecutter https://github.com/wolfgangwazzlestrauss/scaffold-python
+cookiecutter https://github.com/scruffaluff/scaffold-python
 ```
 
 Follow the interactive prompts, and a folder, with your selected `project_name`,

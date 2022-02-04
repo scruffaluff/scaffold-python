@@ -3,7 +3,7 @@
   "author_email": "wolfgang.wazzle.strauss@gmail.com",
 
   "githost": ["github", "gitlab"],
-  "githost_username": "wolfgangwazzlestrauss",
+  "githost_username": "scruffaluff",
 
   "project_name": "scaffold-python",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",

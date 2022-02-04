@@ -6,11 +6,11 @@ copyright: Copyright &copy; 2021 Macklan Weinstein
 extra:
   social:
     - icon: fontawesome/solid/home
-      link: https://wolfgangwazzlestrauss.com
+      link: https://scruffaluff.com
     - icon: fontawesome/brands/github
-      link: https://github.com/wolfgangwazzlestrauss
+      link: https://github.com/scruffaluff
     - icon: fontawesome/solid/envelope
-      link: mailto://wolfgangwazzlestrauss@gmail.com
+      link: mailto://macklan.weinstein@gmail.com
 markdown_extensions:
   - admonition
   - codehilite:
@@ -37,11 +37,11 @@ markdown_extensions:
 plugins:
   - search
 repo_name: scaffold-python
-repo_url: https://github.com/wolfgangwazzlestrauss/scaffold-python
+repo_url: https://github.com/scruffaluff/scaffold-python
 site_author: Macklan Weinstein
 site_description: Python project template for scaffolding.
 site_name: Scaffold Python
-site_url: https://wolfgangwazzlestrauss.github.io/scaffold-python
+site_url: https://scruffaluff.github.io/scaffold-python
 theme:
   name: material
   palette:

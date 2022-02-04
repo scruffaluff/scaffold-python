@@ -35,5 +35,5 @@ jobs:
           release_name: Scaffold Python ${{ steps.extract_tag.outputs.tag }}
           body: >-
             See the
-            [changelog](https://github.com/wolfgangwazzlestrauss/scaffold-python/blob/${{
+            [changelog](https://github.com/scruffaluff/scaffold-python/blob/${{
             steps.extract_tag.outputs.tag }}/CHANGELOG.md) for more information.
