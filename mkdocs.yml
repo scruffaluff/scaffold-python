@@ -5,7 +5,7 @@
 copyright: Copyright &copy; 2021 Macklan Weinstein
 extra:
   social:
-    - icon: fontawesome/solid/home
+    - icon: fontawesome/solid/house
       link: https://scruffaluff.com
     - icon: fontawesome/brands/github
       link: https://github.com/scruffaluff
