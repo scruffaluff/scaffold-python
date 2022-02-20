@@ -11,6 +11,23 @@ requires = ["poetry-core>=1.0.0"]
 extend-exclude = "{{cookiecutter.project_name}}/*"
 line-length = 80
 
+[tool.mypy]
+check_untyped_defs = true
+disallow_untyped_calls = false
+disallow_untyped_defs = true
+exclude = [
+  '\.pytest_cache/',
+  '\.venv/',
+  'tmp/',
+  '\{\{cookiecutter.project_name\}\}/',
+]
+ignore_missing_imports = true
+no_implicit_optional = true
+strict_optional = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_ignores = true
+
 [tool.poetry]
 authors = ["Macklan Weinstein <macklan.weinstein@gmail.com>"]
 description = "Python project template for scaffolding."
@@ -22,20 +39,20 @@ readme = "README.md"
 version = "0.1.0"
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7.0"
 
 [tool.poetry.dev-dependencies]
-black = "^21.9b0"
+black = "^22.1.0"
 flake8 = "^4.0.0"
-flake8-bugbear = "^21.9.0"
+flake8-bugbear = "^22.1.11"
 flake8-docstrings = "^1.6.0"
 flake8-import-order = "^0.18.0"
-mccabe = "^0.6.1"
+mccabe = "^0.6.0"
 mkdocs = "^1.2.0"
-mkdocs-material = "^7.3.0"
-mypy = "^0.910"
-pdbpp = "^0.10.3"
-pymdown-extensions = "^9.0.0"
-pytest = "^6.2.0"
+mkdocs-material = "^8.2.0"
+mypy = "^0.931"
+pdbpp = "^0.10.0"
+pymdown-extensions = "^9.2.0"
+pytest = "^7.0.0"
 pytest-cookies = "^0.6.0"
-pytest-mock = "^3.6.0"
+pytest-mock = "^3.7.0"

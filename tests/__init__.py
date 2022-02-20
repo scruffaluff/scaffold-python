@@ -70,11 +70,8 @@ def test_existing_paths(
 
 def test_flake8_lints(baked_project: Result) -> None:
     """Generated files must pass Flake8 lints."""
-    src_dir = baked_project.project_path / "src"
-    test_dir = baked_project.project_path / "tests"
-
     process = run_command(
-        command=f"flake8 {src_dir} {test_dir}",
+        command="flake8 .",
         work_dir=baked_project.project_path,
     )
 
@@ -147,11 +144,8 @@ def test_mkdocs_build(cookies: Cookies) -> None:
 
 def test_mypy_type_checks(baked_project: Result) -> None:
     """Generated files must pass Mypy type checks."""
-    src_dir = baked_project.project_path / "src"
-    test_dir = baked_project.project_path / "tests"
-
     process = run_command(
-        command=f"mypy --install-types --non-interactive {src_dir} {test_dir}",
+        command="mypy --install-types --non-interactive .",
         work_dir=baked_project.project_path,
     )
 
