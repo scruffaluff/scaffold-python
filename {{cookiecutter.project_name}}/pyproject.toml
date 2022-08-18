@@ -57,7 +57,7 @@ readme = "README.md"
 version = "{{ cookiecutter.project_version }}"
 
 [tool.poetry.dependencies]
-python = "^3.7.0"
+python = "^3.8.0"
 {%- if cookiecutter.cli_support == "yes" %}
 typer = "^0.6.0"
 {%- endif %}
@@ -78,7 +78,6 @@ mypy = "^0.971"
 nbqa = "^1.4.0"
 pdbpp = "^0.10.0"
 py-spy = "^0.3.0"
-pymdown-extensions = "^9.5.0"
 pytest = "^7.1.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.8.0"

@@ -40,14 +40,14 @@ lint:
     - poetry run black --check .
     - poetry run python scripts/build_docs.py
     - poetry run flake8 . 
-    - poetry run mypy --non-interactive .
+    - poetry run mypy --install-types --non-interactive .
 
 test:
   image: "python:$version"
   stage: build
   parallel:
     matrix:
-      - version: ["3.7", "3.8", "3.9", "3.10"]
+      - version: ["3.8", "3.9", "3.10"]
   script:
     - poetry run pytest --cov
 
