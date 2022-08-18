@@ -25,6 +25,24 @@ command_line = "-m pytest"
 omit = []
 source = ["{{ cookiecutter.project_slug }}"]
 
+[tool.mypy]
+check_untyped_defs = true
+disallow_untyped_calls = false
+disallow_untyped_defs = true
+exclude = [
+    '\.benchmarks/',
+    '\.hypothesis/',
+    '\.pytest_cache/',
+    '\.venv/',
+    'tmp/',
+]
+ignore_missing_imports = true
+no_implicit_optional = true
+strict_optional = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_ignores = true
+
 [tool.poetry]
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 description = "{{ cookiecutter.project_description }}"
@@ -41,34 +59,33 @@ version = "{{ cookiecutter.project_version }}"
 [tool.poetry.dependencies]
 python = "^3.7.0"
 {%- if cookiecutter.cli_support == "yes" %}
-typer = "^0.3.0"
+typer = "^0.6.0"
 {%- endif %}
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.0"
-black = "^21.12b0"
+black = "^22.6.0"
 coverage = { version = "^6.3.0", extras = ["toml"] }
-flake8 = "^4.0.0"
-flake8-bugbear = "^22.1.11"
+flake8 = ">=4.0.0, <6.0.0"
+flake8-bugbear = "^22.7.0"
 flake8-docstrings = "^1.6.0"
 flake8-import-order = "^0.18.0"
-mccabe = "^0.6.0"
+mccabe =  ">=0.6.0, <0.8.0"
 mkdocs = "^1.2.0"
 mkdocs-material = "^8.2.0"
-mkdocstrings = "^0.18.0"
-mypy = "^0.931"
-nbqa = "^1.2.0"
+mkdocstrings = "^0.19.0"
+mypy = "^0.971"
+nbqa = "^1.4.0"
 pdbpp = "^0.10.0"
 py-spy = "^0.3.0"
-pymdown-extensions = "^9.2.0"
-pytest = "^7.0.0"
+pymdown-extensions = "^9.5.0"
+pytest = "^7.1.0"
 pytest-cov = "^3.0.0"
-pytest-mock = "^3.7.0"
+pytest-mock = "^3.8.0"
 toml = "^0.10.0"
-tox = "^3.24.0"
-{% if cookiecutter.cli_support == "yes" -%}
-typer-cli = "^0.0.12"
+tox = "^3.25.0"
 
+{% if cookiecutter.cli_support == "yes" -%}
 [tool.poetry.scripts]
 {{ cookiecutter.project_name }} = "{{ cookiecutter.project_slug }}.__main__:app"
 {% endif -%}

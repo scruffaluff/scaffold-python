@@ -40,7 +40,7 @@ lint:
     - poetry run black --check .
     - poetry run python scripts/build_docs.py
     - poetry run flake8 . 
-    - poetry run mypy --install-types --non-interactive .
+    - poetry run mypy --non-interactive .
 
 test:
   image: "python:$version"

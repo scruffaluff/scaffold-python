@@ -2,12 +2,14 @@
 #
 # For more information, visit https://git-scm.com/docs/gitignore.
 
+__pycache__/
 .benchmarks/
 .cache/
 .coverage
 .DS_Store
 .env
 .hypothesis/
+.ipynb_checkpoints/
 .mypy_cache/
 .pdbrc
 .pytest_cache/
@@ -15,14 +17,12 @@
 .tox/
 .venv/
 .vscode/settings.json
+*.egg-info/
 *.ipynb
 *.pyc
 *.swp
 *.tar.gz
 *.whl
-**/__pycache__/
-**/.ipynb_checkpoints/
-**/*.egg-info/
 /docs/api/cli.md
 /docs/index.md
 /tmp/

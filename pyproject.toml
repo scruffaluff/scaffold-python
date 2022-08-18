@@ -16,10 +16,12 @@ check_untyped_defs = true
 disallow_untyped_calls = false
 disallow_untyped_defs = true
 exclude = [
-  '\.pytest_cache/',
-  '\.venv/',
-  'tmp/',
-  '\{\{cookiecutter.project_name\}\}/',
+    '\.benchmarks/',
+    '\.hypothesis/',
+    '\.pytest_cache/',
+    '\.venv/',
+    'tmp/',
+    '\{\{cookiecutter.project_name\}\}/',
 ]
 ignore_missing_imports = true
 no_implicit_optional = true
@@ -42,17 +44,17 @@ version = "0.1.0"
 python = "^3.7.0"
 
 [tool.poetry.dev-dependencies]
-black = "^22.1.0"
-flake8 = "^4.0.0"
-flake8-bugbear = "^22.1.11"
+black = "^22.6.0"
+flake8 = ">=4.0.0, <6.0.0"
+flake8-bugbear = "^22.7.0"
 flake8-docstrings = "^1.6.0"
 flake8-import-order = "^0.18.0"
-mccabe = "^0.6.0"
+mccabe =  ">=0.6.0, <0.8.0"
 mkdocs = "^1.2.0"
-mkdocs-material = "^8.2.0"
-mypy = "^0.931"
+mkdocs-material = "^8.0.0"
+mypy = "^0.971"
 pdbpp = "^0.10.0"
-pymdown-extensions = "^9.2.0"
-pytest = "^7.0.0"
+pymdown-extensions = "^9.5.0"
+pytest = "^7.1.0"
 pytest-cookies = "^0.6.0"
-pytest-mock = "^3.7.0"
+pytest-mock = "^3.8.0"

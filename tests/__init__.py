@@ -122,11 +122,8 @@ def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
 
 
 @pytest.mark.skipif(
-    sys.platform == "win32" or sys.version_info >= (3, 10),
-    reason=(
-        "Poetry install command hits permission errors for temporary paths"
-        " and MkDocs does not yet work on Python 3.10."
-    ),
+    sys.platform == "win32",
+    reason="Poetry install command hits permission errors for temporary paths",
 )
 def test_mkdocs_build(cookies: Cookies) -> None:
     """Mkdocs must be able to build documentation for baked project."""
