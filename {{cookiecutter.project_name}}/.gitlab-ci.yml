@@ -33,7 +33,7 @@ config:
 {% endif -%}
 
 lint:
-  image: "python:3.9"
+  image: "python:3.10"
   stage: build
   script:
     - poetry run bandit -ilr src/
@@ -47,12 +47,12 @@ test:
   stage: build
   parallel:
     matrix:
-      - version: ["3.8", "3.9", "3.10"]
+      - version: ["3.7", "3.8", "3.9", "3.10"]
   script:
     - poetry run pytest --cov
 
 pages:
-  image: "python:3.9"
+  image: "python:3.10"
   stage: deploy
   script:
     - poetry run python scripts/build_docs.py
@@ -69,7 +69,7 @@ pages:
       when: on_success
 
 package:
-  image: "python:3.9"
+  image: "python:3.10"
   stage: deploy
   script:
     - poetry build
