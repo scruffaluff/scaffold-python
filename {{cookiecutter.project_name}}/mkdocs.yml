@@ -2,18 +2,15 @@
 #
 # For more information, visit https://www.mkdocs.org/user-guide/configuration/.
 
-copyright: Copyright &copy; 2021 {{ cookiecutter.author_name }}
+copyright: Copyright &copy; 2022 {{ cookiecutter.author_name }}
 extra:
   social:
     - icon: fontawesome/brands/{{ cookiecutter.githost }}
       link: https://{{ cookiecutter.githost }}.com/{{ cookiecutter.githost_username }}
     - icon: fontawesome/solid/envelope
       link: mailto://{{ cookiecutter.author_email }}
-extra_css:
-  - css/style.css
 extra_javascript:
-  - https://unpkg.com/mermaid@8.9.3/dist/mermaid.min.js
-  - js/index.js
+  - https://unpkg.com/mermaid@9.1.6/dist/mermaid.min.js
 markdown_extensions:
   - admonition
   - codehilite:
@@ -38,10 +35,12 @@ markdown_extensions:
   - toc:
       permalink: true
 nav:
-  - Home: index.md
-  - User Guide: src/user/index.md
-  - API Reference: src/reference/index.md
-  - Developer Guide: src/developer/index.md
+  - Home:
+      - README: index.md
+      - Contributing: CONTRIBUTING.md
+      - License: LICENSE.md
+  - Usage: usage/index.md
+  - API Reference: api/index.md
 plugins:
   - mkdocstrings
   - search

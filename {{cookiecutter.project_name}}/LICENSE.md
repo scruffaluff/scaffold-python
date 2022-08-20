@@ -1,7 +1,7 @@
 {%- if cookiecutter.license != "private" -%}
 MIT License
 
-Copyright (c) 2021 {{ cookiecutter.author_name }}
+Copyright (c) 2022 {{ cookiecutter.author_name }}
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 {% else -%}
-Copyright (C) 2021 {{ cookiecutter.author_name }}
+Copyright (C) 2022 {{ cookiecutter.author_name }}
 
 Unauthorized copying of this software, via any medium is strictly prohibited.
 

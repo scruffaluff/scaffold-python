@@ -17,22 +17,25 @@ def build_docs() -> None:
         sys.exit(1)
 
 
-def copy_index(repo_path: Path) -> None:
+def copy_files(repo_path: Path) -> None:
     """Sync documentation index with repository README file.
 
     Args:
         repo_path: Repository root path.
     """
-    src_path = repo_path / "README.md"
-    dest_path = repo_path / "docs/index.md"
+    shutil.copy(src=repo_path / "README.md", dst=repo_path / "docs/index.md")
 
-    shutil.copy(src=src_path, dst=dest_path)
+    for file_name in ["CONTRIBUTING.md", "LICENSE.md"]:
+        shutil.copy(
+            src=repo_path / file_name,
+            dst=repo_path / f"docs/{file_name}",
+        )
 
 
 def main() -> None:
     """Entrypoint for documentation building."""
     repo_path = Path(__file__).parents[1]
-    copy_index(repo_path)
+    copy_files(repo_path)
     build_docs()
 
 

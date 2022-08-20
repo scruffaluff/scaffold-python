@@ -24,7 +24,7 @@ jobs:
       - name: Install Node interpreter
         uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: "18"
       - name: Install Prettier formatter
         run: npm install -g prettier
       - name: Check configuration file formatting
@@ -67,7 +67,7 @@ jobs:
       - name: Install Node interpreter
         uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: "18"
       - name: Install Prettier formatter
         run: npm install -g prettier
       - name: Install Python interpreter

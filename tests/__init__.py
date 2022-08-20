@@ -137,7 +137,8 @@ def test_mkdocs_build(cookies: Cookies) -> None:
     assert process.returncode == expected, process.stdout.decode("utf-8")
 
     process = run_command(
-        command="poetry run mkdocs build", work_dir=result.project_path
+        command="poetry run python scripts/build_docs.py",
+        work_dir=result.project_path,
     )
     assert process.returncode == expected, process.stderr.decode("utf-8")
 
