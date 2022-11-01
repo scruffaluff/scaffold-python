@@ -45,6 +45,9 @@ python = "^3.7.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"
+# Pytest-cookies is broken for cookiecutter > 2.0.0 on Windows. For more
+# information, visit https://github.com/hackebrot/pytest-cookies/issues/62.
+cookiecutter = { markers = "sys_platform == 'win32'", version = "^1.0.0" }
 flake8 = { python = "^3.8.0", version = "^5.0.0" }
 flake8-bugbear = "^22.10.0"
 flake8-docstrings = "^1.6.0"
