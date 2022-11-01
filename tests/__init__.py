@@ -146,7 +146,7 @@ def test_mkdocs_build(cookies: Cookies) -> None:
 def test_mypy_type_checks(baked_project: Result) -> None:
     """Generated files must pass Mypy type checks."""
     process = run_command(
-        command="mypy --install-types --non-interactive .",
+        command="mypy .",
         work_dir=baked_project.project_path,
     )
 

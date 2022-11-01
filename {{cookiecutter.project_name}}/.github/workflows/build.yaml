@@ -53,7 +53,7 @@ jobs:
           poetry run python scripts/build_docs.py
           poetry run flake8 .
           poetry run nbqa flake8 .
-          poetry run mypy --install-types --non-interactive .
+          poetry run mypy .
 
   test:
     # GitHub contains function does not support literal arrays. For more
