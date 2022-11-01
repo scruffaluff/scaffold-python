@@ -55,6 +55,7 @@ mkdocs-material = { python = "^3.8.0", version = "^8.5.0" }
 mypy = "^0.982"
 pdbpp = "^0.10.0"
 pymdown-extensions = { python = "^3.8.0", version = "^9.7.0" }
+pyreadline3 = { markers = "sys_platform == 'win32'", version = "^3.4.0" }
 pytest = "^7.2.0"
 pytest-cookies = "^0.6.0"
 pytest-mock = "^3.10.0"

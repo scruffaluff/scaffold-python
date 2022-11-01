@@ -122,6 +122,10 @@ def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
 
 
 @pytest.mark.skipif(
+    sys.version_info < (3, 8),
+    reason="Newer Mkdocs versions require at least Python 3.8.",
+)
+@pytest.mark.skipif(
     sys.platform == "win32",
     reason="Poetry install command hits permission errors for temporary paths",
 )
