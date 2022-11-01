@@ -25,7 +25,7 @@ jobs:
       - name: Install Node interpreter
         uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: "18"
       - name: Install Prettier formatter
         run: npm install -g prettier
       - name: Check configuration file formatting
@@ -34,13 +34,13 @@ jobs:
       - name: Install Python interpreter
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: "3.10"
       - name: Cache Python packages
         uses: actions/cache@v2
         with:
           path: .venv
           key: >-
-            {% raw -%} python-3.9_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
+            {% raw -%} python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
       - name: Install Python packages
         run: |
           python -m pip install --upgrade pip poetry setuptools wheel
@@ -53,7 +53,7 @@ jobs:
           poetry run python scripts/build_docs.py
           poetry run flake8 .
           poetry run nbqa flake8 .
-          poetry run mypy --install-types --non-interactive .
+          poetry run mypy .
 
   test:
     # GitHub contains function does not support literal arrays. For more
@@ -62,7 +62,7 @@ jobs:
     if: >-
       {% raw -%} ${{ !contains(fromJson('["refs/heads/develop", "refs/heads/main",
       "refs/heads/master"]'), github.ref) }} {%- endraw %}
-    name: Run test suite for Python 3.9 on Ubuntu
+    name: Run test suite for Python 3.10 on Ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
@@ -70,13 +70,13 @@ jobs:
       - name: Install Python interpreter
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: "3.10"
       - name: Cache Python packages
         uses: actions/cache@v2
         with:
           path: .venv
           key: >-
-            {% raw -%} python-3.9_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
+            {% raw -%} python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
       - name: Install Python packages
         run: |
           python -m pip install --upgrade pip poetry setuptools wheel

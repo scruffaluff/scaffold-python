@@ -70,7 +70,6 @@ def run_command(
         )
 
 
-# Type re.Match does not exist in Python 3.6.
 def show(match: Any) -> None:
     """Show lines surrounding regex match.
 

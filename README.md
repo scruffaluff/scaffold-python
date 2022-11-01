@@ -85,25 +85,19 @@ subcontents are only generated for that chosen context.
 │       └── test.yaml
 ├── .dockerignore
 ├── .gitignore
+├── .gitlab-ci.yaml  {githost: gitlab}
 ├── .prettierignore  {prettier_support: yes}
 ├── .prettierrc.yaml  {prettier_support: yes}
 ├── CONTRIBUTING.md
 ├── docs
 |   ├── api
 │   |   └── index.md
-|   ├── contrib
-│   |   └── index.md
-│   ├── css
-│   │   └── mkdocstrings.css
-│   ├── install
-│   │   └── index.md
-│   └── learn
+│   └── usage
 │       └── index.md
 ├── examples
 │   └── __init__.py
 ├── LICENSE.md
 ├── mkdocs.yml
-├── mypy.ini
 ├── pyproject.toml
 ├── README.md
 ├── scripts
@@ -126,8 +120,8 @@ subcontents are only generated for that chosen context.
 
 ## Continous Integration
 
-Projects generated with this scaffolding repository come with configured
-pipeline for GitHub CI workflows and GitLab CI pipelines.
+Projects generated with this scaffolding repository are automatically configured
+to use GitHub CI workflows and GitLab CI pipelines.
 
 ### Linting and Testing
 

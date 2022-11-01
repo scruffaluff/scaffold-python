@@ -17,49 +17,25 @@ def build_docs() -> None:
         sys.exit(1)
 
 
-def copy_index(repo_path: Path) -> None:
+def copy_files(repo_path: Path) -> None:
     """Sync documentation index with repository README file.
 
     Args:
         repo_path: Repository root path.
     """
-    src_path = repo_path / "README.md"
-    dest_path = repo_path / "docs/index.md"
+    shutil.copy(src=repo_path / "README.md", dst=repo_path / "docs/index.md")
 
-    shutil.copy(src=src_path, dst=dest_path)
+    for file_name in ["CONTRIBUTING.md", "LICENSE.md"]:
+        shutil.copy(
+            src=repo_path / file_name,
+            dst=repo_path / f"docs/{file_name}",
+        )
 
-{% if cookiecutter.cli_support != "yes" %}
-def generate_cli_docs(repo_path: Path) -> None:
-    """Create documentation for the command line interface.
 
-    Args:
-        repo_path: Repository root path.
-    """
-    cli_doc = repo_path / "docs/src/user/cli.md"
-
-    with cli_doc.open("w") as handle:
-        try:
-            subprocess.run(
-                args="typer src/{{ cookiecutter.project_slug }}/__main__.py utils docs",
-                shell=True,
-                check=True,
-                stdout=handle,
-            )
-        except CalledProcessError:
-            print(
-                "Failed to build command line interface documentation.",
-                sys.stderr,
-            )
-            sys.exit(1)
-
-{% endif %}
 def main() -> None:
     """Entrypoint for documentation building."""
     repo_path = Path(__file__).parents[1]
-    copy_index(repo_path)
-    {% if cookiecutter.cli_support != "yes" -%}
-    generate_cli_docs(repo_path)
-    {% endif -%}
+    copy_files(repo_path)
     build_docs()
 
 

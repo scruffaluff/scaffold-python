@@ -2,19 +2,19 @@
 #
 # For more information, visit https://prettier.io/docs/en/ignore.html.
 
+__pycache__/
 .benchmarks/
 .git/
+.ipynb_checkpoints/
 .mypy_cache/
 .pytest_cache/
 .tox/
 .venv/
+*.egg-info/
 *.ipynb
 *.min.js
 *.py
 *.pyc
-**/__pycache__/
-**/.ipynb_checkpoints/
-**/*.egg-info/
 node_modules/
 package-lock.json
 poetry.lock

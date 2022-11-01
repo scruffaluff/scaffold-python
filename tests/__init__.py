@@ -122,11 +122,12 @@ def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
 
 
 @pytest.mark.skipif(
-    sys.platform == "win32" or sys.version_info >= (3, 10),
-    reason=(
-        "Poetry install command hits permission errors for temporary paths"
-        " and MkDocs does not yet work on Python 3.10."
-    ),
+    sys.version_info < (3, 8),
+    reason="Newer Mkdocs versions require at least Python 3.8.",
+)
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="Poetry install command hits permission errors for temporary paths",
 )
 def test_mkdocs_build(cookies: Cookies) -> None:
     """Mkdocs must be able to build documentation for baked project."""
@@ -140,7 +141,8 @@ def test_mkdocs_build(cookies: Cookies) -> None:
     assert process.returncode == expected, process.stdout.decode("utf-8")
 
     process = run_command(
-        command="poetry run mkdocs build", work_dir=result.project_path
+        command="poetry run python scripts/build_docs.py",
+        work_dir=result.project_path,
     )
     assert process.returncode == expected, process.stderr.decode("utf-8")
 
@@ -148,7 +150,7 @@ def test_mkdocs_build(cookies: Cookies) -> None:
 def test_mypy_type_checks(baked_project: Result) -> None:
     """Generated files must pass Mypy type checks."""
     process = run_command(
-        command="mypy --install-types --non-interactive .",
+        command="mypy .",
         work_dir=baked_project.project_path,
     )
 
