@@ -17,26 +17,58 @@ stages:
   - build
   - deploy
 
+variables:
+  PIP_CACHE_DIR: $CI_PROJECT_DIR/.cache/pip
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+  PIP_ROOT_USER_ACTION: ignore
+  POETRY_VIRTUALENVS_IN_PROJECT: 1
+  PYTHON_VERSION_DEFAULT: "3.10"
+  TMATE_DEBUG: "false"
+
 # Contains settings that apply to all jobs unless overridden.
 default:
+  # Allows for debugging via SSH session for failed jobs in manual pipelines.
+  after_script:
+    - |
+      if [[ $CI_JOB_STATUS == 'failed' && $TMATE_DEBUG == 'true' ]]; then
+        bash scripts/setup_tmate.sh
+      fi
   before_script:
-    - python -m pip install --upgrade pip poetry setuptools wheel
-    - poetry config virtualenvs.in-project true
+    - python --version
+    - python -m pip install poetry
     - poetry install --verbose
+  cache:
+    key:
+      files:
+        - poetry.lock
+      prefix: $CI_JOB_IMAGE
+    paths:
+      - .cache/pip
+      - .venv
 
 {% if cookiecutter.prettier_support == "yes" -%}
 config:
-  image: "node:18"
-  stage: build
   before_script:
+    - node --version
     - npm install --global prettier
+  # Disable cache for job.
+  cache: []
+  image: "node:18"
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: always
   script:
     - prettier --check .
+  stage: build
 {% endif -%}
 
 lint:
-  image: "python:3.10"
-  stage: build
+  image: "python:$PYTHON_VERSION_DEFAULT"
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: always
   script:
     - poetry run bandit -ilr src
     - poetry run black --check .
@@ -44,46 +76,50 @@ lint:
     - poetry run flake8 .
     - poetry run nbqa flake8 .
     - poetry run mypy .
+  stage: build
 
 package:
-  image: "python:3.10"
-  stage: deploy
+  # Uploads packages as release files for Git tag.
+  artifacts:
+    paths:
+      - dist/{{ cookiecutter.project_slug }}-$CI_COMMIT_TAG-py-none-any.whl
+  image: "python:$PYTHON_VERSION_DEFAULT"
+  # Makes the job only run on release commit tags, i.e. 1.0.4 or v0.4.1.
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v?[0-9]+\.[0-9]+\.[0-9]+$/
   script:
     - poetry build
     {% if cookiecutter.pypi_support == "yes" -%}
     - poetry publish --username ${PYPI_USERNAME?} --password ${PYPI_PASSWORD?}
     {% endif -%}
-  # Uploads packages as release files for Git tag.
-  artifacts:
-    paths:
-      - dist/{{ cookiecutter.project_slug }}-$CI_COMMIT_TAG-py-none-any.whl
-  # Makes the job only run on release commit tags, i.e. 1.0.4 or v0.4.1.
-  rules:
-    - if: $CI_COMMIT_TAG =~ /^v?[0-9]+\.[0-9]+\.[0-9]+$/
-      when: on_success
+  stage: deploy
 
 pages:
-  image: "python:3.10"
-  stage: deploy
-  script:
-    - poetry run python scripts/build_docs.py
-    - mv site public
   # GitLab Pages uploads files inside the public folder after the job completes.
   artifacts:
     paths:
       - public
+  image: "python:$PYTHON_VERSION_DEFAULT"
   # Makes the job only run on the main and master branches.
   rules:
-    - if: $CI_COMMIT_REF_NAME =~ /^(main|master)$/
-      when: on_success
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(main|master)$/
-      when: on_success
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - poetry run python scripts/build_docs.py
+    - mv site public
+  stage: deploy
 
 test:
   image: "python:$version"
-  stage: build
   parallel:
     matrix:
       - version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+  # GitLab rule order matters since they are evaluated until first match.
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
+    - if: $version == $PYTHON_VERSION_DEFAULT
   script:
     - poetry run pytest --cov
+  stage: build
