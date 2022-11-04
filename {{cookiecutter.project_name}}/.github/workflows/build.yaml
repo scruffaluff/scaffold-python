@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: "18"
       - name: Install Prettier formatter
-        run: npm install -g prettier
+        run: npm install --global prettier
       - name: Check configuration file formatting
         run: prettier --check .
       {% endif -%}
@@ -45,10 +45,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip poetry setuptools wheel
           poetry config virtualenvs.in-project true
-          poetry install -v
+          poetry install --verbose
       - name: Run linter checks
         run: |
-          poetry run bandit -ilr src/
+          poetry run bandit -ilr src
           poetry run black --check .
           poetry run python scripts/build_docs.py
           poetry run flake8 .
@@ -81,6 +81,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip poetry setuptools wheel
           poetry config virtualenvs.in-project true
-          poetry install -v
+          poetry install --verbose
       - name: Run test suite
         run: poetry run pytest

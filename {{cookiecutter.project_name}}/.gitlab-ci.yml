@@ -21,13 +21,15 @@ stages:
 default:
   before_script:
     - python -m pip install --upgrade pip poetry setuptools wheel
+    - poetry config virtualenvs.in-project true
+    - poetry install --verbose
 
 {% if cookiecutter.prettier_support == "yes" -%}
 config:
-  image: "node:16"
+  image: "node:18"
   stage: build
   before_script:
-    - npm install -g prettier
+    - npm install --global prettier
   script:
     - prettier --check .
 {% endif -%}
@@ -36,21 +38,29 @@ lint:
   image: "python:3.10"
   stage: build
   script:
-    - poetry run bandit -ilr src/
+    - poetry run bandit -ilr src
     - poetry run black --check .
     - poetry run python scripts/build_docs.py
     - poetry run flake8 .
     - poetry run nbqa flake8 .
     - poetry run mypy .
 
-test:
-  image: "python:$version"
-  stage: build
-  parallel:
-    matrix:
-      - version: ["3.7", "3.8", "3.9", "3.10"]
+package:
+  image: "python:3.10"
+  stage: deploy
   script:
-    - poetry run pytest --cov
+    - poetry build
+    {% if cookiecutter.pypi_support == "yes" -%}
+    - poetry publish --username ${PYPI_USERNAME?} --password ${PYPI_PASSWORD?}
+    {% endif -%}
+  # Uploads packages as release files for Git tag.
+  artifacts:
+    paths:
+      - dist/{{ cookiecutter.project_slug }}-$CI_COMMIT_TAG-py-none-any.whl
+  # Makes the job only run on release commit tags, i.e. 1.0.4 or v0.4.1.
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v?[0-9]+\.[0-9]+\.[0-9]+$/
+      when: on_success
 
 pages:
   image: "python:3.10"
@@ -69,19 +79,11 @@ pages:
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(main|master)$/
       when: on_success
 
-package:
-  image: "python:3.10"
-  stage: deploy
+test:
+  image: "python:$version"
+  stage: build
+  parallel:
+    matrix:
+      - version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
   script:
-    - poetry build
-    {% if cookiecutter.pypi_support == "yes" -%}
-    - poetry publish -u __token__ -p password
-    {% endif -%}
-  # Uploads packages as release files for Git tag.
-  artifacts:
-    paths:
-      - dist/{{ cookiecutter.project_slug }}-$CI_COMMIT_TAG-py-none-any.whl
-  # Makes the job only run on release commit tags, i.e. 1.0.4 or v0.4.1.
-  rules:
-    - if: $CI_COMMIT_TAG =~ /^v?[0-9]+\.[0-9]+\.[0-9]+$/
-      when: on_success
+    - poetry run pytest --cov

@@ -37,7 +37,8 @@ def test_badges_separate_lines(
 def test_black_format(baked_project: Result) -> None:
     """Generated files must pass Black format checker."""
     process = run_command(
-        command="black -l 80 --check .", work_dir=baked_project.project_path
+        command="black --check . --line-length 80",
+        work_dir=baked_project.project_path,
     )
 
     expected = 0
