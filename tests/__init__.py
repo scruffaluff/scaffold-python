@@ -207,12 +207,11 @@ def test_no_trailing_blank_line(baked_project: Result) -> None:
     returns nonzero exit codes on success for MacOS.
     """,
 )
-def test_prettier_format(cookies: Cookies) -> None:
+def test_prettier_format(baked_project: Result) -> None:
     """Generated files must pass Prettier format checker."""
-    result = cookies.bake(extra_context={})
-    proj_dir = result.project_path
-
-    process = run_command(command="prettier --check .", work_dir=proj_dir)
+    process = run_command(
+        command="prettier --check .", work_dir=baked_project.project_path
+    )
     assert process.returncode == 0, process.stderr.decode("utf-8")
 
 

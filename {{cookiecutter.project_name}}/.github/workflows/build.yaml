@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Checkout code repository
         uses: actions/checkout@v2
-      {%- if cookiecutter.prettier_support == "yes" %}
+      {% if cookiecutter.prettier_support == "yes" -%}
       - name: Install Node interpreter
         uses: actions/setup-node@v2
         with:

@@ -1,15 +1,21 @@
-# GitLab Continuous Integration to build and deploy repository.
+# GitLab continuous integration file to build and deploy repository.
 #
-# For a reference of the CI file syntax, see
+# For a reference of the CI file syntax, visit
 # https://docs.gitlab.com/ee/ci/yaml/.
 
-# Workflow rules define whether or not the CI pipeline is run.
-# The rules are required to ensure that every job is run for detached pipelines.
+# Workflow rules define when the CI pipeline is created. Rule order matters
+# since they are evaluated until first match.
 workflow:
+  # Makes pipeline run on Git tags, any branch commit, and on expected result of
+  # merge request branches. For more information, visit
+  # https://docs.gitlab.com/ee/ci/pipelines/merge_request_pipelines.html and
+  # https://docs.gitlab.com/ee/ci/yaml/workflow.html#switch-between-branch-pipelines-and-merge-request-pipelines.
   rules:
-    - if: $CI_MERGE_REQUEST_ID
     - if: $CI_COMMIT_TAG
-    - if: $CI_COMMIT_BRANCH =~ /^.*$/
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
 
 # Jobs of the same stage run in parallel. Jobs of the next stage only run after
 # all current jobs have completed successfully.
@@ -17,6 +23,7 @@ stages:
   - build
   - deploy
 
+# Environment variables that apply to all jobs.
 variables:
   PIP_CACHE_DIR: $CI_PROJECT_DIR/.cache/pip
   PIP_DISABLE_PIP_VERSION_CHECK: 1
@@ -37,6 +44,11 @@ default:
     - python --version
     - python -m pip install poetry
     - poetry install --verbose
+  # Creates a dependencies cache for each unique Docker image and Poetry lock
+  # file hash pair to speed up dependency installations. Since caches are shared
+  # between jobs and branches, cache keys must not apply to multiple version
+  # targets to avoid installation errors. For more information, visit
+  # https://docs.gitlab.com/ee/ci/caching.
   cache:
     key:
       files:
@@ -45,8 +57,8 @@ default:
     paths:
       - .cache/pip
       - .venv
+{%- if cookiecutter.prettier_support == "yes" %}
 
-{% if cookiecutter.prettier_support == "yes" -%}
 config:
   before_script:
     - node --version
@@ -54,6 +66,7 @@ config:
   # Disable cache for job.
   cache: []
   image: "node:18"
+  # Makes job only run on every Git event except for tags.
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -61,10 +74,11 @@ config:
   script:
     - prettier --check .
   stage: build
-{% endif -%}
+{%- endif %}
 
 lint:
   image: "python:$PYTHON_VERSION_DEFAULT"
+  # Makes job run on every Git event except for tags.
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -79,28 +93,28 @@ lint:
   stage: build
 
 package:
-  # Uploads packages as release files for Git tag.
+  # Uploads packages as release files for Git tags.
   artifacts:
     paths:
       - dist/{{ cookiecutter.project_slug }}-$CI_COMMIT_TAG-py-none-any.whl
   image: "python:$PYTHON_VERSION_DEFAULT"
-  # Makes the job only run on release commit tags, i.e. 1.0.4 or v0.4.1.
+  # Makes job only run on release commit tags, i.e. 1.0.4 or v0.4.1.
   rules:
     - if: $CI_COMMIT_TAG =~ /^v?[0-9]+\.[0-9]+\.[0-9]+$/
   script:
     - poetry build
-    {% if cookiecutter.pypi_support == "yes" -%}
+    {%- if cookiecutter.pypi_support == "yes" %}
     - poetry publish --username ${PYPI_USERNAME?} --password ${PYPI_PASSWORD?}
-    {% endif -%}
+    {%- endif %}
   stage: deploy
 
 pages:
-  # GitLab Pages uploads files inside the public folder after the job completes.
+  # GitLab Pages uploads files inside the "public" folder after job completes.
   artifacts:
     paths:
       - public
   image: "python:$PYTHON_VERSION_DEFAULT"
-  # Makes the job only run on the main and master branches.
+  # Makes job only run on the default repository branch.
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
@@ -113,7 +127,9 @@ test:
   parallel:
     matrix:
       - version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
-  # GitLab rule order matters since they are evaluated until first match.
+  # Makes job skip Git tags and run only default Python version on all events
+  # except for commits to or merge requests to the default repository branch.
+  # Then all Python versions are run.
   rules:
     - if: $CI_COMMIT_TAG
       when: never

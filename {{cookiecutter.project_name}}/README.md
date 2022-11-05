@@ -8,7 +8,7 @@
 
 ---
 
-{{ cookiecutter.project_name }} is {{ cookiecutter.project_description }}.
+{{ cookiecutter.project_name }}
 
 ## Getting Started
 
@@ -32,7 +32,6 @@ Distributed under the terms of the [{{ cookiecutter.license }} license](LICENSE.
 cookiecutter.project_name }} is
 free and open source software.
 {% else -%}
-{{ cookiecutter.project_name }} is proprietary software and prohibited from
-unauthorized redistribution. See the [license](LICENSE.md) for more
-information.
-{%- endif -%}
+{{ cookiecutter.project_name }} is proprietary software and prohibited from unauthorized
+redistribution. See the [license](LICENSE.md) for more information.
+{% endif -%}
