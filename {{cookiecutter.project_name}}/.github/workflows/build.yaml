@@ -54,6 +54,7 @@ jobs:
           poetry run flake8 .
           poetry run nbqa flake8 .
           poetry run mypy .
+          poetry build
 
   test:
     # GitHub contains function does not support literal arrays. For more

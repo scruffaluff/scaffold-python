@@ -90,7 +90,9 @@ lint:
     - poetry run flake8 .
     - poetry run nbqa flake8 .
     - poetry run mypy .
+    - poetry build
   stage: build
+{%- if cookiecutter.pypi_support == "yes" %}
 
 package:
   # Uploads packages as release files for Git tags.
@@ -103,10 +105,9 @@ package:
     - if: $CI_COMMIT_TAG =~ /^v?[0-9]+\.[0-9]+\.[0-9]+$/
   script:
     - poetry build
-    {%- if cookiecutter.pypi_support == "yes" %}
     - poetry publish --username ${PYPI_USERNAME?} --password ${PYPI_PASSWORD?}
-    {%- endif %}
   stage: deploy
+{%- endif %}
 
 pages:
   # GitLab Pages uploads files inside the "public" folder after job completes.
