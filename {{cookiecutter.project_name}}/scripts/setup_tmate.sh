@@ -6,11 +6,10 @@
 # Exit immediately if a command exits or pipes a non-zero return code.
 #
 # Flags:
-#   -E: Inheret trap on ERR signal for all functions and sub shells.
 #   -e: Exit immediately when a command pipeline fails.
 #   -o: Persist nonzero exit codes through a Bash pipe.
 #   -u: Throw an error when an unset variable is encountered.
-set -Eeou pipefail
+set -eou pipefail
 
 #######################################
 # Show CLI help information.
@@ -30,6 +29,7 @@ USAGE:
     setup-tmate [OPTIONS]
 
 OPTIONS:
+        --debug      Show Bash debug traces
     -h, --help       Print help information
     -v, --version    Print version information
 EOF
@@ -41,13 +41,30 @@ EOF
 }
 
 #######################################
+# Assert that command can be found in system path.
+# Will exit script with an error code if command is not in system path.
+# Arguments:
+#   Command to check availabilty.
+# Outputs:
+#   Writes error message to stderr if command is not in system path.
+#######################################
+assert_cmd() {
+  # Flags:
+  #   -v: Only show file path of command.
+  #   -x: Check if file exists and execute permission is granted.
+  if [[ ! -x "$(command -v "$1")" ]]; then
+    error "Cannot find required $1 command on computer"
+  fi
+}
+
+#######################################
 # Print error message and exit script with error code.
 # Outputs:
 #   Writes error message to stderr.
 #######################################
 error() {
-  local bold_red="\033[1;31m"
-  local default="\033[0m"
+  local bold_red='\033[1;31m'
+  local default='\033[0m'
 
   printf "${bold_red}error${default}: %s\n" "$1" >&2
   exit 1
@@ -94,6 +111,9 @@ install_tmate() {
   elif [[ -x "$(command -v zypper)" ]]; then
     ${1:+sudo} zypper install -y curl openssh tar xz
   fi
+
+  assert_cmd curl
+  assert_cmd tar
 
   curl -LSfs "https://github.com/tmate-io/tmate/releases/download/${tmate_version}/tmate-${tmate_version}-static-linux-${tmate_arch}.tar.xz" -o /tmp/tmate.tar.xz
   tar xvf /tmp/tmate.tar.xz -C /tmp --strip-components 1
@@ -162,17 +182,27 @@ setup_tmate() {
 #######################################
 main() {
   # Parse command line arguments.
-  case "${1:-}" in
-    -h | --help)
-      usage "main"
-      ;;
-    -v | --version)
-      version
-      ;;
-    *)
-      setup_tmate
-      ;;
-  esac
+  while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+      --debug)
+        set -o xtrace
+        shift 1
+        ;;
+      -h | --help)
+        usage 'main'
+        exit 0
+        ;;
+      -v | --version)
+        version
+        exit 0
+        ;;
+      *) ;;
+    esac
+  done
+
+  setup_tmate
 }
 
+# Variable BASH_SOURCE cannot be used to load script as a library. Piping the
+# script to Bash gives the same BASH_SOURCE result as sourcing the script.
 main "$@"
