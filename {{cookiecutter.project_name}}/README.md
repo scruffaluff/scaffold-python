@@ -1,17 +1,4 @@
 # {{ cookiecutter.project_name }}
-{% if cookiecutter.pypi_support == "yes" %}
-![](https://img.shields.io/pypi/v/{{ cookiecutter.project_name }})
-![](https://img.shields.io/pypi/pyversions/{{ cookiecutter.project_name }})
-{%- endif -%}
-{%- if cookiecutter.githost == "github" %}
-![](https://img.shields.io/github/workflow/status/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }}/build)
-{% endif -%}
-{%- if cookiecutter.githost == "gitlab" %}
-![](https://img.shields.io/gitlab/pipeline/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }}/master)
-{% endif -%}
-![](https://img.shields.io/badge/code%20style-black-000000)
-![](https://img.shields.io/{{ cookiecutter.githost }}/repo-size/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
-![](https://img.shields.io/{{ cookiecutter.githost }}/license/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name }})
 
 ---
 
@@ -45,7 +32,6 @@ Distributed under the terms of the [{{ cookiecutter.license }} license](LICENSE.
 cookiecutter.project_name }} is
 free and open source software.
 {% else -%}
-{{ cookiecutter.project_name }} is proprietary software and prohibited from
-unauthorized redistribution. See the [license](LICENSE.md) for more
-information.
-{%- endif -%}
+{{ cookiecutter.project_name }} is proprietary software and prohibited from unauthorized
+redistribution. See the [license](LICENSE.md) for more information.
+{% endif -%}

@@ -2,7 +2,7 @@
 #
 # For more information, visit https://www.mkdocs.org/user-guide/configuration/.
 
-copyright: Copyright &copy; 2022 {{ cookiecutter.author_name }}
+copyright: Copyright &copy; {% now 'utc', '%Y' %} {{ cookiecutter.author_name }}
 extra:
   social:
     - icon: fontawesome/brands/{{ cookiecutter.githost }}
