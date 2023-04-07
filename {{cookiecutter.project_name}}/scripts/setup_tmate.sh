@@ -63,19 +63,47 @@ assert_cmd() {
 #   Writes error message to stderr.
 #######################################
 error() {
-  local bold_red='\033[1;31m'
-  local default='\033[0m'
-
+  local bold_red='\033[1;31m' default='\033[0m'
   printf "${bold_red}error${default}: %s\n" "$1" >&2
   exit 1
 }
 
 #######################################
 # Install Tmate.
+# Arguments:
+#   Whether to use sudo command.
 #######################################
 install_tmate() {
-  local arch_type tmate_arch
-  local tmate_version='2.4.0'
+  local os_type
+  assert_cmd uname
+
+  # Do not use long form --kernel-name flag for uname. It is not supported on
+  # MacOS.
+  os_type="$(uname -s)"
+  case "${os_type}" in
+    Darwin)
+      brew install tmate
+      ;;
+    FreeBSD)
+      ${1:+sudo} pkg update
+      ${1:+sudo} pkg install --yes tmate
+      ;;
+    Linux)
+      install_tmate_linux "$1"
+      ;;
+    *)
+      error "Operating system ${os_type} is not supported"
+      ;;
+  esac
+}
+
+#######################################
+# Install Tmate for Linux.
+# Arguments:
+#   Whether to use sudo command.
+#######################################
+install_tmate_linux() {
+  local arch_type tmate_arch tmate_version='2.4.0'
 
   # Short form machine flag '-m' should be used since processor flag and long
   # form machine flag '--machine' are non-portable. For more information, visit
@@ -102,21 +130,18 @@ install_tmate() {
     ${1:+sudo} apk add curl openssh-client xz
   elif [[ -x "$(command -v apt-get)" ]]; then
     ${1:+sudo} apt-get update
-    ${1:+sudo} apt-get install -y curl openssh-client xz-utils
+    ${1:+sudo} apt-get install --yes curl openssh-client xz-utils
   elif [[ -x "$(command -v dnf)" ]]; then
-    ${1:+sudo} dnf install -y curl openssh xz
+    ${1:+sudo} dnf install --assumeyes curl openssh xz
   elif [[ -x "$(command -v pacman)" ]]; then
-    ${1:+sudo} pacman -Suy --noconfirm
-    ${1:+sudo} pacman -S --noconfirm curl openssh xz
+    ${1:+sudo} pacman --noconfirm --refresh --sync --sysupgrade
+    ${1:+sudo} pacman --noconfirm --sync curl openssh xz
   elif [[ -x "$(command -v zypper)" ]]; then
-    ${1:+sudo} zypper install -y curl openssh tar xz
+    ${1:+sudo} zypper install --no-confirm curl openssh tar xz
   fi
 
-  assert_cmd curl
-  assert_cmd tar
-
   curl -LSfs "https://github.com/tmate-io/tmate/releases/download/${tmate_version}/tmate-${tmate_version}-static-linux-${tmate_arch}.tar.xz" -o /tmp/tmate.tar.xz
-  tar xvf /tmp/tmate.tar.xz -C /tmp --strip-components 1
+  tar xvf /tmp/tmate.tar.xz --directory /tmp --strip-components 1
   ${1:+sudo} install /tmp/tmate /usr/local/bin/tmate
   rm /tmp/tmate /tmp/tmate.tar.xz
 }
@@ -127,19 +152,19 @@ install_tmate() {
 #   Setup Tmate version string.
 #######################################
 version() {
-  echo 'SetupTmate 0.0.1'
+  echo 'SetupTmate 0.0.2'
 }
 
 #######################################
 # Installs Tmate and creates a remote session.
 #######################################
 setup_tmate() {
-  local use_sudo=''
+  local ssh_connect use_sudo='' web_connect
 
   # Check if user is not root.
   if [[ "${EUID}" -ne 0 ]]; then
     assert_cmd sudo
-    use_sudo=1
+    use_sudo='true'
   fi
 
   # Install Tmate if not available.
@@ -167,7 +192,7 @@ setup_tmate() {
     # Check if script should exit.
     #
     # Flags:
-    #   -f: Check if file exists and is a socket.
+    #   -S: Check if file exists and is a socket.
     #   -f: Check if file exists and is a regular file.
     if [[ ! -S /tmp/tmate.sock || -f /close-tmate ]]; then
       break
