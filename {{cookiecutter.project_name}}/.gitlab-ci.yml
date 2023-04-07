@@ -123,11 +123,11 @@ pages:
     - mv site public
   stage: deploy
 
-test:
+test-linux:
   image: "python:$version"
   parallel:
     matrix:
-      - version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+      - version: ["3.8", "3.9", "3.10", "3.11"]
   # Makes job skip Git tags and run only default Python version on all events
   # except for commits to or merge requests to the default repository branch.
   # Then all Python versions are run.

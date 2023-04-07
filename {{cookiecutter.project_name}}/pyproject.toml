@@ -57,34 +57,33 @@ readme = "README.md"
 version = "{{ cookiecutter.project_version }}"
 
 [tool.poetry.dependencies]
-python = "^3.7.0"
+python = "^3.8.1"
 {%- if cookiecutter.cli_support == "yes" %}
-typer = "^0.6.0"
+typer = "^0.7.0"
 {%- endif %}
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.0"
-black = { extras = ["jupyter"], version = "^22.10.0" }
-coverage = { extras = ["toml"], version = "^6.5.0" }
-flake8 = { python = "^3.8.0", version = "^5.0.0" }
-flake8-bugbear = "^22.10.0"
-flake8-docstrings = "^1.6.0"
+black = { extras = ["jupyter"], version = "^23.3.0" }
+coverage = { extras = ["toml"], version = "^7.2.0" }
+flake8 = "^6.0.0"
+flake8-bugbear = "^23.3.0"
+flake8-docstrings = "^1.7.0"
 flake8-import-order = "^0.18.0"
-mccabe = { python = "^3.8.0", version = "^0.7.0" }
-mkdocs = { python = "^3.8.0", version = "^1.4.0" }
-mkdocs-material = { python = "^3.8.0", version = "^8.5.0" }
-mkdocstrings = { extras = ["python"], version = "^0.19.0" }
-mypy = "^0.982"
-nbqa = "^1.5.0"
-pdbpp = "^0.10.0"
+mccabe = "^0.7.0"
+mkdocs = "^1.4.0"
+mkdocs-material = "^9.1.0"
+mkdocstrings = "^0.21.0"
+mypy = "^1.0.0"
+nbqa = "^1.7.0"
 py-spy = "^0.3.0"
-pymdown-extensions = { python = "^3.8.0", version = "^9.7.0" }
+pymdown-extensions = "^9.10.0"
 pyreadline3 = { markers = "sys_platform == 'win32'", version = "^3.4.0" }
 pytest = "^7.2.0"
 pytest-cov = "^4.0.0"
 pytest-mock = "^3.10.0"
 toml = "^0.10.0"
-tox = "^3.27.0"
+tox = "^4.4.0"
 types-toml = "^0.10.0"
 
 {% if cookiecutter.cli_support == "yes" -%}
