@@ -82,7 +82,11 @@ install_tmate() {
   os_type="$(uname -s)"
   case "${os_type}" in
     Darwin)
-      brew install tmate
+      # Setting environment variable "HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK"
+      # prevents upgrading outdated system packages during a Homebrew
+      # installation of a new package. This is necessary since in some systems,
+      # such as GitLab CI, upgrading system packages causes breakage.
+      HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK='true' brew install tmate
       ;;
     FreeBSD)
       ${1:+sudo} pkg update
@@ -152,7 +156,7 @@ install_tmate_linux() {
 #   Setup Tmate version string.
 #######################################
 version() {
-  echo 'SetupTmate 0.0.2'
+  echo 'SetupTmate 0.1.0'
 }
 
 #######################################
@@ -194,7 +198,7 @@ setup_tmate() {
     # Flags:
     #   -S: Check if file exists and is a socket.
     #   -f: Check if file exists and is a regular file.
-    if [[ ! -S /tmp/tmate.sock || -f /close-tmate ]]; then
+    if [[ ! -S /tmp/tmate.sock || -f /close-tmate || -f ./close-tmate ]]; then
       break
     fi
 
