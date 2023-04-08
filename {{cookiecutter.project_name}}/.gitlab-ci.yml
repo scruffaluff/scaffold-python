@@ -26,9 +26,9 @@ stages:
 # Environment variables that apply to all jobs.
 variables:
   PIP_CACHE_DIR: $CI_PROJECT_DIR/.cache/pip
-  PIP_DISABLE_PIP_VERSION_CHECK: 'true'
+  PIP_DISABLE_PIP_VERSION_CHECK: "true"
   PIP_ROOT_USER_ACTION: ignore
-  POETRY_VIRTUALENVS_IN_PROJECT: 'true'
+  POETRY_VIRTUALENVS_IN_PROJECT: "true"
   PYTHON_VERSION_DEFAULT: "3.10"
   TMATE_DEBUG: "false"
 
