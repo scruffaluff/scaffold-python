@@ -43,6 +43,7 @@ default:
   before_script:
     - python --version
     - python -m pip install poetry
+    - poetry lock --check
     - poetry install --verbose
   # Creates a dependencies cache for each unique Docker image and Poetry lock
   # file hash pair to speed up dependency installations. Since caches are shared
@@ -170,6 +171,7 @@ test-windows:
     - $Env:Path = 'C:\python310;C:\python310\Scripts;' + $Env:Path
     - choco install --yes --cache .cache/choco python310
     - python -m pip install poetry
+    - poetry lock --check
     - poetry install --verbose
   # Creates a dependencies cache for each unique Poetry lock file hash pair to
   # speed up dependency installations.
