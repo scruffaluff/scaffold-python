@@ -30,19 +30,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Node interpreter
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
       - name: Install Prettier formatter
         run: npm install --global prettier
       - name: Install Python interpreter
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
       - name: Cache Python packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .venv
           key: >-

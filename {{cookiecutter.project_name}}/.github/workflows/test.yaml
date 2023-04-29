@@ -30,13 +30,13 @@ jobs:
     runs-on: {% raw -%} ${{ matrix.os }} {%- endraw %}
     steps:
       - name: Checkout code repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Python interpreter
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: {% raw -%} ${{ matrix.python }} {%- endraw %}
       - name: Cache Python packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .venv
           key: >-

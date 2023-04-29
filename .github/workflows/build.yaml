@@ -20,21 +20,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Node interpreter
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
       - name: Install Prettier formatter
         run: npm install --global prettier
       - name: Check configuration file formatting
         run: prettier --check .
       - name: Install Python interpreter
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.10"
       - name: Cache Python packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .venv
           key: python-3.10_ubuntu-latest_poetry-${{ hashFiles('poetry.lock') }}
@@ -64,19 +64,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Node interpreter
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
       - name: Install Prettier formatter
         run: npm install --global prettier
       - name: Install Python interpreter
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.10"
       - name: Cache Python packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .venv
           key: >-
