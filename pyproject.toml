@@ -38,28 +38,24 @@ keywords = []
 license = "MIT"
 name = "scaffold-python"
 readme = "README.md"
-version = "0.1.0"
+version = "0.2.0"
 
 [tool.poetry.dependencies]
-python = "^3.7.0"
+python = "^3.8.1"
 
 [tool.poetry.group.dev.dependencies]
-black = "^22.10.0"
-# Pytest-cookies is broken for cookiecutter > 2.0.0 on Windows. For more
-# information, visit https://github.com/hackebrot/pytest-cookies/issues/62.
-cookiecutter = { markers = "sys_platform == 'win32'", version = "^1.0.0" }
-flake8 = { python = "^3.8.0", version = "^5.0.0" }
-flake8-bugbear = "^22.10.0"
-flake8-docstrings = "^1.6.0"
+black = "^23.3.0"
+flake8 = "^6.0.0"
+flake8-bugbear = "^23.3.0"
+flake8-docstrings = "^1.7.0"
 flake8-import-order = "^0.18.0"
-mccabe = { python = "^3.8.0", version = "^0.7.0" }
-mkdocs = { python = "^3.8.0", version = "^1.4.0" }
-mkdocs-material = { python = "^3.8.0", version = "^8.5.0" }
-mypy = "^0.982"
-pdbpp = "^0.10.0"
-pymdown-extensions = { python = "^3.8.0", version = "^9.7.0" }
+mccabe = "^0.7.0"
+mkdocs = "^1.4.0"
+mkdocs-material = "^9.1.0"
+mypy = "^1.0.0"
+pymdown-extensions = "^9.10.0"
 pyreadline3 = { markers = "sys_platform == 'win32'", version = "^3.4.0" }
 pytest = "^7.2.0"
-pytest-cookies = "^0.6.0"
+pytest-cookies = "^0.7.0"
 pytest-mock = "^3.10.0"
 types-toml = "^0.10.0"
