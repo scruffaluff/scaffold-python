@@ -1,17 +1,19 @@
 # GitLab continuous integration file to build and deploy repository.
 #
 # For a reference of the CI file syntax, visit
-# https://docs.gitlab.com/ee/ci/yaml/.
+# https://docs.gitlab.com/ee/ci/yaml.
 
+---
 # Workflow rules define when the CI pipeline is created. Rule order matters
 # since they are evaluated until first match.
 workflow:
-  # Makes pipeline run on Git tags, any branch commit, and on expected result of
-  # merge request branches. For more information, visit
+  # Makes pipeline run on Git tags, merge requests, manual web run, and on
+  # branch commits when no merge request is open. For more information, visit
   # https://docs.gitlab.com/ee/ci/pipelines/merge_request_pipelines.html and
   # https://docs.gitlab.com/ee/ci/yaml/workflow.html#switch-between-branch-pipelines-and-merge-request-pipelines.
   rules:
     - if: $CI_COMMIT_TAG
+    - if: $CI_PIPELINE_SOURCE =~ /(merge_request_event|web)/
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
