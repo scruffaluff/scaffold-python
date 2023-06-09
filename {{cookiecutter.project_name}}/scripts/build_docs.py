@@ -11,7 +11,7 @@ import sys
 def build_docs() -> None:
     """Build documentation with MkDocs."""
     try:
-        subprocess.run(args="mkdocs build", shell=True, check=True)
+        subprocess.run(args="mkdocs build --strict", shell=True, check=True)
     except CalledProcessError:
         print("Failed to build project documentation.", sys.stderr)
         sys.exit(1)

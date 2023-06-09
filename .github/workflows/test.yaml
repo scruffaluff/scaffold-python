@@ -37,7 +37,10 @@ jobs:
         with:
           node-version: "20"
       - name: Install Prettier formatter
-        run: npm install --global prettier
+        run: |
+          node --version
+          npm --version
+          npm install --global prettier
       - name: Install Python interpreter
         uses: actions/setup-python@v4
         with:
@@ -51,7 +54,9 @@ jobs:
             hashFiles('poetry.lock') }}
       - name: Install Python packages
         run: |
-          python -m pip install --upgrade pip poetry setuptools wheel
+          python --version
+          python -m pip --version
+          python -m pip install poetry
           poetry config virtualenvs.in-project true
           poetry lock --check
           poetry install --verbose
