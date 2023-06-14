@@ -14,7 +14,6 @@ workflow:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_PIPELINE_SOURCE =~ /(merge_request_event|web)/
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
     - if: $CI_COMMIT_BRANCH
@@ -67,10 +66,11 @@ default:
 config:
   before_script:
     - node --version
+    - npm --version
     - npm install --global prettier
   # Disable cache for job.
   cache: []
-  image: "node:18"
+  image: "node:20"
   # Makes job only run on every Git event except for tags.
   rules:
     - if: $CI_COMMIT_TAG
@@ -108,7 +108,7 @@ package:
     - if: $CI_COMMIT_TAG =~ /^v?[0-9]+\.[0-9]+\.[0-9]+$/
   script:
     - poetry build
-    - poetry publish --username ${PYPI_USERNAME?} --password ${PYPI_PASSWORD?}
+    - poetry publish --username $PYPI_USERNAME --password $PYPI_PASSWORD
   stage: deploy
 {%- endif %}
 
