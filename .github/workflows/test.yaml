@@ -6,19 +6,20 @@
 ---
 name: test
 
-# Trigger workflow on push or pull request to the develop, main, and master
-# branches.
+# Trigger workflow on push or pull request to the default branch.
 on:
   pull_request:
     branches:
-      - develop
-      - main
-      - master
+      - $default-branch
   push:
     branches:
-      - develop
-      - main
-      - master
+      - $default-branch
+  workflow_dispatch:
+    inputs:
+      debug:
+        default: "false"
+        description: Use TMate session for debugging on failure
+        required: false
 
 jobs:
   test:
@@ -62,3 +63,9 @@ jobs:
           poetry install --verbose
       - name: Run test suite
         run: poetry run pytest
+      - name: Setup tmate session if job failed
+        if: >-
+          ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.debug == 'true' }}
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3

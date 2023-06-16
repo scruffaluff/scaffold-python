@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Installs Tmate and creates a session suitable for CI. Based on logic from
-# https://github.com/mxschmitt/action-tmate.
+# Installs Tmate and creates a session suitable for CI pipelines. Based on logic
+# from https://github.com/mxschmitt/action-tmate.
 
 # Exit immediately if a command exits or pipes a non-zero return code.
 #

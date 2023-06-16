@@ -6,11 +6,17 @@
 ---
 name: release
 
-# Trigger workflow on SemVer compatible tags.
+# Trigger workflow on Git tag.
 on:
   push:
     tags:
-      - "v?[0-9]+.[0-9]+.[0-9]+"
+      - "**"
+  workflow_dispatch:
+    inputs:
+      debug:
+        default: "false"
+        description: Use TMate session for debugging on failure
+        required: false
 
 jobs:
   release:
@@ -38,3 +44,9 @@ jobs:
             See the
             [changelog](https://github.com/scruffaluff/scaffold-python/blob/${{
             steps.extract_tag.outputs.tag }}/CHANGELOG.md) for more information.
+      - name: Setup tmate session if job failed
+        if: >-
+          ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.debug == 'true' }}
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3

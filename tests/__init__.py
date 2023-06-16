@@ -27,6 +27,7 @@ def test_badges_separate_lines(
 ) -> None:
     """Readme files must have all badge links on separate lines."""
     result = cookies.bake(extra_context=context)
+    assert result.exit_code == 0, str(result.exception)
     readme = result.project_path / "README.md"
 
     regex = re.compile(r"img\.shields\.io")
@@ -64,6 +65,7 @@ def test_existing_paths(
 ) -> None:
     """Check that specific paths exist after scaffolding."""
     result = cookies.bake(extra_context=context)
+    assert result.exit_code == 0, str(result.exception)
     for path in paths:
         file_path = result.project_path / path
         assert file_path.exists()
@@ -107,7 +109,7 @@ def test_homepage_context(
 ) -> None:
     """Default homepage is generated from repository URL."""
     result = cookies.bake(extra_context=context)
-
+    assert result.exit_code == 0, str(result.exception)
     actual = result.context["project_homepage"]
     assert actual == expected
 
@@ -133,6 +135,7 @@ def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
 def test_mkdocs_build(cookies: Cookies) -> None:
     """Mkdocs must be able to build documentation for baked project."""
     result = cookies.bake(extra_context={})
+    assert result.exit_code == 0, str(result.exception)
     expected = 0
 
     process = run_command(
@@ -222,6 +225,7 @@ def test_prettier_format(baked_project: Result) -> None:
 def test_pytest_test(cookies: Cookies) -> None:
     """Generated files must pass Pytest unit tests."""
     result = cookies.bake(extra_context={})
+    assert result.exit_code == 0, str(result.exception)
     expected = 0
 
     process = run_command(
@@ -254,6 +258,7 @@ def test_removed_paths(
 ) -> None:
     """Check that specific paths are removed after scaffolding."""
     result = cookies.bake(extra_context=context)
+    assert result.exit_code == 0, str(result.exception)
     for path in paths:
         remove_path = result.project_path / path
         assert not remove_path.exists()
@@ -275,7 +280,7 @@ def test_removed_paths(
 def test_scaffold(context: Dict[str, Any], cookies: Cookies) -> None:
     """Check that various configurations generate successfully."""
     result = cookies.bake(extra_context=context)
-    assert result.exit_code == 0
+    assert result.exit_code == 0, str(result.exception)
 
 
 @pytest.mark.parametrize(
@@ -334,6 +339,7 @@ def test_text_existence(
 ) -> None:
     """Check for existence of text in files."""
     result = cookies.bake(extra_context=context)
+    assert result.exit_code == 0, str(result.exception)
     for path in paths:
         text_exists = text in (result.project_path / path).read_text()
         assert text_exists == exist
