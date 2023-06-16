@@ -14,6 +14,12 @@ on:
   push:
     branches:
       - "**"
+  workflow_dispatch:
+    inputs:
+      debug:
+        default: "false"
+        description: Use TMate session for debugging on failure
+        required: false
 
 jobs:
   lint:
@@ -62,14 +68,16 @@ jobs:
           poetry run nbqa flake8 .
           poetry run mypy .
           poetry build
+      - name: Setup tmate session if job failed
+        if: >-
+          {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.debug == 'true' }} {%- endraw %}
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3
 
   test:
-    # GitHub contains function does not support literal arrays. For more
-    # information, visit
-    # https://github.community/t/passing-an-array-literal-to-contains-function-causes-syntax-error/17213.
     if: >-
-      {% raw -%} ${{ !contains(fromJson('["refs/heads/develop", "refs/heads/main",
-      "refs/heads/master"]'), github.ref) }} {%- endraw %}
+      {% raw -%} if: ${{ github.ref != format('refs/heads/{0}', $default-branch) }} {%- endraw %}
     name: Run test suite for Python 3.10 on Ubuntu
     runs-on: ubuntu-latest
     steps:
@@ -95,3 +103,9 @@ jobs:
           poetry install --verbose
       - name: Run test suite
         run: poetry run pytest --cov
+      - name: Setup tmate session if job failed
+        if: >-
+          {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.debug == 'true' }} {%- endraw %}
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3
