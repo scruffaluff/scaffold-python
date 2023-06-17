@@ -54,6 +54,6 @@ jobs:
       - name: Setup tmate session if job failed
         if: >-
           {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
-          github.event.inputs.debug == 'true' }} {%- endraw %}
+          inputs.debug == 'true' }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
