@@ -6,12 +6,8 @@
 ---
 name: pages
 
-# Makes workflow run on push or pull request to the main or develop branches.
+# Makes workflow run on push to the main or develop branches.
 on:
-  pull_request:
-    branches:
-      - develop
-      - main
   push:
     branches:
       - develop
