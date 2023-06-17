@@ -6,14 +6,16 @@
 ---
 name: test
 
-# Trigger workflow on push or pull request to the default branch.
+# Makes workflow run on push or pull request to the main or develop branches.
 on:
   pull_request:
     branches:
-      - $default-branch
+      - develop
+      - main
   push:
     branches:
-      - $default-branch
+      - develop
+      - main
   workflow_dispatch:
     inputs:
       debug:

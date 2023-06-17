@@ -6,7 +6,7 @@
 ---
 name: release
 
-# Trigger workflow on Git tag.
+# Makes workflow run on Git tag.
 on:
   push:
     tags:

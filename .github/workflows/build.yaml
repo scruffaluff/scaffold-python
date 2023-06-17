@@ -6,7 +6,7 @@
 ---
 name: build
 
-# Trigger workflow on any push or pull request.
+# Makes workflow run on any push or pull request.
 on:
   pull_request:
     branches:
