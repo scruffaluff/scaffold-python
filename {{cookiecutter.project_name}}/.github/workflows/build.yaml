@@ -20,6 +20,14 @@ on:
         default: "false"
         description: Use TMate session for debugging on failure
         required: false
+      os:
+        default: macos ubuntu windows
+        description: Space separated list of operating systems
+        required: false
+      python:
+        default: 3.8 3.9 3.10 3.11
+        description: Space separated list of Python versions
+        required: false
 
 jobs:
   lint:
@@ -76,6 +84,11 @@ jobs:
         uses: mxschmitt/action-tmate@v3
 
   test:
+    # Runs only job combinations specified as inputs during a manual workflow.
+    if: >-
+      {% raw -%} ${{ github.event_name != 'workflow_dispatch' ||
+      (contains(github.event.inputs.os, matrix.os) &&
+      contains(github.event.inputs.python, matrix.python)) }} {%- endraw %}
     name: {% raw -%} Run test suite for Python ${{ matrix.python }} on ${{ matrix.os }} {%- endraw %}
     strategy:
       fail-fast: false
@@ -92,9 +105,16 @@ jobs:
         include:
           - os: ubuntu-latest
             python: "3.10"
-        os: [macos-latest, windows-latest, ubuntu-latest]
-        python: ["3.8", "3.9", "3.10", "3.11"]
-    runs-on: {% raw -%} ${{ matrix.os }} {%- endraw %}
+        os:
+          - macos
+          - ubuntu
+          - windows
+        python:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+    runs-on: {% raw -%} ${{ matrix.os }}-latest {%- endraw %}
     steps:
       - name: Checkout code repository
         uses: actions/checkout@v3
