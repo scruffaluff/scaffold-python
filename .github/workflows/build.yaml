@@ -113,6 +113,9 @@ jobs:
             github.event.repository.default_branch }}
         exclude:
           - all: false
+          # Python 3.11 is being fickle on Windows with its Pip installation.
+          - os: windows
+            python: "3.11"
         include:
           - os: ${{ inputs.os || 'ubuntu' }}
             python: ${{ inputs.python || '3.10' }}
