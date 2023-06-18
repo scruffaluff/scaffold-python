@@ -33,7 +33,7 @@ Function RemoteScript($URL) {
 
 # Script entrypoint.
 Function Main() {
-    $Env:Path = 'C:\tools\msys64\usr\bin;' + $Env:Path
+    $Env:Path = 'C:\tools\msys64\usr\bin;' + "$Env:Path"
     If (-Not (Get-Command tmate -ErrorAction SilentlyContinue)) {
         InstallTmate
     }
@@ -58,7 +58,7 @@ Function Main() {
 
         # Check if script should exit.
         If (
-            (-Not (bash -l -c "ls /tmp/tmate.sock 2> /dev/null")) -Or 
+            (-Not (bash -l -c 'ls /tmp/tmate.sock 2> /dev/null')) -Or 
             (Test-Path -Path 'C:/tools/msys64/close-tmate') -Or 
             (Test-Path -Path './close-tmate')
         ) {

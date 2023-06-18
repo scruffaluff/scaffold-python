@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Installs Tmate and creates a session suitable for CI. Based on logic from
-# https://github.com/mxschmitt/action-tmate.
+# Installs Tmate and creates a session suitable for CI pipelines. Based on logic
+# from https://github.com/mxschmitt/action-tmate.
 
 # Exit immediately if a command exits or pipes a non-zero return code.
 #
@@ -18,7 +18,7 @@ set -eou pipefail
 #   Writes help information to stdout.
 #######################################
 usage() {
-  case "$1" in
+  case "${1}" in
     main)
       cat 1>&2 << EOF
 $(version)
@@ -35,7 +35,7 @@ OPTIONS:
 EOF
       ;;
     *)
-      error "No such usage option '$1'"
+      error "No such usage option '${1}'"
       ;;
   esac
 }
@@ -52,8 +52,8 @@ assert_cmd() {
   # Flags:
   #   -v: Only show file path of command.
   #   -x: Check if file exists and execute permission is granted.
-  if [[ ! -x "$(command -v "$1")" ]]; then
-    error "Cannot find required $1 command on computer"
+  if [[ ! -x "$(command -v "${1}")" ]]; then
+    error "Cannot find required ${1} command on computer"
   fi
 }
 
@@ -64,7 +64,7 @@ assert_cmd() {
 #######################################
 error() {
   local bold_red='\033[1;31m' default='\033[0m'
-  printf "${bold_red}error${default}: %s\n" "$1" >&2
+  printf "${bold_red}error${default}: %s\n" "${1}" >&2
   exit 1
 }
 
@@ -82,7 +82,7 @@ install_tmate() {
   os_type="$(uname -s)"
   case "${os_type}" in
     Darwin)
-      # Setting environment variable "HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK"
+      # Setting environment variable 'HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK'
       # prevents upgrading outdated system packages during a Homebrew
       # installation of a new package. This is necessary since in some systems,
       # such as GitLab CI, upgrading system packages causes breakage.
@@ -93,7 +93,7 @@ install_tmate() {
       ${1:+sudo} pkg install --yes tmate
       ;;
     Linux)
-      install_tmate_linux "$1"
+      install_tmate_linux "${1}"
       ;;
     *)
       error "Operating system ${os_type} is not supported"
@@ -212,7 +212,7 @@ setup_tmate() {
 main() {
   # Parse command line arguments.
   while [[ "$#" -gt 0 ]]; do
-    case "$1" in
+    case "${1}" in
       --debug)
         set -o xtrace
         shift 1

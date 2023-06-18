@@ -6,6 +6,7 @@ import sys
 from typing import Any, Dict, List
 
 import pytest
+from pytest import mark
 from pytest_cookies.plugin import Cookies, Result
 
 # Ingoring unused import for show_match. Function is imported for convenient
@@ -13,7 +14,7 @@ from pytest_cookies.plugin import Cookies, Result
 from tests.util import file_matches, run_command, show  # noqa: F401
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context",
     [
         {"githost": "github"},
@@ -27,6 +28,7 @@ def test_badges_separate_lines(
 ) -> None:
     """Readme files must have all badge links on separate lines."""
     result = cookies.bake(extra_context=context)
+    assert result.exit_code == 0, str(result.exception)
     readme = result.project_path / "README.md"
 
     regex = re.compile(r"img\.shields\.io")
@@ -46,7 +48,7 @@ def test_black_format(baked_project: Result) -> None:
     assert actual == expected, process.stderr.decode("utf-8")
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context,paths",
     [
         ({"githost": "github"}, [".github"]),
@@ -64,6 +66,7 @@ def test_existing_paths(
 ) -> None:
     """Check that specific paths exist after scaffolding."""
     result = cookies.bake(extra_context=context)
+    assert result.exit_code == 0, str(result.exception)
     for path in paths:
         file_path = result.project_path / path
         assert file_path.exists()
@@ -83,7 +86,7 @@ def test_flake8_lints(baked_project: Result) -> None:
 
 
 # Flake8 E501 is disabled since Black autoformats the line to be too long.
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context,expected",
     [
         (
@@ -107,12 +110,12 @@ def test_homepage_context(
 ) -> None:
     """Default homepage is generated from repository URL."""
     result = cookies.bake(extra_context=context)
-
+    assert result.exit_code == 0, str(result.exception)
     actual = result.context["project_homepage"]
     assert actual == expected
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context",
     [{"project_name": "$Mock?"}],
 )
@@ -122,17 +125,18 @@ def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
     assert result.exit_code == -1
 
 
-@pytest.mark.skipif(
+@mark.skipif(
     sys.version_info < (3, 8),
     reason="Newer Mkdocs versions require at least Python 3.8.",
 )
-@pytest.mark.skipif(
+@mark.skipif(
     sys.platform == "win32",
     reason="Poetry install command hits permission errors for temporary paths",
 )
 def test_mkdocs_build(cookies: Cookies) -> None:
     """Mkdocs must be able to build documentation for baked project."""
     result = cookies.bake(extra_context={})
+    assert result.exit_code == 0, str(result.exception)
     expected = 0
 
     process = run_command(
@@ -200,7 +204,7 @@ def test_no_trailing_blank_line(baked_project: Result) -> None:
         assert match is None, f"File {path} ends with a blank line."
 
 
-@pytest.mark.skipif(
+@mark.skipif(
     sys.platform in ["darwin", "win32"],
     reason="""
     Cookiecutter does not generate files with Windows line endings and Prettier
@@ -209,19 +213,23 @@ def test_no_trailing_blank_line(baked_project: Result) -> None:
 )
 def test_prettier_format(baked_project: Result) -> None:
     """Generated files must pass Prettier format checker."""
+    if baked_project.context["prettier_support"] == "no":
+        pytest.skip("Prettier support is required for format testing.")
+
     process = run_command(
         command="prettier --check .", work_dir=baked_project.project_path
     )
     assert process.returncode == 0, process.stderr.decode("utf-8")
 
 
-@pytest.mark.skipif(
+@mark.skipif(
     sys.platform == "win32",
     reason="Poetry install command hits permission errors for temporary paths.",
 )
 def test_pytest_test(cookies: Cookies) -> None:
     """Generated files must pass Pytest unit tests."""
     result = cookies.bake(extra_context={})
+    assert result.exit_code == 0, str(result.exception)
     expected = 0
 
     process = run_command(
@@ -237,7 +245,7 @@ def test_pytest_test(cookies: Cookies) -> None:
     assert process.returncode == expected, process.stdout.decode("utf-8")
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context,paths",
     [
         ({"githost": "github"}, [".gitlab-ci.yml"]),
@@ -254,12 +262,13 @@ def test_removed_paths(
 ) -> None:
     """Check that specific paths are removed after scaffolding."""
     result = cookies.bake(extra_context=context)
+    assert result.exit_code == 0, str(result.exception)
     for path in paths:
         remove_path = result.project_path / path
         assert not remove_path.exists()
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context",
     [
         {"githost": "github"},
@@ -275,10 +284,10 @@ def test_removed_paths(
 def test_scaffold(context: Dict[str, Any], cookies: Cookies) -> None:
     """Check that various configurations generate successfully."""
     result = cookies.bake(extra_context=context)
-    assert result.exit_code == 0
+    assert result.exit_code == 0, str(result.exception)
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context,paths,text,exist",
     [
         (
@@ -334,6 +343,7 @@ def test_text_existence(
 ) -> None:
     """Check for existence of text in files."""
     result = cookies.bake(extra_context=context)
+    assert result.exit_code == 0, str(result.exception)
     for path in paths:
         text_exists = text in (result.project_path / path).read_text()
         assert text_exists == exist

@@ -59,3 +59,14 @@ pytest = "^7.3.0"
 pytest-cookies = "^0.7.0"
 pytest-mock = "^3.10.0"
 types-toml = "^0.10.0"
+
+[tool.pytest.ini_options]
+addopts = "-sv"
+filterwarnings = ["ignore::DeprecationWarning"]
+python_classes = "Test*"
+python_files = [
+    "__init__.py",
+    "test_*.py",
+]
+python_functions = ["test_*"]
+testpaths = ["tests"]

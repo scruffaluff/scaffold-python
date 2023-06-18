@@ -6,12 +6,17 @@
 ---
 name: pages
 
-# Trigger workflow on push to the main and master branches.
+# Makes workflow run on push to the main branch.
 on:
   push:
     branches:
       - main
-      - master
+  workflow_dispatch:
+    inputs:
+      debug:
+        default: false
+        description: Use TMate session for debugging on failure
+        type: boolean
 
 jobs:
   docs:
@@ -48,3 +53,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: site
+      - name: Setup tmate session if job failed
+        if: >-
+          ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          inputs.debug }}
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3

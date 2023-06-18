@@ -93,9 +93,9 @@ types-toml = "^0.10.0"
 
 [tool.pytest.ini_options]
 addopts = "-sv"
+filterwarnings = ["ignore::DeprecationWarning"]
 markers = [
-    "functional: mark as functional test.",
-    "integration: mark as integration test.",
+    "e2e: mark as end to end test.",
     "unit: mark as unit test.",
 ]
 python_classes = "Test*"

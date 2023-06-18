@@ -6,7 +6,7 @@
 ---
 name: build
 
-# Trigger workflow on any push or pull request.
+# Makes workflow run on any push or pull request.
 on:
   pull_request:
     branches:
@@ -14,9 +14,40 @@ on:
   push:
     branches:
       - "**"
+  workflow_dispatch:
+    inputs:
+      debug:
+        default: false
+        description: Use TMate session for debugging on failure
+        type: boolean
+      job:
+        default: test
+        description: CI job to run
+        options:
+          - lint
+          - test
+        type: choice
+      os:
+        default: ubuntu
+        description: Operating system for test job
+        options:
+          - macos
+          - ubuntu
+          - windows
+        type: choice
+      python:
+        default: "3.10"
+        description: Python version for test job
+        options:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+        type: choice
 
 jobs:
   lint:
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.job == 'lint' }}
     name: Check code with formatter and linter
     runs-on: ubuntu-latest
     steps:
@@ -41,8 +72,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: python-3.10_ubuntu-latest_poetry-${{ hashFiles('poetry.lock') }}
-      - name: Install Python dependencies
+          key: >-
+            python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }}
+      - name: Install Python packages
         run: |
           python --version
           python -m pip --version
@@ -50,7 +82,7 @@ jobs:
           poetry config virtualenvs.in-project true
           poetry lock --check
           poetry install --verbose
-      - name: Static lint code
+      - name: Run linter checks
         run: |
           poetry run black --check .
           poetry run flake8 .
@@ -58,16 +90,45 @@ jobs:
           mkdir docs
           cp README.md docs/index.md
           poetry run mkdocs build --strict
+      - name: Setup tmate session if job failed
+        if: >-
+          ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          inputs.debug }}
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3
 
   test:
-    # GitHub contains function does not support literal arrays. For more
-    # information, visit
-    # https://github.community/t/passing-an-array-literal-to-contains-function-causes-syntax-error/17213.
-    if: >-
-      ${{ !contains(fromJson('["refs/heads/develop", "refs/heads/main",
-      "refs/heads/master"]'), github.ref) }}
-    name: Run test suite for Python 3.10 on Ubuntu
-    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.job == 'test' }}
+    name: Run test suite for Python ${{ matrix.python }} on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      # Runs all job combinations on a manual run or any push or pull request to
+      # the default branch. Runs only Python 3.10 Ubuntu job for all other Git
+      # events.
+      matrix:
+        all:
+          - >-
+            ${{ github.ref == format('refs/heads/{0}',
+            github.event.repository.default_branch) || github.base_ref ==
+            github.event.repository.default_branch }}
+        exclude:
+          - all: false
+          # Python 3.11 is being fickle on Windows with its Pip installation.
+          - os: windows
+            python: "3.11"
+        include:
+          - os: ${{ inputs.os || 'ubuntu' }}
+            python: ${{ inputs.python || '3.10' }}
+        os:
+          - macos
+          - ubuntu
+          - windows
+        python:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+    runs-on: ${{ matrix.os }}-latest
     steps:
       - name: Checkout code repository
         uses: actions/checkout@v3
@@ -83,13 +144,14 @@ jobs:
       - name: Install Python interpreter
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: ${{ matrix.python }}
       - name: Cache Python packages
         uses: actions/cache@v3
         with:
           path: .venv
           key: >-
-            python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }}
+            python-${{ matrix.python }}_${{ runner.os }}_poetry-${{
+            hashFiles('poetry.lock') }}
       - name: Install Python packages
         run: |
           python --version
@@ -100,3 +162,9 @@ jobs:
           poetry install --verbose
       - name: Run test suite
         run: poetry run pytest
+      - name: Setup tmate session if job failed
+        if: >-
+          ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          inputs.debug }}
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3
