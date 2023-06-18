@@ -76,6 +76,8 @@ config:
   # Makes job only run on every Git event except for tags.
   rules:
     - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'config'
+    - if: $CI_PIPELINE_SOURCE == 'web'
+      when: never
     - if: $CI_COMMIT_TAG
       when: never
     - when: always
@@ -88,6 +90,8 @@ lint:
   # Makes job run on every Git event except for tags.
   rules:
     - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'lint'
+    - if: $CI_PIPELINE_SOURCE == 'web'
+      when: never
     - if: $CI_COMMIT_TAG
       when: never
     - when: always
@@ -110,6 +114,8 @@ package:
   # Makes job only run on Git tags.
   rules:
     - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'package'
+    - if: $CI_PIPELINE_SOURCE == 'web'
+      when: never
     - if: $CI_COMMIT_TAG
   script:
     - poetry build
@@ -125,6 +131,8 @@ pages:
   # Makes job only run on the default repository branch.
   rules:
     - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'pages'
+    - if: $CI_PIPELINE_SOURCE == 'web'
+      when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - poetry run python scripts/build_docs.py
@@ -143,6 +151,8 @@ test-linux:
     - if: >-
         $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'test-linux' &&
         $CI_WEB_PYTHON_VERSION == $version
+    - if: $CI_PIPELINE_SOURCE == 'web'
+      when: never
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
@@ -160,6 +170,8 @@ test-linux:
 #   # default repository branch.
 #   rules:
 #     - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'test-macos'
+#     - if: $CI_PIPELINE_SOURCE == 'web'
+#       when: never
 #     - if: $CI_COMMIT_TAG
 #       when: never
 #     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
@@ -201,6 +213,8 @@ test-windows:
   # default repository branch.
   rules:
     - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'test-windows'
+    - if: $CI_PIPELINE_SOURCE == 'web'
+      when: never
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
