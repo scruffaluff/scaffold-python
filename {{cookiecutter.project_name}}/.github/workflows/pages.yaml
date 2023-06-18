@@ -35,7 +35,7 @@ jobs:
         with:
           path: .venv
           key: >-
-            {% raw -%} python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
+            {% raw -%} python-3.10_${{ runner.os }}_poetry-${{ hashFiles("poetry.lock") }} {%- endraw %}
       - name: Install Python packages
         run: |
           python --version
@@ -53,7 +53,7 @@ jobs:
           publish_dir: site
       - name: Setup tmate session if job failed
         if: >-
-          {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          {% raw -%} ${{ failure() && github.event_name == "workflow_dispatch" &&
           inputs.debug }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3

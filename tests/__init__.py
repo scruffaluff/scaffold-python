@@ -6,6 +6,7 @@ import sys
 from typing import Any, Dict, List
 
 import pytest
+from pytest import mark
 from pytest_cookies.plugin import Cookies, Result
 
 # Ingoring unused import for show_match. Function is imported for convenient
@@ -13,7 +14,7 @@ from pytest_cookies.plugin import Cookies, Result
 from tests.util import file_matches, run_command, show  # noqa: F401
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context",
     [
         {"githost": "github"},
@@ -47,7 +48,7 @@ def test_black_format(baked_project: Result) -> None:
     assert actual == expected, process.stderr.decode("utf-8")
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context,paths",
     [
         ({"githost": "github"}, [".github"]),
@@ -85,7 +86,7 @@ def test_flake8_lints(baked_project: Result) -> None:
 
 
 # Flake8 E501 is disabled since Black autoformats the line to be too long.
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context,expected",
     [
         (
@@ -114,7 +115,7 @@ def test_homepage_context(
     assert actual == expected
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context",
     [{"project_name": "$Mock?"}],
 )
@@ -124,11 +125,11 @@ def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
     assert result.exit_code == -1
 
 
-@pytest.mark.skipif(
+@mark.skipif(
     sys.version_info < (3, 8),
     reason="Newer Mkdocs versions require at least Python 3.8.",
 )
-@pytest.mark.skipif(
+@mark.skipif(
     sys.platform == "win32",
     reason="Poetry install command hits permission errors for temporary paths",
 )
@@ -203,7 +204,7 @@ def test_no_trailing_blank_line(baked_project: Result) -> None:
         assert match is None, f"File {path} ends with a blank line."
 
 
-@pytest.mark.skipif(
+@mark.skipif(
     sys.platform in ["darwin", "win32"],
     reason="""
     Cookiecutter does not generate files with Windows line endings and Prettier
@@ -212,13 +213,16 @@ def test_no_trailing_blank_line(baked_project: Result) -> None:
 )
 def test_prettier_format(baked_project: Result) -> None:
     """Generated files must pass Prettier format checker."""
+    if baked_project.context["prettier_support"] == "no":
+        pytest.skip("Prettier support is required for format testing.")
+
     process = run_command(
         command="prettier --check .", work_dir=baked_project.project_path
     )
     assert process.returncode == 0, process.stderr.decode("utf-8")
 
 
-@pytest.mark.skipif(
+@mark.skipif(
     sys.platform == "win32",
     reason="Poetry install command hits permission errors for temporary paths.",
 )
@@ -241,7 +245,7 @@ def test_pytest_test(cookies: Cookies) -> None:
     assert process.returncode == expected, process.stdout.decode("utf-8")
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context,paths",
     [
         ({"githost": "github"}, [".gitlab-ci.yml"]),
@@ -264,7 +268,7 @@ def test_removed_paths(
         assert not remove_path.exists()
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context",
     [
         {"githost": "github"},
@@ -283,7 +287,7 @@ def test_scaffold(context: Dict[str, Any], cookies: Cookies) -> None:
     assert result.exit_code == 0, str(result.exception)
 
 
-@pytest.mark.parametrize(
+@mark.parametrize(
     "context,paths,text,exist",
     [
         (

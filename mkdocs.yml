@@ -3,7 +3,7 @@
 # For more information, visit https://www.mkdocs.org/user-guide/configuration/.
 
 ---
-copyright: Copyright &copy; 2022 Macklan Weinstein
+copyright: Copyright &copy; 2020-Present Macklan Weinstein
 extra:
   social:
     - icon: fontawesome/solid/house
@@ -46,5 +46,5 @@ site_url: https://scruffaluff.github.io/scaffold-python
 theme:
   name: material
   palette:
-    accent: light blue
-    primary: deep orange
+    accent: cyan
+    primary: teal

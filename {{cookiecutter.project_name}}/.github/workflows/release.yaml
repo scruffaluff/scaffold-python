@@ -46,7 +46,7 @@ jobs:
             steps.extract_tag.outputs.tag }} {%- endraw %}/CHANGELOG.md) for more information.
       - name: Setup tmate session if job failed
         if: >-
-          {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          {% raw -%} ${{ failure() && github.event_name == "workflow_dispatch" &&
           inputs.debug }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
@@ -91,7 +91,7 @@ jobs:
           password: {% raw -%} ${{ secrets.PYPI_PASSWORD }} {%- endraw %}
       - name: Setup tmate session if job failed
         if: >-
-          {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          {% raw -%} ${{ failure() && github.event_name == "workflow_dispatch" &&
           inputs.debug }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3

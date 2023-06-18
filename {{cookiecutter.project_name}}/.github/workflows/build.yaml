@@ -47,7 +47,7 @@ on:
 
 jobs:
   lint:
-    if: {% raw -%} ${{ github.event_name != 'workflow_dispatch' || inputs.job == 'lint' }} {%- endraw %}
+    if: {% raw -%} ${{ github.event_name != "workflow_dispatch" || inputs.job == "lint" }} {%- endraw %}
     name: Check code with formatter and linter
     runs-on: ubuntu-latest
     steps:
@@ -75,7 +75,7 @@ jobs:
         with:
           path: .venv
           key: >-
-            {% raw -%} python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
+            {% raw -%} python-3.10_${{ runner.os }}_poetry-${{ hashFiles("poetry.lock") }} {%- endraw %}
       - name: Install Python packages
         run: |
           python --version
@@ -95,13 +95,13 @@ jobs:
           poetry build
       - name: Setup tmate session if job failed
         if: >-
-          {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          {% raw -%} ${{ failure() && github.event_name == "workflow_dispatch" &&
           inputs.debug }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
 
   test:
-    if: {% raw -%} ${{ github.event_name != 'workflow_dispatch' || inputs.job == 'test' }} {%- endraw %}
+    if: {% raw -%} ${{ github.event_name != "workflow_dispatch" || inputs.job == "test" }} {%- endraw %}
     name: {% raw -%} Run test suite for Python ${{ matrix.python }} on ${{ matrix.os }} {%- endraw %}
     strategy:
       fail-fast: false
@@ -111,14 +111,14 @@ jobs:
       matrix:
         all:
           - >-
-            {% raw -%} ${{ github.ref == format('refs/heads/{0}',
+            {% raw -%} ${{ github.ref == format("refs/heads/{0}",
             github.event.repository.default_branch) || github.base_ref ==
             github.event.repository.default_branch }} {%- endraw %}
         exclude:
           - all: false
         include:
-          - os: {% raw -%} ${{ inputs.os || 'ubuntu' }} {%- endraw %}
-            python: {% raw -%} ${{ inputs.python || '3.10' }} {%- endraw %}
+          - os: {% raw -%} ${{ inputs.os || "ubuntu" }} {%- endraw %}
+            python: {% raw -%} ${{ inputs.python || "3.10" }} {%- endraw %}
         os:
           - macos
           - ubuntu
@@ -142,7 +142,7 @@ jobs:
           path: .venv
           key: >-
             {% raw -%} python-${{ matrix.python }}_${{ runner.os }}_poetry-${{
-            hashFiles('poetry.lock') }} {%- endraw %}
+            hashFiles("poetry.lock") }} {%- endraw %}
       - name: Install Python packages
         run: |
           python --version
@@ -155,7 +155,7 @@ jobs:
         run: poetry run pytest --cov
       - name: Setup tmate session if job failed
         if: >-
-          {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          {% raw -%} ${{ failure() && github.event_name == "workflow_dispatch" &&
           inputs.debug }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
