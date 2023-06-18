@@ -14,9 +14,9 @@ on:
   workflow_dispatch:
     inputs:
       debug:
-        default: "false"
+        default: false
         description: Use TMate session for debugging on failure
-        required: false
+        type: boolean
 
 jobs:
   release:
@@ -47,6 +47,6 @@ jobs:
       - name: Setup tmate session if job failed
         if: >-
           ${{ failure() && github.event_name == 'workflow_dispatch' &&
-          inputs.debug == 'true' }}
+          inputs.debug }}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3

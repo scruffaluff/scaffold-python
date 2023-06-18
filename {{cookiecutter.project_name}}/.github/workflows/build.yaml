@@ -17,20 +17,37 @@ on:
   workflow_dispatch:
     inputs:
       debug:
-        default: "false"
+        default: false
         description: Use TMate session for debugging on failure
-        required: false
+        type: boolean
+      job:
+        default: test
+        description: CI job to run
+        options:
+          - lint
+          - test
+        type: choice
       os:
-        default: macos ubuntu windows
-        description: Space separated list of operating systems
-        required: false
+        default: ubuntu
+        description: Operating system for test job
+        options:
+          - macos
+          - ubuntu
+          - windows
+        type: choice
       python:
-        default: 3.8 3.9 3.10 3.11
-        description: Space separated list of Python versions
-        required: false
+        default: "3.10"
+        description: Python version for test job
+        options:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+        type: choice
 
 jobs:
   lint:
+    if: {% raw -%} ${{ github.event_name != 'workflow_dispatch' || inputs.job == 'lint' }} {%- endraw %}
     name: Check code with formatter and linter
     runs-on: ubuntu-latest
     steps:
@@ -79,11 +96,12 @@ jobs:
       - name: Setup tmate session if job failed
         if: >-
           {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
-          inputs.debug == 'true' }} {%- endraw %}
+          inputs.debug }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
 
   test:
+    if: {% raw -%} ${{ github.event_name != 'workflow_dispatch' || inputs.job == 'test' }} {%- endraw %}
     name: {% raw -%} Run test suite for Python ${{ matrix.python }} on ${{ matrix.os }} {%- endraw %}
     strategy:
       fail-fast: false
@@ -95,13 +113,12 @@ jobs:
           - >-
             {% raw -%} ${{ github.ref == format('refs/heads/{0}',
             github.event.repository.default_branch) || github.base_ref ==
-            github.event.repository.default_branch || github.event_name ==
-            'workflow_dispatch' }} {%- endraw %}
+            github.event.repository.default_branch }} {%- endraw %}
         exclude:
           - all: false
         include:
-          - os: ubuntu
-            python: "3.10"
+          - os: {% raw -%} ${{ inputs.os || 'ubuntu' }} {%- endraw %}
+            python: {% raw -%} ${{ inputs.python || '3.10' }} {%- endraw %}
         os:
           - macos
           - ubuntu
@@ -139,6 +156,6 @@ jobs:
       - name: Setup tmate session if job failed
         if: >-
           {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
-          inputs.debug == 'true' }} {%- endraw %}
+          inputs.debug }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3

@@ -17,20 +17,37 @@ on:
   workflow_dispatch:
     inputs:
       debug:
-        default: "false"
+        default: false
         description: Use TMate session for debugging on failure
-        required: false
+        type: boolean
+      job:
+        default: test
+        description: CI job to run
+        options:
+          - lint
+          - test
+        type: choice
       os:
-        default: macos ubuntu windows
-        description: Space separated list of operating systems
-        required: false
+        default: ubuntu
+        description: Operating system for test job
+        options:
+          - macos
+          - ubuntu
+          - windows
+        type: choice
       python:
-        default: 3.8 3.9 3.10 3.11
-        description: Space separated list of Python versions
-        required: false
+        default: "3.10"
+        description: Python version for test job
+        options:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+        type: choice
 
 jobs:
   lint:
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.job == 'lint' }}
     name: Check code with formatter and linter
     runs-on: ubuntu-latest
     steps:
@@ -55,8 +72,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: python-3.10_ubuntu-latest_poetry-${{ hashFiles('poetry.lock') }}
-      - name: Install Python dependencies
+          key: >-
+            python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }}
+      - name: Install Python packages
         run: |
           python --version
           python -m pip --version
@@ -64,7 +82,7 @@ jobs:
           poetry config virtualenvs.in-project true
           poetry lock --check
           poetry install --verbose
-      - name: Static lint code
+      - name: Run linter checks
         run: |
           poetry run black --check .
           poetry run flake8 .
@@ -75,11 +93,12 @@ jobs:
       - name: Setup tmate session if job failed
         if: >-
           ${{ failure() && github.event_name == 'workflow_dispatch' &&
-          inputs.debug == 'true' }}
+          inputs.debug }}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
 
   test:
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.job == 'test' }}
     name: Run test suite for Python ${{ matrix.python }} on ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -91,13 +110,12 @@ jobs:
           - >-
             ${{ github.ref == format('refs/heads/{0}',
             github.event.repository.default_branch) || github.base_ref ==
-            github.event.repository.default_branch || github.event_name ==
-            'workflow_dispatch' }}
+            github.event.repository.default_branch }}
         exclude:
           - all: false
         include:
-          - os: ubuntu
-            python: "3.10"
+          - os: ${{ inputs.os || 'ubuntu' }}
+            python: ${{ inputs.python || '3.10' }}
         os:
           - macos
           - ubuntu
@@ -144,6 +162,6 @@ jobs:
       - name: Setup tmate session if job failed
         if: >-
           ${{ failure() && github.event_name == 'workflow_dispatch' &&
-          inputs.debug == 'true' }}
+          inputs.debug }}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
