@@ -6,11 +6,10 @@
 ---
 name: pages
 
-# Makes workflow run on push to the main or develop branches.
+# Makes workflow run on push to the main branch.
 on:
   push:
     branches:
-      - develop
       - main
   workflow_dispatch:
     inputs:
@@ -35,7 +34,7 @@ jobs:
         with:
           path: .venv
           key: >-
-            python-3.10_${{ runner.os }}_poetry-${{ hashFiles("poetry.lock") }}
+            python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }}
       - name: Install Python packages
         run: |
           python --version
@@ -56,7 +55,7 @@ jobs:
           publish_dir: site
       - name: Setup tmate session if job failed
         if: >-
-          ${{ failure() && github.event_name == "workflow_dispatch" &&
+          ${{ failure() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
