@@ -18,7 +18,7 @@ on:
     inputs:
       debug:
         default: false
-        description: Use TMate session for debugging on failure
+        description: Use TMate session for debugging
         type: boolean
       job:
         default: test
@@ -90,9 +90,9 @@ jobs:
           mkdir docs
           cp README.md docs/index.md
           poetry run mkdocs build --strict
-      - name: Setup tmate session if job failed
+      - name: Setup tmate session if debug enabled
         if: >-
-          ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
@@ -162,9 +162,9 @@ jobs:
           poetry install --verbose
       - name: Run test suite
         run: poetry run pytest
-      - name: Setup tmate session if job failed
+      - name: Setup tmate session if debug enabled
         if: >-
-          ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3

@@ -37,10 +37,10 @@ variables:
 
 # Contains settings that apply to all jobs unless overridden.
 default:
-  # Allows for debugging via SSH session for failed jobs in manual pipelines.
+  # Allows for debugging via SSH session for manual pipelines.
   after_script:
     - |
-      if [[ "$CI_JOB_STATUS" == "failed" && "$CI_WEB_DEBUG" == "true" ]]; then
+      if [[ "$CI_WEB_DEBUG" == "true" ]]; then
         bash scripts/setup_tmate.sh
       fi
   before_script:
@@ -187,10 +187,10 @@ test-linux:
 #     - shared-macos-amd64
 
 test-windows:
-  # Allows for debugging via SSH session for failed jobs in manual pipelines.
+  # Allows for debugging via SSH session for manual pipelines.
   after_script:
     - |
-      If (("$Env:CI_JOB_STATUS" -Eq "failed") -And ("$Env:CI_WEB_DEBUG" -Eq "true")) {
+      If ("$Env:CI_WEB_DEBUG" -Eq "true") {
         & scripts/setup_tmate.ps1
       }
   before_script:
