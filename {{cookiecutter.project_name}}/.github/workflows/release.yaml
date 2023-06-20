@@ -15,7 +15,7 @@ on:
     inputs:
       debug:
         default: false
-        description: Use TMate session for debugging on failure
+        description: Use Tmate session for debugging
         type: boolean
 
 jobs:
@@ -44,9 +44,9 @@ jobs:
             See the
             [changelog]({{ cookiecutter.project_repository }}/blob/{% raw -%} ${{
             steps.extract_tag.outputs.tag }} {%- endraw %}/CHANGELOG.md) for more information.
-      - name: Setup tmate session if job failed
+      - name: Setup Tmate session if debug enabled
         if: >-
-          {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          {% raw -%} ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
@@ -89,9 +89,9 @@ jobs:
         with:
           user: __token__
           password: {% raw -%} ${{ secrets.PYPI_PASSWORD }} {%- endraw %}
-      - name: Setup tmate session if job failed
+      - name: Setup Tmate session if debug enabled
         if: >-
-          {% raw -%} ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          {% raw -%} ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3

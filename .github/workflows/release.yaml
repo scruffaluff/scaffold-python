@@ -15,7 +15,7 @@ on:
     inputs:
       debug:
         default: false
-        description: Use TMate session for debugging on failure
+        description: Use Tmate session for debugging
         type: boolean
 
 jobs:
@@ -44,9 +44,9 @@ jobs:
             See the
             [changelog](https://github.com/scruffaluff/scaffold-python/blob/${{
             steps.extract_tag.outputs.tag }}/CHANGELOG.md) for more information.
-      - name: Setup tmate session if job failed
+      - name: Setup Tmate session if debug enabled
         if: >-
-          ${{ failure() && github.event_name == 'workflow_dispatch' &&
+          ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
