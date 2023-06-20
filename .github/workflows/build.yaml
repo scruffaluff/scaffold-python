@@ -18,7 +18,7 @@ on:
     inputs:
       debug:
         default: false
-        description: Use TMate session for debugging
+        description: Use Tmate session for debugging
         type: boolean
       job:
         default: test
@@ -90,7 +90,7 @@ jobs:
           mkdir docs
           cp README.md docs/index.md
           poetry run mkdocs build --strict
-      - name: Setup tmate session if debug enabled
+      - name: Setup Tmate session if debug enabled
         if: >-
           ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }}
@@ -162,7 +162,7 @@ jobs:
           poetry install --verbose
       - name: Run test suite
         run: poetry run pytest
-      - name: Setup tmate session if debug enabled
+      - name: Setup Tmate session if debug enabled
         if: >-
           ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }}

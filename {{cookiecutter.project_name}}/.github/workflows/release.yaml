@@ -15,7 +15,7 @@ on:
     inputs:
       debug:
         default: false
-        description: Use TMate session for debugging
+        description: Use Tmate session for debugging
         type: boolean
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
             See the
             [changelog]({{ cookiecutter.project_repository }}/blob/{% raw -%} ${{
             steps.extract_tag.outputs.tag }} {%- endraw %}/CHANGELOG.md) for more information.
-      - name: Setup tmate session if debug enabled
+      - name: Setup Tmate session if debug enabled
         if: >-
           {% raw -%} ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }} {%- endraw %}
@@ -89,7 +89,7 @@ jobs:
         with:
           user: __token__
           password: {% raw -%} ${{ secrets.PYPI_PASSWORD }} {%- endraw %}
-      - name: Setup tmate session if debug enabled
+      - name: Setup Tmate session if debug enabled
         if: >-
           {% raw -%} ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }} {%- endraw %}

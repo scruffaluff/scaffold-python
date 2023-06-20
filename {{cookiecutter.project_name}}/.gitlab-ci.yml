@@ -27,7 +27,7 @@ stages:
 # Environment variables that apply to all jobs.
 variables:
   CI_WEB_DEBUG: "false"
-  CI_WEB_JOB: lint
+  CI_WEB_JOB: test-linux
   CI_WEB_PYTHON_VERSION: "3.10"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PIP_DISABLE_PIP_VERSION_CHECK: "true"
@@ -37,7 +37,7 @@ variables:
 
 # Contains settings that apply to all jobs unless overridden.
 default:
-  # Allows for debugging via SSH session for manual pipelines.
+  # Allows for debugging via Tmate session for manual pipelines.
   after_script:
     - |
       if [[ "$CI_WEB_DEBUG" == "true" ]]; then
@@ -187,7 +187,7 @@ test-linux:
 #     - shared-macos-amd64
 
 test-windows:
-  # Allows for debugging via SSH session for manual pipelines.
+  # Allows for debugging via Tmate session for manual pipelines.
   after_script:
     - |
       If ("$Env:CI_WEB_DEBUG" -Eq "true") {

@@ -18,7 +18,7 @@ on:
     inputs:
       debug:
         default: false
-        description: Use TMate session for debugging
+        description: Use Tmate session for debugging
         type: boolean
       job:
         default: test
@@ -93,7 +93,7 @@ jobs:
           poetry run nbqa flake8 .
           poetry run mypy .
           poetry build
-      - name: Setup tmate session if debug enabled
+      - name: Setup Tmate session if debug enabled
         if: >-
           {% raw -%} ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }} {%- endraw %}
@@ -153,7 +153,7 @@ jobs:
           poetry install --verbose
       - name: Run test suite
         run: poetry run pytest --cov
-      - name: Setup tmate session if debug enabled
+      - name: Setup Tmate session if debug enabled
         if: >-
           {% raw -%} ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }} {%- endraw %}
