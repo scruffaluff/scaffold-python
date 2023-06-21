@@ -1,19 +1,16 @@
 {
-  "author_name": "Macklan Weinstein",
+  "_copy_without_render": ["scripts/setup_tmate.*"],
   "author_email": "macklan.weinstein@gmail.com",
-
-  "githost": ["github", "gitlab"],
+  "author_name": "Macklan Weinstein",
   "githost_username": "scruffaluff",
-
+  "githost": ["github", "gitlab"],
   "project_name": "scaffold-python",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
   "project_description": "Scaffolding template for Python packages.",
   "project_version": "0.1.0",
   "project_repository": "https://{{ cookiecutter.githost }}.com/{{ cookiecutter.githost_username }}/{{ cookiecutter.project_name.lower() }}",
   "project_homepage": "https://{{ cookiecutter.project_repository.split('/')[3] }}.{{ cookiecutter.githost }}.io/{{ '/'.join(cookiecutter.project_repository.split('/')[4:]) }}",
-
   "license": ["MIT", "private"],
-
   "cli_support": ["yes", "no"],
   "prettier_support": ["yes", "no"],
   "pypi_support": ["yes", "no"]

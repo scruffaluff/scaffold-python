@@ -1,15 +1,14 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 #
 # Installs Tmate and creates a session suitable for CI pipelines. Based on logic
 # from https://github.com/mxschmitt/action-tmate.
 
-# Exit immediately if a command exits or pipes a non-zero return code.
+# Exit immediately if a command exits with non-zero return code.
 #
 # Flags:
-#   -e: Exit immediately when a command pipeline fails.
-#   -o: Persist nonzero exit codes through a Bash pipe.
+#   -e: Exit immediately when a command fails.
 #   -u: Throw an error when an unset variable is encountered.
-set -eou pipefail
+set -eu
 
 #######################################
 # Show CLI help information.
@@ -21,17 +20,15 @@ usage() {
   case "${1}" in
     main)
       cat 1>&2 << EOF
-$(version)
 Installs Tmate and creates a remote session. Users can close the session by
 creating the file /close-tmate.
 
-USAGE:
-    setup-tmate [OPTIONS]
+Usage: setup-tmate [OPTIONS]
 
-OPTIONS:
-        --debug      Show Bash debug traces
-    -h, --help       Print help information
-    -v, --version    Print version information
+Options:
+      --debug     Show shell debug traces
+  -h, --help      Print help information
+  -v, --version   Print version information
 EOF
       ;;
     *)
@@ -52,7 +49,7 @@ assert_cmd() {
   # Flags:
   #   -v: Only show file path of command.
   #   -x: Check if file exists and execute permission is granted.
-  if [[ ! -x "$(command -v "${1}")" ]]; then
+  if [ ! -x "$(command -v "${1}")" ]; then
     error "Cannot find required ${1} command on computer"
   fi
 }
@@ -63,7 +60,7 @@ assert_cmd() {
 #   Writes error message to stderr.
 #######################################
 error() {
-  local bold_red='\033[1;31m' default='\033[0m'
+  bold_red='\033[1;31m' default='\033[0m'
   printf "${bold_red}error${default}: %s\n" "${1}" >&2
   exit 1
 }
@@ -74,7 +71,6 @@ error() {
 #   Whether to use sudo command.
 #######################################
 install_tmate() {
-  local os_type
   assert_cmd uname
 
   # Do not use long form --kernel-name flag for uname. It is not supported on
@@ -107,7 +103,7 @@ install_tmate() {
 #   Whether to use sudo command.
 #######################################
 install_tmate_linux() {
-  local arch_type tmate_arch tmate_version='2.4.0'
+  tmate_version='2.4.0'
 
   # Short form machine flag '-m' should be used since processor flag and long
   # form machine flag '--machine' are non-portable. For more information, visit
@@ -130,17 +126,17 @@ install_tmate_linux() {
   # Flags:
   #   -v: Only show file path of command.
   #   -x: Check if file exists and execute permission is granted.
-  if [[ -x "$(command -v apk)" ]]; then
+  if [ -x "$(command -v apk)" ]; then
     ${1:+sudo} apk add curl openssh-client xz
-  elif [[ -x "$(command -v apt-get)" ]]; then
+  elif [ -x "$(command -v apt-get)" ]; then
     ${1:+sudo} apt-get update
     ${1:+sudo} apt-get install --yes curl openssh-client xz-utils
-  elif [[ -x "$(command -v dnf)" ]]; then
+  elif [ -x "$(command -v dnf)" ]; then
     ${1:+sudo} dnf install --assumeyes curl openssh xz
-  elif [[ -x "$(command -v pacman)" ]]; then
+  elif [ -x "$(command -v pacman)" ]; then
     ${1:+sudo} pacman --noconfirm --refresh --sync --sysupgrade
     ${1:+sudo} pacman --noconfirm --sync curl openssh xz
-  elif [[ -x "$(command -v zypper)" ]]; then
+  elif [ -x "$(command -v zypper)" ]; then
     ${1:+sudo} zypper install --no-confirm curl openssh tar xz
   fi
 
@@ -156,17 +152,17 @@ install_tmate_linux() {
 #   Setup Tmate version string.
 #######################################
 version() {
-  echo 'SetupTmate 0.1.0'
+  echo 'SetupTmate 0.2.0'
 }
 
 #######################################
 # Installs Tmate and creates a remote session.
 #######################################
 setup_tmate() {
-  local ssh_connect use_sudo='' web_connect
+  use_sudo=''
 
   # Check if user is not root.
-  if [[ "${EUID}" -ne 0 ]]; then
+  if [ "$(id -u)" -ne 0 ]; then
     assert_cmd sudo
     use_sudo='true'
   fi
@@ -176,7 +172,7 @@ setup_tmate() {
   # Flags:
   #   -v: Only show file path of command.
   #   -x: Check if file exists and execute permission is granted.
-  if [[ ! -x "$(command -v tmate)" ]]; then
+  if [ ! -x "$(command -v tmate)" ]; then
     install_tmate "${use_sudo}"
   fi
 
@@ -198,7 +194,7 @@ setup_tmate() {
     # Flags:
     #   -S: Check if file exists and is a socket.
     #   -f: Check if file exists and is a regular file.
-    if [[ ! -S /tmp/tmate.sock || -f /close-tmate || -f ./close-tmate ]]; then
+    if [ ! -S /tmp/tmate.sock ] || [ -f /close-tmate ] || [ -f ./close-tmate ]; then
       break
     fi
 
@@ -211,7 +207,7 @@ setup_tmate() {
 #######################################
 main() {
   # Parse command line arguments.
-  while [[ "$#" -gt 0 ]]; do
+  while [ "${#}" -gt 0 ]; do
     case "${1}" in
       --debug)
         set -o xtrace
@@ -232,6 +228,4 @@ main() {
   setup_tmate
 }
 
-# Variable BASH_SOURCE cannot be used to load script as a library. Piping the
-# script to Bash gives the same BASH_SOURCE result as sourcing the script.
 main "$@"

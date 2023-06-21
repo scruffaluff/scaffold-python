@@ -3,11 +3,23 @@
     Installs Tmate and creates a session suitable for CI. Based on logic from
     https://github.com/mxschmitt/action-tmate.
 #>
-[CmdletBinding()]
-Param()
 
 # Exit immediately if a PowerShell Cmdlet encounters an error.
 $ErrorActionPreference = 'Stop'
+
+# Show CLI help information.
+Function Usage() {
+    Write-Output @'
+Installs Tmate and creates a remote session. Users can close the session by
+creating the file /close-tmate.
+
+Usage: setup-tmate [OPTIONS]
+
+Options:
+  -h, --help      Print help information
+  -v, --version   Print version information
+'@
+}
 
 Function InstallTmate($URL) {
     If (-Not (Get-Command choco -ErrorAction SilentlyContinue)) {
@@ -31,8 +43,31 @@ Function RemoteScript($URL) {
     Invoke-WebRequest -UseBasicParsing -Uri "$URL" | Invoke-Expression
 }
 
+# Print SetupTmate version string.
+Function Version() {
+    Write-Output 'SetupTmate 0.1.0'
+}
+
 # Script entrypoint.
 Function Main() {
+    $ArgIdx = 0
+
+    While ($ArgIdx -LT $Args[0].Count) {
+        Switch ($Args[0][$ArgIdx]) {
+            { $_ -In '-h', '--help' } {
+                Usage
+                Exit 0
+            }
+            { $_ -In '-v', '--version' } {
+                Version
+                Exit 0
+            }
+            Default {
+                $ArgIdx += 1
+            }
+        }
+    }
+
     $Env:Path = 'C:\tools\msys64\usr\bin;' + "$Env:Path"
     If (-Not (Get-Command tmate -ErrorAction SilentlyContinue)) {
         InstallTmate
@@ -49,8 +84,8 @@ Function Main() {
     #   -S: Set Tmate socket path.
     tmate -S /tmp/tmate.sock new-session -d
     tmate -S /tmp/tmate.sock wait tmate-ready
-    $SSHConnect = "$(bash -l -c "tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}'")"
-    $WebConnect = "$(bash -l -c "tmate -S /tmp/tmate.sock display -p '#{tmate_web}'")"
+    $SSHConnect = "$(sh -l -c "tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}'")"
+    $WebConnect = "$(sh -l -c "tmate -S /tmp/tmate.sock display -p '#{tmate_web}'")"
 
     While ($True) {
         Write-Output "SSH: $SSHConnect"
@@ -58,14 +93,14 @@ Function Main() {
 
         # Check if script should exit.
         If (
-            (-Not (bash -l -c 'ls /tmp/tmate.sock 2> /dev/null')) -Or 
+            (-Not (sh -l -c 'ls /tmp/tmate.sock 2> /dev/null')) -Or 
             (Test-Path -Path 'C:/tools/msys64/close-tmate') -Or 
             (Test-Path -Path './close-tmate')
         ) {
             Break
         }
 
-        Sleep 5
+        sleep 5
     }
 }
 
