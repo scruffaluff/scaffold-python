@@ -20,39 +20,7 @@ on:
 
 jobs:
   release:
-    name: Get Git tag and make GitHub release
-    runs-on: ubuntu-latest
-    outputs:
-      tag: {% raw -%} ${{ steps.extract_tag.outputs.tag }} {%- endraw %}
-      upload_url: {% raw -%}  ${{ steps.create_release.outputs.upload_url }} {%- endraw %}
-    steps:
-      - name: Extract tag
-        id: extract_tag
-        shell: bash
-        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/tags/})"
-      - name: Checkout code repository
-        uses: actions/checkout@v3
-      - name: Create GitHub release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: {% raw -%} ${{ secrets.GITHUB_TOKEN }} {%- endraw %}
-        with:
-          tag_name: {% raw -%} ${{ github.ref }} {%- endraw %}
-          release_name: {{ cookiecutter.project_name }} {% raw -%} ${{ steps.extract_tag.outputs.tag }} {%- endraw %}
-          body: >-
-            See the
-            [changelog]({{ cookiecutter.project_repository }}/blob/{% raw -%} ${{
-            steps.extract_tag.outputs.tag }} {%- endraw %}/CHANGELOG.md) for more information.
-      - name: Setup Tmate session if debug enabled
-        if: >-
-          {% raw -%} ${{ always() && github.event_name == 'workflow_dispatch' &&
-          inputs.debug }} {%- endraw %}
-        timeout-minutes: 60
-        uses: mxschmitt/action-tmate@v3
-{% if cookiecutter.pypi_support == "yes" %}
-  package:
-    name: Build and publish Python package
+    name: Make GitHub release and publish Python package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
@@ -69,19 +37,19 @@ jobs:
           poetry install --no-dev
       - name: Build Python package
         run: poetry build
-      - name: Upload package to GitHub release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: {% raw -%} ${{ secrets.GITHUB_TOKEN }} {%- endraw %}
+      - name: Create GitHub release
+        id: create_release
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: {% raw -%} ${{ steps.create_release.outputs.upload_url }} {%- endraw %}
-          asset_path: >-
-            dist/{{ cookiecutter.project_slug }} {%- raw -%} -${{ steps.extract_tag.outputs.tag
-            }}-py3-none-any.whl {%- endraw %}
-          asset_name: >-
-            {{ cookiecutter.project_slug }} {%- raw -%} -${{ steps.extract_tag.outputs.tag
-            }}-py3-none-any.whl {%- endraw %}
-          asset_content_type: application/octet-stream
+          body: >-
+            See the
+            [changelog]({{ cookiecutter.project_repository }}/blob/{% raw -%} ${{
+            steps.extract_tag.outputs.tag }} {%- endraw %}/CHANGELOG.md) for more information.
+          files: >-
+            dist/{{ cookiecutter.project_slug }} {%- raw -%} -${{ github.ref_name }}-py3-none-any.whl {%- endraw %}
+          name: {{ cookiecutter.project_name }} {% raw -%} ${{ github.ref_name }} {%- endraw %}
+          tag_name: {% raw -%} ${{ github.ref }} {%- endraw %}
+      {% if cookiecutter.pypi_support == "yes" -%}
       # Use PyPI publish action over Poetry publish to prevent PyPI password
       # from being printed in CI logs.
       - name: Upload package to PyPI
@@ -89,10 +57,10 @@ jobs:
         with:
           user: __token__
           password: {% raw -%} ${{ secrets.PYPI_PASSWORD }} {%- endraw %}
+      {% endif -%}
       - name: Setup Tmate session if debug enabled
         if: >-
           {% raw -%} ${{ always() && github.event_name == 'workflow_dispatch' &&
           inputs.debug }} {%- endraw %}
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
-{% endif -%}

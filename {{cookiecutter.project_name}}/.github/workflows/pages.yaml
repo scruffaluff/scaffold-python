@@ -49,7 +49,7 @@ jobs:
       - name: Publish documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: {% raw -%} ${{ secrets.GITHUB_TOKEN }} {%- endraw %}
+          github_token: {% raw -%} ${{ github.token }} {%- endraw %}
           publish_dir: site
       - name: Setup Tmate session if debug enabled
         if: >-

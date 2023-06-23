@@ -20,30 +20,20 @@ on:
 
 jobs:
   release:
-    name: Get Git tag and make GitHub release
+    name: Make GitHub release
     runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.extract_tag.outputs.tag }}
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
-      - name: Extract tag
-        id: extract_tag
-        shell: bash
-        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/tags/})"
       - name: Checkout code repository
         uses: actions/checkout@v3
       - name: Create GitHub release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Scaffold Python ${{ steps.extract_tag.outputs.tag }}
           body: >-
             See the
             [changelog](https://github.com/scruffaluff/scaffold-python/blob/${{
-            steps.extract_tag.outputs.tag }}/CHANGELOG.md) for more information.
+            github.ref_name }}/CHANGELOG.md) for more information.
+          name: Scaffold Python ${{ github.ref_name }}
+          tag_name: ${{ github.ref }}
       - name: Setup Tmate session if debug enabled
         if: >-
           ${{ always() && github.event_name == 'workflow_dispatch' &&
