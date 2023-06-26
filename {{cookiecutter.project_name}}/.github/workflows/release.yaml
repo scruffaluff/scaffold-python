@@ -21,6 +21,8 @@ on:
 jobs:
   release:
     name: Make GitHub release and publish Python package
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
