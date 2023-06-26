@@ -45,7 +45,7 @@ Function RemoteScript($URL) {
 
 # Print SetupTmate version string.
 Function Version() {
-    Write-Output 'SetupTmate 0.1.0'
+    Write-Output 'SetupTmate 0.2.1'
 }
 
 # Script entrypoint.
@@ -93,14 +93,14 @@ Function Main() {
 
         # Check if script should exit.
         If (
-            (-Not (sh -l -c 'ls /tmp/tmate.sock 2> /dev/null')) -Or 
-            (Test-Path -Path 'C:/tools/msys64/close-tmate') -Or 
+            (-Not (sh -l -c 'ls /tmp/tmate.sock 2> /dev/null')) -Or
+            (Test-Path -Path 'C:/tools/msys64/close-tmate') -Or
             (Test-Path -Path './close-tmate')
         ) {
             Break
         }
 
-        sleep 5
+        Start-Sleep 5
     }
 }
 
