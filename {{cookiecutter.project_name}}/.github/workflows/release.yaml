@@ -18,6 +18,12 @@ on:
         description: Use Tmate session for debugging
         type: boolean
 
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "true"
+  PIP_ROOT_USER_ACTION: ignore
+  POETRY_VIRTUALENVS_IN_PROJECT: "true"
+  PYTHON_KEYRING_BACKEND: "keyring.backends.null.Keyring"
+
 jobs:
   release:
     name: Make GitHub release and publish Python package
@@ -40,7 +46,6 @@ jobs:
       - name: Build Python package
         run: poetry build
       - name: Create GitHub release
-        id: create_release
         uses: softprops/action-gh-release@v1
         with:
           body: >-

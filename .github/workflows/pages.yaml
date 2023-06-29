@@ -18,6 +18,13 @@ on:
         description: Use Tmate session for debugging
         type: boolean
 
+env:
+  PIP_CACHE_DIR: "${{ github.workspace }}/.cache/pip"
+  PIP_DISABLE_PIP_VERSION_CHECK: "true"
+  PIP_ROOT_USER_ACTION: ignore
+  POETRY_VIRTUALENVS_IN_PROJECT: "true"
+  PYTHON_KEYRING_BACKEND: "keyring.backends.null.Keyring"
+
 jobs:
   docs:
     name: Build and publish documentation
@@ -34,7 +41,9 @@ jobs:
       - name: Cache Python packages
         uses: actions/cache@v3
         with:
-          path: .venv
+          path: |
+            .cache/pip
+            .venv
           key: >-
             python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }}
       - name: Install Python packages
@@ -42,7 +51,6 @@ jobs:
           python --version
           python -m pip --version
           python -m pip install poetry
-          poetry config virtualenvs.in-project true
           poetry lock --check
           poetry install --verbose
       - name: Build documentation
