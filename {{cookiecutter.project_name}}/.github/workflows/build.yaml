@@ -46,7 +46,7 @@ on:
         type: choice
 
 env:
-  PIP_CACHE_DIR: "${{ github.workspace }}/.cache/pip"
+  PIP_CACHE_DIR: {% raw -%} "${{ github.workspace }}/.cache/pip" {%- endraw %}
   PIP_DISABLE_PIP_VERSION_CHECK: "true"
   PIP_ROOT_USER_ACTION: ignore
   POETRY_VIRTUALENVS_IN_PROJECT: "true"
