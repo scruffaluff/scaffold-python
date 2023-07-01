@@ -29,6 +29,8 @@ variables:
   CI_WEB_DEBUG: "false"
   CI_WEB_JOB: test-linux
   CI_WEB_PYTHON_VERSION: "3.10"
+  PACKAGE_REGISTRY_URL: >-
+    "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{{ cookiecutter.project_name }}"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PIP_DISABLE_PIP_VERSION_CHECK: "true"
   PIP_ROOT_USER_ACTION: ignore
@@ -130,7 +132,7 @@ release:
           name: >-
             {{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py-none-any.whl
           url: >-
-            ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{{ cookiecutter.project_name }}/${CI_COMMIT_TAG}/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py-none-any.whl
+            ${PACKAGE_REGISTRY_URL}/${CI_COMMIT_TAG}/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py3-none-any.whl
     description: >-
       See the
       [changelog]({{ cookiecutter.project_repository }}/-/tree/{% raw -%}
@@ -145,7 +147,7 @@ release:
       when: never
     - if: $CI_COMMIT_TAG
   script:
-    - package="{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py-none-any.whl"
+    - package="{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py3-none-any.whl"
     - apt-get install --yes curl
     - curl --location --output /usr/local/bin/release-cli
       https://gitlab.com/api/v4/projects/gitlab-org/release-cli/packages/generic/release-cli/latest/release-cli-linux-amd64
@@ -153,7 +155,7 @@ release:
     - poetry build
     - >-
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "dist/${package}"
-      "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{{ cookiecutter.project_name }}/${CI_COMMIT_TAG}/${package}"
+      "${PACKAGE_REGISTRY_URL}/${CI_COMMIT_TAG}/${package}"
     {%- if cookiecutter.pypi_support == "yes" %}
     - poetry publish --username "${PYPI_USERNAME?}" --password
       "${PYPI_PASSWORD?}"

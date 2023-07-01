@@ -74,7 +74,7 @@ Function Main() {
     }
 
     # Set Msys2 environment variables.
-    $Env:CHERE_INVOKING = 1
+    $Env:CHERE_INVOKING = 'true'
     $Env:MSYS2_PATH_TYPE = 'inherit'
     $Env:MSYSTEM = 'MINGW64'
 
