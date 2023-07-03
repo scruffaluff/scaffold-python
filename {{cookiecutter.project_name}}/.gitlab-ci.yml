@@ -30,7 +30,7 @@ variables:
   CI_WEB_JOB: test-linux
   CI_WEB_PYTHON_VERSION: "3.10"
   PACKAGE_REGISTRY_URL: >-
-    "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{{ cookiecutter.project_name }}"
+    ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{{ cookiecutter.project_name }}
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PIP_DISABLE_PIP_VERSION_CHECK: "true"
   PIP_ROOT_USER_ACTION: ignore
@@ -139,10 +139,10 @@ release:
       ${CI_COMMIT_TAG} {%- endraw %}/CHANGELOG.md)
       for more information.
     tag_name: "${CI_COMMIT_TAG}"
-    name: "{{ cookiecutter.project_slug }} ${CI_COMMIT_TAG}"
+    name: "{{ cookiecutter.project_name }} ${CI_COMMIT_TAG}"
   # Makes job only run on Git tags.
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'package'
+    - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'release'
     - if: $CI_PIPELINE_SOURCE == 'web'
       when: never
     - if: $CI_COMMIT_TAG
@@ -150,7 +150,7 @@ release:
     - package="{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py3-none-any.whl"
     - apt-get install --yes curl
     - curl --location --output /usr/local/bin/release-cli
-      https://gitlab.com/api/v4/projects/gitlab-org/release-cli/packages/generic/release-cli/latest/release-cli-linux-amd64
+      https://gitlab.com/api/v4/projects/gitlab-org%2Frelease-cli/packages/generic/release-cli/latest/release-cli-linux-amd64
     - chmod 755 /usr/local/bin/release-cli
     - poetry build
     - >-
