@@ -68,28 +68,6 @@ default:
       - .cache
       - .venv
   image: "python:${PYTHON_VERSION_DEFAULT}"
-{%- if cookiecutter.prettier_support == "yes" %}
-
-config:
-  before_script:
-    - node --version
-    - npm --version
-    - npm install --global prettier
-  # Disable cache for job.
-  cache: []
-  image: "node:20"
-  # Makes job only run on every Git event except for tags.
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'config'
-    - if: $CI_PIPELINE_SOURCE == 'web'
-      when: never
-    - if: $CI_COMMIT_TAG
-      when: never
-    - when: always
-  script:
-    - prettier --check .
-  stage: build
-{%- endif %}
 
 lint:
   # Makes job run on every Git event except for tags.
@@ -101,6 +79,15 @@ lint:
       when: never
     - when: always
   script:
+    {%- if cookiecutter.prettier_support == "yes" %}
+    - curl --fail --location --show-error --silent
+      https://deb.nodesource.com/setup_20.x | bash
+    - apt-get install --yes nodejs
+    - node --version
+    - npm --version
+    - npm install --global prettier
+    - prettier --check .
+    {%- endif %}
     - poetry run bandit -ilr src
     - poetry run black --check .
     - poetry run python scripts/build_docs.py
