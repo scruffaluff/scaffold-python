@@ -82,7 +82,7 @@ jobs:
           npm install --global prettier
       - name: Check configuration file formatting
         run: prettier --check .
-      {% else %}
+      {% else -%}
       - name: Cache Python packages
         uses: actions/cache@v3
         with:
