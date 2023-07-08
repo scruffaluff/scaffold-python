@@ -4,6 +4,7 @@
 
 __pycache__/
 .benchmarks/
+.cache/
 .git/
 .ipynb_checkpoints/
 .mypy_cache/

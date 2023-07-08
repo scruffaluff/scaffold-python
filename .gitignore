@@ -3,6 +3,7 @@
 # For more information, visit https://git-scm.com/docs/gitignore.
 
 __pycache__/
+.cache/
 .coverage*
 .DS_Store
 .env

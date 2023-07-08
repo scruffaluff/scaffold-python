@@ -61,6 +61,16 @@ jobs:
       - name: Checkout code repository
         uses: actions/checkout@v3
       {% if cookiecutter.prettier_support == "yes" -%}
+      - name: Cache packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            .cache
+            .venv
+          key: >-
+            {% raw -%} node-20_python-3.10_${{ runner.os }}_npm-${{
+            hashFiles('package-lock.json') }}_poetry-${{
+            hashFiles('poetry.lock') }} {%- endraw %}
       - name: Install Node interpreter
         uses: actions/setup-node@v3
         with:
@@ -72,19 +82,20 @@ jobs:
           npm install --global prettier
       - name: Check configuration file formatting
         run: prettier --check .
+      {% else %}
+      - name: Cache Python packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            .cache
+            .venv
+          key: >-
+            {% raw -%} python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
       {% endif -%}
       - name: Install Python interpreter
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-      - name: Cache Python packages
-        uses: actions/cache@v3
-        with:
-          path: |
-            .cache/pip
-            .venv
-          key: >-
-            {% raw -%} python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
       - name: Install Python packages
         run: |
           python --version
@@ -140,19 +151,19 @@ jobs:
     steps:
       - name: Checkout code repository
         uses: actions/checkout@v3
-      - name: Install Python interpreter
-        uses: actions/setup-python@v4
-        with:
-          python-version: {% raw -%} ${{ matrix.python }} {%- endraw %}
       - name: Cache Python packages
         uses: actions/cache@v3
         with:
           path: |
-            .cache/pip
+            .cache
             .venv
           key: >-
             {% raw -%} python-${{ matrix.python }}_${{ runner.os }}_poetry-${{
             hashFiles('poetry.lock') }} {%- endraw %}
+      - name: Install Python interpreter
+        uses: actions/setup-python@v4
+        with:
+          python-version: {% raw -%} ${{ matrix.python }} {%- endraw %}
       - name: Install Python packages
         run: |
           python --version
