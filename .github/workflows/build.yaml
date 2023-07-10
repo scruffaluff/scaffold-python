@@ -46,11 +46,11 @@ on:
         type: choice
 
 env:
-  NPM_CONFIG_CACHE: "${CI_PROJECT_DIR}/.cache/npm"
+  NPM_CONFIG_CACHE: "${{ github.workspace }}/.cache/npm"
   PIP_CACHE_DIR: "${{ github.workspace }}/.cache/pip"
   PIP_DISABLE_PIP_VERSION_CHECK: "true"
   PIP_ROOT_USER_ACTION: ignore
-  POETRY_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pypoetry"
+  POETRY_CACHE_DIR: "${{ github.workspace }}/.cache/pypoetry"
   POETRY_VIRTUALENVS_IN_PROJECT: "true"
   PYTHON_KEYRING_BACKEND: "keyring.backends.null.Keyring"
 
