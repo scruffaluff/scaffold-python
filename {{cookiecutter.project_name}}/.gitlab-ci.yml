@@ -29,9 +29,13 @@ variables:
   CI_WEB_DEBUG: "false"
   CI_WEB_JOB: test-linux
   CI_WEB_PYTHON_VERSION: "3.10"
+  NPM_CONFIG_CACHE: "${CI_PROJECT_DIR}/.cache/npm"
+  PACKAGE_REGISTRY_URL: >-
+    ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{{ cookiecutter.project_name }}
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PIP_DISABLE_PIP_VERSION_CHECK: "true"
   PIP_ROOT_USER_ACTION: ignore
+  POETRY_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pypoetry"
   POETRY_VIRTUALENVS_IN_PROJECT: "true"
   PYTHON_KEYRING_BACKEND: "keyring.backends.null.Keyring"
   PYTHON_VERSION_DEFAULT: "3.10"
@@ -61,31 +65,9 @@ default:
         - poetry.lock
       prefix: "${CI_JOB_IMAGE}"
     paths:
-      - .cache/pip
+      - .cache
       - .venv
   image: "python:${PYTHON_VERSION_DEFAULT}"
-{%- if cookiecutter.prettier_support == "yes" %}
-
-config:
-  before_script:
-    - node --version
-    - npm --version
-    - npm install --global prettier
-  # Disable cache for job.
-  cache: []
-  image: "node:20"
-  # Makes job only run on every Git event except for tags.
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'config'
-    - if: $CI_PIPELINE_SOURCE == 'web'
-      when: never
-    - if: $CI_COMMIT_TAG
-      when: never
-    - when: always
-  script:
-    - prettier --check .
-  stage: build
-{%- endif %}
 
 lint:
   # Makes job run on every Git event except for tags.
@@ -97,6 +79,15 @@ lint:
       when: never
     - when: always
   script:
+    {%- if cookiecutter.prettier_support == "yes" %}
+    - curl --fail --location --show-error --silent
+      https://deb.nodesource.com/setup_20.x | bash
+    - apt-get install --yes nodejs
+    - node --version
+    - npm --version
+    - npm install --global prettier
+    - prettier --check .
+    {%- endif %}
     - poetry run bandit -ilr src
     - poetry run black --check .
     - poetry run python scripts/build_docs.py
@@ -105,25 +96,6 @@ lint:
     - poetry run mypy .
     - poetry build
   stage: build
-{%- if cookiecutter.pypi_support == "yes" %}
-
-package:
-  # Uploads packages as release files for Git tags.
-  artifacts:
-    paths:
-      - "dist/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py-none-any.whl"
-  # Makes job only run on Git tags.
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'package'
-    - if: $CI_PIPELINE_SOURCE == 'web'
-      when: never
-    - if: $CI_COMMIT_TAG
-  script:
-    - poetry build
-    - poetry publish --username "${PYPI_USERNAME?}" --password
-      "${PYPI_PASSWORD?}"
-  stage: deploy
-{%- endif %}
 
 pages:
   # GitLab Pages uploads files inside the "public" folder after job completes.
@@ -139,6 +111,44 @@ pages:
   script:
     - poetry run python scripts/build_docs.py
     - mv site public
+  stage: deploy
+
+release:
+  release:
+    assets:
+      links:
+        - link_type: package
+          name: >-
+            {{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py-none-any.whl
+          url: >-
+            ${PACKAGE_REGISTRY_URL}/${CI_COMMIT_TAG}/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py3-none-any.whl
+    description: >-
+      See the
+      [changelog]({{ cookiecutter.project_repository }}/-/tree/{% raw -%}
+      ${CI_COMMIT_TAG} {%- endraw %}/CHANGELOG.md)
+      for more information.
+    tag_name: "${CI_COMMIT_TAG}"
+    name: "{{ cookiecutter.project_name }} ${CI_COMMIT_TAG}"
+  # Makes job only run on Git tags.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'release'
+    - if: $CI_PIPELINE_SOURCE == 'web'
+      when: never
+    - if: $CI_COMMIT_TAG
+  script:
+    - package="{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py3-none-any.whl"
+    - apt-get install --yes curl
+    - curl --location --output /usr/local/bin/release-cli
+      https://gitlab.com/api/v4/projects/gitlab-org%2Frelease-cli/packages/generic/release-cli/latest/release-cli-linux-amd64
+    - chmod 755 /usr/local/bin/release-cli
+    - poetry build
+    - >-
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "dist/${package}"
+      "${PACKAGE_REGISTRY_URL}/${CI_COMMIT_TAG}/${package}"
+    {%- if cookiecutter.pypi_support == "yes" %}
+    - poetry publish --username "${PYPI_USERNAME?}" --password
+      "${PYPI_PASSWORD?}"
+    {%- endif %}
   stage: deploy
 
 test-linux:
@@ -211,8 +221,7 @@ test-windows:
         - poetry.lock
       prefix: windows
     paths:
-      - .cache/choco
-      - .cache/pip
+      - .cache
       - .venv
   # Makes job skip Git tags and run only on commits to or merge requests to the
   # default repository branch.

@@ -51,7 +51,7 @@ jobs:
           body: >-
             See the
             [changelog]({{ cookiecutter.project_repository }}/blob/{% raw -%} ${{
-            steps.extract_tag.outputs.tag }} {%- endraw %}/CHANGELOG.md) for more information.
+            github.ref_name }} {%- endraw %}/CHANGELOG.md) for more information.
           files: >-
             dist/{{ cookiecutter.project_slug }} {%- raw -%} -${{ github.ref_name }}-py3-none-any.whl {%- endraw %}
           name: {{ cookiecutter.project_name }} {% raw -%} ${{ github.ref_name }} {%- endraw %}
