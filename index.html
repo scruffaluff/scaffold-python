@@ -275,33 +275,6 @@
     Continous Integration
   </a>
   
-    <nav class="md-nav" aria-label="Continous Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#linting-and-testing" class="md-nav__link">
-    Linting and Testing
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#documentation-publishing" class="md-nav__link">
-    Documentation Publishing
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#package-publishing" class="md-nav__link">
-    Package Publishing
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -363,33 +336,6 @@
   <a href="#continous-integration" class="md-nav__link">
     Continous Integration
   </a>
-  
-    <nav class="md-nav" aria-label="Continous Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#linting-and-testing" class="md-nav__link">
-    Linting and Testing
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#documentation-publishing" class="md-nav__link">
-    Documentation Publishing
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#package-publishing" class="md-nav__link">
-    Package Publishing
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -474,9 +420,8 @@ subcontents are only generated for that chosen context.</p>
 ├── .github  {githost: github}
 │   └── workflows
 │       ├── build.yaml
-|       ├── pages.yaml
-│       ├── release.yaml
-│       └── test.yaml
+│       ├── pages.yaml
+│       └── release.yaml
 ├── .dockerignore
 ├── .gitignore
 ├── .gitlab-ci.yaml  {githost: gitlab}
@@ -484,7 +429,7 @@ subcontents are only generated for that chosen context.</p>
 ├── .prettierrc.yaml  {prettier_support: yes}
 ├── CONTRIBUTING.md
 ├── docs
-|   ├── api
+│   ├── api
 │   |   └── index.md
 │   └── usage
 │       └── index.md
@@ -495,28 +440,23 @@ subcontents are only generated for that chosen context.</p>
 ├── pyproject.toml
 ├── README.md
 ├── scripts
-|   ├── __init__.py
-│   └── build_docs.py
+│   ├── __init__.py
+│   ├── build_docs.py
+│   ├── setup_tmate.ps1  {githost: gitlab}
+│   └── setup_tmate.sh  {githost: gitlab}
 ├── src
 │   └── {{project_slug}}
 │       ├── __init__.py
-|       ├── __main__.py  {cli_support: yes}
+│       ├── __main__.py  {cli_support: yes}
 │       └── py.typed
 ├── tests
 │   ├── conftest.py
 │   ├── __init__.py
-│   ├── integration
-│   │   └── __init__.py
-│   └── unit
-│       └── __init__.py
 └── tox.ini
 </code></pre></div>
 <h2 id="continous-integration">Continous Integration<a class="headerlink" href="#continous-integration" title="Permanent link">&para;</a></h2>
 <p>Projects generated with this scaffolding repository are automatically configured
 to use GitHub CI workflows and GitLab CI pipelines.</p>
-<h3 id="linting-and-testing">Linting and Testing<a class="headerlink" href="#linting-and-testing" title="Permanent link">&para;</a></h3>
-<h3 id="documentation-publishing">Documentation Publishing<a class="headerlink" href="#documentation-publishing" title="Permanent link">&para;</a></h3>
-<h3 id="package-publishing">Package Publishing<a class="headerlink" href="#package-publishing" title="Permanent link">&para;</a></h3>
 
 
 
