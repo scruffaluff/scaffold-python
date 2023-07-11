@@ -122,6 +122,11 @@ release:
             {{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py-none-any.whl
           url: >-
             ${PACKAGE_REGISTRY_URL}/${CI_COMMIT_TAG}/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py3-none-any.whl
+        - link_type: package
+          name: >-
+            {{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}.tar.gz
+          url: >-
+            ${PACKAGE_REGISTRY_URL}/${CI_COMMIT_TAG}/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}.tar.gz
     description: >-
       See the
       [changelog]({{ cookiecutter.project_repository }}/-/tree/{% raw -%}
@@ -136,15 +141,19 @@ release:
       when: never
     - if: $CI_COMMIT_TAG
   script:
-    - package="{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py3-none-any.whl"
     - apt-get install --yes curl
     - curl --location --output /usr/local/bin/release-cli
       https://gitlab.com/api/v4/projects/gitlab-org%2Frelease-cli/packages/generic/release-cli/latest/release-cli-linux-amd64
     - chmod 755 /usr/local/bin/release-cli
     - poetry build
     - >-
-      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "dist/${package}"
-      "${PACKAGE_REGISTRY_URL}/${CI_COMMIT_TAG}/${package}"
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file
+      "dist/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py3-none-any.whl"
+      "${PACKAGE_REGISTRY_URL}/${CI_COMMIT_TAG}/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}-py3-none-any.whl"
+    - >-
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file
+      "dist/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}.tar.gz"
+      "${PACKAGE_REGISTRY_URL}/${CI_COMMIT_TAG}/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}.tar.gz"
     {%- if cookiecutter.pypi_support == "yes" %}
     - poetry publish --username "${PYPI_USERNAME?}" --password
       "${PYPI_PASSWORD?}"

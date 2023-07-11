@@ -80,9 +80,8 @@ subcontents are only generated for that chosen context.
 ├── .github  {githost: github}
 │   └── workflows
 │       ├── build.yaml
-|       ├── pages.yaml
-│       ├── release.yaml
-│       └── test.yaml
+│       ├── pages.yaml
+│       └── release.yaml
 ├── .dockerignore
 ├── .gitignore
 ├── .gitlab-ci.yaml  {githost: gitlab}
@@ -90,7 +89,7 @@ subcontents are only generated for that chosen context.
 ├── .prettierrc.yaml  {prettier_support: yes}
 ├── CONTRIBUTING.md
 ├── docs
-|   ├── api
+│   ├── api
 │   |   └── index.md
 │   └── usage
 │       └── index.md
@@ -101,20 +100,18 @@ subcontents are only generated for that chosen context.
 ├── pyproject.toml
 ├── README.md
 ├── scripts
-|   ├── __init__.py
-│   └── build_docs.py
+│   ├── __init__.py
+│   ├── build_docs.py
+│   ├── setup_tmate.ps1  {githost: gitlab}
+│   └── setup_tmate.sh  {githost: gitlab}
 ├── src
 │   └── {{project_slug}}
 │       ├── __init__.py
-|       ├── __main__.py  {cli_support: yes}
+│       ├── __main__.py  {cli_support: yes}
 │       └── py.typed
 ├── tests
 │   ├── conftest.py
 │   ├── __init__.py
-│   ├── integration
-│   │   └── __init__.py
-│   └── unit
-│       └── __init__.py
 └── tox.ini
 ```
 
@@ -122,9 +119,3 @@ subcontents are only generated for that chosen context.
 
 Projects generated with this scaffolding repository are automatically configured
 to use GitHub CI workflows and GitLab CI pipelines.
-
-### Linting and Testing
-
-### Documentation Publishing
-
-### Package Publishing

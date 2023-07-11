@@ -52,8 +52,9 @@ jobs:
             See the
             [changelog]({{ cookiecutter.project_repository }}/blob/{% raw -%} ${{
             github.ref_name }} {%- endraw %}/CHANGELOG.md) for more information.
-          files: >-
+          files: |
             dist/{{ cookiecutter.project_slug }} {%- raw -%} -${{ github.ref_name }}-py3-none-any.whl {%- endraw %}
+            dist/{{ cookiecutter.project_slug }} {%- raw -%} -${{ github.ref_name }}.tar.gz {%- endraw %}
           name: {{ cookiecutter.project_name }} {% raw -%} ${{ github.ref_name }} {%- endraw %}
           tag_name: {% raw -%} ${{ github.ref }} {%- endraw %}
       {% if cookiecutter.pypi_support == "yes" -%}
