@@ -36,13 +36,14 @@ on:
           - windows
         type: choice
       python:
-        default: "3.10"
+        default: "3.11"
         description: Python version for test job
         options:
           - "3.8"
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12"
         type: choice
 
 env:
@@ -72,7 +73,7 @@ jobs:
             .cache
             .venv
           key: >-
-            {% raw -%} node-20_python-3.10_${{ runner.os }}_npm-${{
+            {% raw -%} node-20_python-3.11_${{ runner.os }}_npm-${{
             hashFiles('package-lock.json') }}_poetry-${{
             hashFiles('poetry.lock') }} {%- endraw %}
       - name: Install Node interpreter
@@ -94,12 +95,12 @@ jobs:
             .cache
             .venv
           key: >-
-            {% raw -%} python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
+            {% raw -%} python-3.11_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
       {% endif -%}
       - name: Install Python interpreter
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       - name: Install Python packages
         run: |
           python --version
@@ -129,7 +130,7 @@ jobs:
     strategy:
       fail-fast: false
       # Runs all job combinations on a manual run or any push or pull request to
-      # the default branch. Runs only Python 3.10 Ubuntu job for all other Git
+      # the default branch. Runs only Python 3.11 Ubuntu job for all other Git
       # events.
       matrix:
         all:
@@ -141,7 +142,7 @@ jobs:
           - all: false
         include:
           - os: {% raw -%} ${{ inputs.os || 'ubuntu' }} {%- endraw %}
-            python: {% raw -%} ${{ inputs.python || '3.10' }} {%- endraw %}
+            python: {% raw -%} ${{ inputs.python || '3.11' }} {%- endraw %}
         os:
           - macos
           - ubuntu
@@ -151,6 +152,7 @@ jobs:
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12"
     runs-on: {% raw -%} ${{ matrix.os }}-latest {%- endraw %}
     steps:
       - name: Checkout code repository
