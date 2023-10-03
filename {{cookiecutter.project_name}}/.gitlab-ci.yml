@@ -28,7 +28,7 @@ stages:
 variables:
   CI_WEB_DEBUG: "false"
   CI_WEB_JOB: test-linux
-  CI_WEB_PYTHON_VERSION: "3.10"
+  CI_WEB_PYTHON_VERSION: "3.11"
   NPM_CONFIG_CACHE: "${CI_PROJECT_DIR}/.cache/npm"
   PACKAGE_REGISTRY_URL: >-
     ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{{ cookiecutter.project_name }}
@@ -38,7 +38,7 @@ variables:
   POETRY_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pypoetry"
   POETRY_VIRTUALENVS_IN_PROJECT: "true"
   PYTHON_KEYRING_BACKEND: "keyring.backends.null.Keyring"
-  PYTHON_VERSION_DEFAULT: "3.10"
+  PYTHON_VERSION_DEFAULT: "3.11"
 
 # Contains settings that apply to all jobs unless overridden.
 default:
@@ -169,6 +169,7 @@ test-linux:
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12"
   # Makes job skip Git tags and run only default Python version on all events
   # except for commits to or merge requests to the default repository branch.
   # Then all Python versions are run.

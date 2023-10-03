@@ -31,6 +31,7 @@ disallow_untyped_calls = false
 disallow_untyped_defs = true
 exclude = [
     '\.benchmarks/',
+    '\.cache/',
     '\.hypothesis/',
     '\.pytest_cache/',
     '\.venv/',

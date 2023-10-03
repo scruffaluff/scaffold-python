@@ -43,11 +43,11 @@ jobs:
             .cache
             .venv
           key: >-
-            {% raw -%} python-3.10_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
+            {% raw -%} python-3.11_${{ runner.os }}_poetry-${{ hashFiles('poetry.lock') }} {%- endraw %}
       - name: Install Python interpreter
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       - name: Install Python packages
         run: |
           python --version
