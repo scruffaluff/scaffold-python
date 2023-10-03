@@ -17,6 +17,7 @@ disallow_untyped_calls = false
 disallow_untyped_defs = true
 exclude = [
     '\.benchmarks/',
+    '\.cache/',
     '\.hypothesis/',
     '\.pytest_cache/',
     '\.venv/',
@@ -38,7 +39,7 @@ keywords = []
 license = "MIT"
 name = "scaffold-python"
 readme = "README.md"
-version = "0.2.0"
+version = "0.2.1"
 
 [tool.poetry.dependencies]
 python = "^3.8.1"
@@ -64,9 +65,6 @@ types-toml = "^0.10.0"
 addopts = "-sv"
 filterwarnings = ["ignore::DeprecationWarning"]
 python_classes = "Test*"
-python_files = [
-    "__init__.py",
-    "test_*.py",
-]
+python_files = ["__init__.py", "test_*.py"]
 python_functions = ["test_*"]
 testpaths = ["tests"]
