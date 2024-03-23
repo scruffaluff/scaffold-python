@@ -100,7 +100,7 @@ jobs:
           poetry run black --check .
           poetry run flake8 .
           poetry run mypy .
-          mkdir docs
+          mkdir -p docs
           cp README.md docs/index.md
           poetry run mkdocs build --strict
       - name: Setup Tmate session if debug enabled
