@@ -1,6 +1,5 @@
 """{{ cookiecutter.project_name }} testing package."""
 
-
 import pathlib
 
 import toml

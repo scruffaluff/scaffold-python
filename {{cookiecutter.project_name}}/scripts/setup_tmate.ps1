@@ -45,7 +45,7 @@ Function RemoteScript($URL) {
 
 # Print SetupTmate version string.
 Function Version() {
-    Write-Output 'SetupTmate 0.2.1'
+    Write-Output 'SetupTmate 0.3.0'
 }
 
 # Script entrypoint.

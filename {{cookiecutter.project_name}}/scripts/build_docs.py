@@ -1,6 +1,5 @@
 """Copy index file and build documentation."""
 
-
 from pathlib import Path
 import shutil
 import subprocess

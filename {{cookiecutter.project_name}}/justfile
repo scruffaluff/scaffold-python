@@ -13,32 +13,30 @@ all: setup format lint docs test
 
 # Build documentation.
 docs: _docs_mkdir
-  cp README.md docs/index.md
-  poetry run mkdocs build --strict
-
-[unix]
-_docs_mkdir:
-  mkdir -p docs
-
-[windows]
-_docs_mkdir:
-  New-Item -Force -ItemType Directory docs
+  poetry run python scripts/build_docs.py
 
 # Check code formatting.
 format:
+  {% if cookiecutter.prettier_support == "yes" -%}
   prettier --check .
+  {% endif -%}
   poetry run black --check .
 
 # Run code analyses.
 lint:
+  poetry run bandit -ilr src
+  poetry run black --check .
   poetry run flake8 .
   poetry run mypy .
+  poetry run nbqa flake8 .
 
 # Install development dependencies.
 setup:
+  {% if cookiecutter.prettier_support == "yes" -%}
   node --version
   npm --version
   npm install --global prettier
+  {% endif -%}
   python3 --version
   python3 -m venv .venv
   python3 -m pip --version

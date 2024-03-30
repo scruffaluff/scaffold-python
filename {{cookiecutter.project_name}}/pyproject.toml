@@ -77,7 +77,6 @@ mkdocs-material = "^9.5.0"
 mkdocstrings = "^0.24.0"
 mypy = "^1.9.0"
 nbqa = "^1.8.0"
-py-spy = "^0.3.0"
 pymdown-extensions = "^10.7.0"
 pyreadline3 = { markers = "sys_platform == 'win32'", version = "^3.4.0" }
 pytest = "^8.1.0"

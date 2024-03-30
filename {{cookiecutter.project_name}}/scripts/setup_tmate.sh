@@ -17,9 +17,7 @@ set -eu
 #   Writes help information to stdout.
 #######################################
 usage() {
-  case "${1}" in
-    main)
-      cat 1>&2 << EOF
+  cat 1>&2 << EOF
 Installs Tmate and creates a remote session. Users can close the session by
 creating the file /close-tmate.
 
@@ -30,28 +28,6 @@ Options:
   -h, --help      Print help information
   -v, --version   Print version information
 EOF
-      ;;
-    *)
-      error "No such usage option '${1}'"
-      ;;
-  esac
-}
-
-#######################################
-# Assert that command can be found in system path.
-# Will exit script with an error code if command is not in system path.
-# Arguments:
-#   Command to check availabilty.
-# Outputs:
-#   Writes error message to stderr if command is not in system path.
-#######################################
-assert_cmd() {
-  # Flags:
-  #   -v: Only show file path of command.
-  #   -x: Check if file exists and execute permission is granted.
-  if [ ! -x "$(command -v "${1}")" ]; then
-    error "Cannot find required ${1} command on computer"
-  fi
 }
 
 #######################################
@@ -66,13 +42,43 @@ error() {
 }
 
 #######################################
+# Print error message and exit script with usage error code.
+# Outputs:
+#   Writes error message to stderr.
+#######################################
+error_usage() {
+  bold_red='\033[1;31m' default='\033[0m'
+  printf "${bold_red}error${default}: %s\n" "${1}" >&2
+  printf "Run 'packup --help' for usage.\n" >&2
+  exit 2
+}
+
+#######################################
+# Find command to elevate as super user.
+#######################################
+find_super() {
+  # Do not use long form -user flag for id. It is not supported on MacOS.
+  #
+  # Flags:
+  #   -v: Only show file path of command.
+  #   -x: Check if file exists and execute permission is granted.
+  if [ "$(id -u)" -eq 0 ]; then
+    echo ''
+  elif [ -x "$(command -v sudo)" ]; then
+    echo 'sudo'
+  elif [ -x "$(command -v doas)" ]; then
+    echo 'doas'
+  else
+    error 'Unable to find a command for super user elevation'
+  fi
+}
+
+#######################################
 # Install Tmate.
 # Arguments:
-#   Whether to use sudo command.
+#   Super user command for installation.
 #######################################
 install_tmate() {
-  assert_cmd uname
-
   # Do not use long form --kernel-name flag for uname. It is not supported on
   # MacOS.
   os_type="$(uname -s)"
@@ -85,8 +91,8 @@ install_tmate() {
       HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK='true' brew install tmate
       ;;
     FreeBSD)
-      ${1:+sudo} pkg update
-      ${1:+sudo} pkg install --yes tmate
+      ${1:+"${1}"} pkg update
+      ${1:+"${1}"} pkg install --yes tmate
       ;;
     Linux)
       install_tmate_linux "${1}"
@@ -100,7 +106,7 @@ install_tmate() {
 #######################################
 # Install Tmate for Linux.
 # Arguments:
-#   Whether to use sudo command.
+#   Super user command for installation.
 #######################################
 install_tmate_linux() {
   tmate_version='2.4.0'
@@ -127,22 +133,22 @@ install_tmate_linux() {
   #   -v: Only show file path of command.
   #   -x: Check if file exists and execute permission is granted.
   if [ -x "$(command -v apk)" ]; then
-    ${1:+sudo} apk add curl openssh-client xz
+    ${1:+"${1}"} apk add curl openssh-client xz
   elif [ -x "$(command -v apt-get)" ]; then
-    ${1:+sudo} apt-get update
-    ${1:+sudo} apt-get install --yes curl openssh-client xz-utils
+    ${1:+"${1}"} apt-get update
+    ${1:+"${1}"} apt-get install --yes curl openssh-client xz-utils
   elif [ -x "$(command -v dnf)" ]; then
-    ${1:+sudo} dnf install --assumeyes curl openssh xz
+    ${1:+"${1}"} dnf install --assumeyes curl openssh xz
   elif [ -x "$(command -v pacman)" ]; then
-    ${1:+sudo} pacman --noconfirm --refresh --sync --sysupgrade
-    ${1:+sudo} pacman --noconfirm --sync curl openssh xz
+    ${1:+"${1}"} pacman --noconfirm --refresh --sync --sysupgrade
+    ${1:+"${1}"} pacman --noconfirm --sync curl openssh xz
   elif [ -x "$(command -v zypper)" ]; then
-    ${1:+sudo} zypper install --no-confirm curl openssh tar xz
+    ${1:+"${1}"} zypper install --no-confirm curl openssh tar xz
   fi
 
   curl -LSfs "https://github.com/tmate-io/tmate/releases/download/${tmate_version}/tmate-${tmate_version}-static-linux-${tmate_arch}.tar.xz" -o /tmp/tmate.tar.xz
   tar xvf /tmp/tmate.tar.xz --directory /tmp --strip-components 1
-  ${1:+sudo} install /tmp/tmate /usr/local/bin/tmate
+  ${1:+"${1}"} install /tmp/tmate /usr/local/bin/tmate
   rm /tmp/tmate /tmp/tmate.tar.xz
 }
 
@@ -150,14 +156,7 @@ install_tmate_linux() {
 # Installs Tmate and creates a remote session.
 #######################################
 setup_tmate() {
-  # Use sudo for system installation if user is not root. Do not use long form
-  # --user flag for id. It is not supported on MacOS.
-  if [ "$(id -u)" -ne 0 ]; then
-    assert_cmd sudo
-    use_sudo='true'
-  else
-    use_sudo=''
-  fi
+  super="$(find_super)"
 
   # Install Tmate if not available.
   #
@@ -165,7 +164,7 @@ setup_tmate() {
   #   -v: Only show file path of command.
   #   -x: Check if file exists and execute permission is granted.
   if [ ! -x "$(command -v tmate)" ]; then
-    install_tmate "${use_sudo}"
+    install_tmate "${super}"
   fi
 
   # Launch new Tmate session with custom socket.
@@ -200,7 +199,7 @@ setup_tmate() {
 #   Setup Tmate version string.
 #######################################
 version() {
-  echo 'SetupTmate 0.2.1'
+  echo 'SetupTmate 0.3.0'
 }
 
 #######################################
@@ -215,18 +214,23 @@ main() {
         shift 1
         ;;
       -h | --help)
-        usage 'main'
+        usage
         exit 0
         ;;
       -v | --version)
         version
         exit 0
         ;;
-      *) ;;
+      *)
+        error_usage "No such option '${1}'."
+        ;;
     esac
   done
 
   setup_tmate
 }
 
-main "$@"
+# Add ability to selectively skip main function during test suite.
+if [ -z "${BATS_SOURCE_ONLY:-}" ]; then
+  main "$@"
+fi

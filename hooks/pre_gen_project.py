@@ -1,6 +1,5 @@
 """Project pre-generation hooks."""
 
-
 import re
 import sys
 
