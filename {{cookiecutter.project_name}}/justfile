@@ -1,0 +1,48 @@
+# Just configuration file for running commands.
+#
+# For more information, visit https://just.systems.
+
+set windows-shell := ['pwsh.exe', '-NoLogo', '-Command']
+
+# List all commands available in justfile.
+list:
+  just --list
+
+# Execute all development commands.
+all: setup format lint docs test
+
+# Build documentation.
+docs: _docs_mkdir
+  poetry run python scripts/build_docs.py
+
+# Check code formatting.
+format:
+  {% if cookiecutter.prettier_support == "yes" -%}
+  prettier --check .
+  {% endif -%}
+  poetry run black --check .
+
+# Run code analyses.
+lint:
+  poetry run bandit -ilr src
+  poetry run black --check .
+  poetry run flake8 .
+  poetry run mypy .
+  poetry run nbqa flake8 .
+
+# Install development dependencies.
+setup:
+  {% if cookiecutter.prettier_support == "yes" -%}
+  node --version
+  npm --version
+  npm install --global prettier
+  {% endif -%}
+  python3 --version
+  python3 -m venv .venv
+  python3 -m pip --version
+  poetry check --lock
+  poetry install --no-root
+
+# Run test suites.
+test:
+  poetry run pytest

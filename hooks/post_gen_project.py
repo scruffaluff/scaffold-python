@@ -1,6 +1,5 @@
 """Project post-generation hooks."""
 
-
 from pathlib import Path
 import shutil
 from typing import Dict, List, Union

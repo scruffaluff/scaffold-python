@@ -62,9 +62,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Cache packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             .cache
@@ -74,7 +74,7 @@ jobs:
             hashFiles('package-lock.json') }}_poetry-${{
             hashFiles('poetry.lock') }}
       - name: Install Node interpreter
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
       - name: Install Prettier formatter
@@ -85,7 +85,7 @@ jobs:
       - name: Check configuration file formatting
         run: prettier --check .
       - name: Install Python interpreter
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Install Python packages
@@ -100,7 +100,7 @@ jobs:
           poetry run black --check .
           poetry run flake8 .
           poetry run mypy .
-          mkdir docs
+          mkdir -p docs
           cp README.md docs/index.md
           poetry run mkdocs build --strict
       - name: Setup Tmate session if debug enabled
@@ -142,9 +142,9 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     steps:
       - name: Checkout code repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Cache packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             .cache
@@ -154,7 +154,7 @@ jobs:
             hashFiles('package-lock.json') }}_poetry-${{
             hashFiles('poetry.lock') }}
       - name: Install Node interpreter
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
       - name: Install Prettier formatter
@@ -163,7 +163,7 @@ jobs:
           npm --version
           npm install --global prettier
       - name: Install Python interpreter
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
       - name: Install Python packages

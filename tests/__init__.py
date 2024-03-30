@@ -1,6 +1,5 @@
 """Tests for Scaffold Python."""
 
-
 import re
 import sys
 from typing import Any, Dict, List

@@ -6,7 +6,7 @@ __pycache__/
 .cache/
 .coverage*
 .DS_Store
-.env
+.env*
 .ipynb_checkpoints/
 .mypy_cache/
 .pdbrc

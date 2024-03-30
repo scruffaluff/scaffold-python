@@ -1,6 +1,5 @@
 """Utility functions for testing."""
 
-
 import contextlib
 import os
 from pathlib import Path
