@@ -12,7 +12,7 @@ list:
 all: setup format lint docs test
 
 # Build documentation.
-docs: _docs_mkdir
+docs:
   poetry run python scripts/build_docs.py
 
 # Check code formatting.
@@ -41,7 +41,7 @@ setup:
   python3 -m venv .venv
   python3 -m pip --version
   poetry check --lock
-  poetry install --no-root
+  poetry install
 
 # Run test suites.
 test:
