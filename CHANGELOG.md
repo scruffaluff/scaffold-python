@@ -5,6 +5,12 @@ details, see the commit logs. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+## Removed
+
+- Python 3.8 support.
+
 ## 0.2.1 - 2023-10-03
 
 ### Added
@@ -27,7 +33,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Default Python version to 3.10.
 - Repository default branch from master to main.
-- Simplifed `docs` and `tests` directory layouts.
+- Simplified `docs` and `tests` directory layouts.
 
 ### Removed
 
