@@ -165,11 +165,11 @@ test-linux:
   parallel:
     matrix:
       - version:
-          - "3.8"
           - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
   # Makes job skip Git tags and run only default Python version on all events
   # except for commits to or merge requests to the default repository branch.
   # Then all Python versions are run.

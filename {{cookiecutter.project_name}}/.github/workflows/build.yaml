@@ -39,11 +39,11 @@ on:
         default: "3.11"
         description: Python version for test job
         options:
-          - "3.8"
           - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
         type: choice
 
 env:
@@ -79,7 +79,7 @@ jobs:
       - name: Install Node interpreter
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Install Prettier formatter
         run: |
           node --version
@@ -148,11 +148,11 @@ jobs:
           - ubuntu
           - windows
         python:
-          - "3.8"
           - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
     runs-on: {% raw -%} ${{ matrix.os }}-latest {%- endraw %}
     steps:
       - name: Checkout code repository

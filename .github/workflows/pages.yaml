@@ -60,7 +60,7 @@ jobs:
           cp README.md docs/index.md
           poetry run mkdocs build
       - name: Publish documentation
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ github.token }}
           publish_dir: site
