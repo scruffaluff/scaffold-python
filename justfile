@@ -42,8 +42,9 @@ setup:
   python3 --version
   python3 -m venv .venv
   python3 -m pip --version
+  poetry --version
   poetry check --lock
-  poetry install --no-root
+  poetry install
 
 # Run test suites.
 test:

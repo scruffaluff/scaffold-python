@@ -5,7 +5,27 @@
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core^2.0.0"]
+
+[project]
+authors = [{ email = "{{ cookiecutter.author_email }}", name = "{{ cookiecutter.author_name }}" }]
+description = "{{ cookiecutter.project_description }}"
+documentation = "{{ cookiecutter.project_homepage }}"
+dynamic = ["dependencies"]
+homepage = "{{ cookiecutter.project_repository }}"
+keywords = []
+{%- if cookiecutter.license == "MIT" %}
+license = "MIT"
+{%- endif %}
+name = "{{ cookiecutter.project_name }}"
+readme = "README.md"
+requires-python = "^3.9.0"
+version = "{{ cookiecutter.project_version }}"
+
+{% if cookiecutter.cli_support == "yes" -%}
+[project.scripts]
+{{ cookiecutter.project_name }} = "{{ cookiecutter.project_slug }}.__main__:app"
+{% endif -%}
 
 [tool.black]
 line-length = 80
@@ -44,40 +64,26 @@ warn_redundant_casts = true
 warn_return_any = true
 warn_unused_ignores = true
 
-[tool.poetry]
-authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
-description = "{{ cookiecutter.project_description }}"
-documentation = "{{ cookiecutter.project_homepage }}"
-homepage = "{{ cookiecutter.project_repository }}"
-keywords = []
-{%- if cookiecutter.license == "MIT" %}
-license = "MIT"
-{%- endif %}
-name = "{{ cookiecutter.project_name }}"
-readme = "README.md"
-version = "{{ cookiecutter.project_version }}"
-
-[tool.poetry.dependencies]
-python = "^3.9.0"
 {%- if cookiecutter.cli_support == "yes" %}
-typer = "^0.12.0"
+[tool.poetry.dependencies]
+typer = "^0.15.0"
 {%- endif %}
 
 [tool.poetry.group.dev.dependencies]
-bandit = "^1.7.0"
+bandit = "^1.8.0"
 black = { extras = ["jupyter"], version = "^24.10.0" }
 coverage = { extras = ["toml"], version = "^7.6.0" }
 flake8 = "^7.1.0"
-flake8-bugbear = "^24.10.0"
+flake8-bugbear = "^24.12.0"
 flake8-docstrings = "^1.7.0"
 flake8-import-order = "^0.18.0"
 mccabe = "^0.7.0"
 mkdocs = "^1.6.0"
 mkdocs-material = "^9.5.0"
 mkdocstrings = "^0.27.0"
-mypy = "^1.13.0"
+mypy = "^1.14.0"
 nbqa = "^1.9.0"
-pymdown-extensions = "^10.12.0"
+pymdown-extensions = "^10.14.0"
 pyreadline3 = { markers = "sys_platform == 'win32'", version = "^3.5.0" }
 pytest = "^8.3.0"
 pytest-cov = "^6.0.0"
@@ -85,11 +91,6 @@ pytest-mock = "^3.14.0"
 toml = "^0.10.0"
 tox = "^4.23.0"
 types-toml = "^0.10.0"
-
-{% if cookiecutter.cli_support == "yes" -%}
-[tool.poetry.scripts]
-{{ cookiecutter.project_name }} = "{{ cookiecutter.project_slug }}.__main__:app"
-{% endif -%}
 
 [tool.pytest.ini_options]
 addopts = "-sv"

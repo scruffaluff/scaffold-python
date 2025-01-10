@@ -39,7 +39,7 @@ black .
 git init
 ```
 
-Then the development environment is configured and you are ready to code.
+Then the development environment is configured, and you are ready to code.
 
 ## Tooling
 
@@ -73,7 +73,7 @@ The following tools are configured if you select optional features:
 
 The following diagram shows all possible files generated from scaffolding. If a
 file is followed by `{option: selection}`, then the path and its possible
-subcontents are only generated for that chosen context.
+contents are only generated for that chosen context.
 
 ```
 {{project_name}}
@@ -115,7 +115,7 @@ subcontents are only generated for that chosen context.
 └── tox.ini
 ```
 
-## Continous Integration
+## Continuous Integration
 
 Projects generated with this scaffolding repository are automatically configured
 to use GitHub CI workflows and GitLab CI pipelines.

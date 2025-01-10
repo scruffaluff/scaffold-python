@@ -5,7 +5,18 @@
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core^2.0.0"]
+
+[project]
+authors = [{ email = "macklan.weinstein@gmail.com", name = "Macklan Weinstein" }]
+description = "Python project template for scaffolding."
+homepage = "https://github.com/scruffaluff/scaffold-python"
+keywords = []
+license = "MIT"
+name = "scaffold-python"
+readme = "README.md"
+requires-python = "^3.9.0"
+version = "0.2.1"
 
 [tool.black]
 extend-exclude = "{{cookiecutter.project_name}}/*"
@@ -32,29 +43,19 @@ warn_return_any = true
 warn_unused_ignores = true
 
 [tool.poetry]
-authors = ["Macklan Weinstein <macklan.weinstein@gmail.com>"]
-description = "Python project template for scaffolding."
-homepage = "https://github.com/scruffaluff/scaffold-python"
-keywords = []
-license = "MIT"
-name = "scaffold-python"
-readme = "README.md"
-version = "0.2.1"
-
-[tool.poetry.dependencies]
-python = "^3.9.0"
+package-mode = false
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
 flake8 = "^7.1.0"
-flake8-bugbear = "^24.10.0"
+flake8-bugbear = "^24.12.0"
 flake8-docstrings = "^1.7.0"
 flake8-import-order = "^0.18.0"
 mccabe = "^0.7.0"
 mkdocs = "^1.6.0"
 mkdocs-material = "^9.5.0"
-mypy = "^1.13.0"
-pymdown-extensions = "^10.12.0"
+mypy = "^1.14.0"
+pymdown-extensions = "^10.14.0"
 pyreadline3 = { markers = "sys_platform == 'win32'", version = "^3.5.0" }
 pytest = "^8.3.0"
 pytest-cookies = "^0.7.0"
