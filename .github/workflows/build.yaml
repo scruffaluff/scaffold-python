@@ -93,7 +93,7 @@ jobs:
           python --version
           python -m pip --version
           python -m pip install poetry
-          poetry lock --check
+          poetry check --lock
           poetry install --verbose
       - name: Run linter checks
         run: |
@@ -171,7 +171,7 @@ jobs:
           python --version
           python -m pip --version
           python -m pip install poetry
-          poetry lock --check
+          poetry check --lock
           poetry install --verbose
       - name: Run test suite
         run: poetry run pytest

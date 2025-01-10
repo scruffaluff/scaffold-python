@@ -53,7 +53,7 @@ jobs:
           python --version
           python -m pip --version
           python -m pip install poetry
-          poetry lock --check
+          poetry check --lock
           poetry install --verbose
       - name: Build documentation
         run: poetry run python scripts/build_docs.py

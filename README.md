@@ -30,7 +30,7 @@ will be generated in your current working directory.
 
 To develop with the generated project, install
 [Poetry](https://python-poetry.org/) and step into the project folder.
-Afterwards execute:
+Afterwards execute the following commands.
 
 ```console
 poetry install
