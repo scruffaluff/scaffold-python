@@ -31,6 +31,7 @@ requires-python = "~=3.9"
 version = "0.2.1"
 
 [tool.mypy]
+cache_dir = ".vendor/cache/mypy"
 check_untyped_defs = true
 disallow_untyped_calls = false
 disallow_untyped_defs = true
@@ -53,16 +54,17 @@ warn_unused_ignores = true
 
 [tool.pytest.ini_options]
 addopts = "-sv"
-# python_files = ["*.test.py"]
+cache_dir = ".vendor/cache/pytest"
 python_classes = "Test*"
 python_files = [
     "__init__.py",
-    "test_*.py",
+    "*.test.py",
 ]
 python_functions = ["test_*"]
 testpaths = ["test"]
 
 [tool.ruff]
+cache-dir = ".vendor/cache/ruff"
 extend-exclude = ["[{][{]cookiecutter.project_name[}][}]"]
 
 [tool.uv]

@@ -17,7 +17,7 @@ list:
   just --list
 
 # Execute CI workflow commands.
-ci: setup lint doc test-ver
+ci: setup lint doc test
 
 # Build documentation.
 [script]

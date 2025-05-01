@@ -11,11 +11,7 @@ Paths = List[Path]
 PATHS: Dict[str, Union[Paths, Dict[str, Paths]]] = {
     "githost": {
         "github": [Path(".github")],
-        "gitlab": [
-            Path(".gitlab-ci.yml"),
-            Path("scripts/setup_tmate.ps1"),
-            Path("scripts/setup_tmate.sh"),
-        ],
+        "gitlab": [Path(".gitlab-ci.yml")],
     },
     "cli_support": [
         Path("src/{{ cookiecutter.project_slug }}/__main__.py"),
