@@ -3,22 +3,26 @@
 # For more information, visit
 # https://snarky.ca/what-the-heck-is-pyproject-toml/.
 
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling~=1.0"]
+
 [dependency-groups]
 dev = [
-    "black>=24.10.0,<25.0.0",
-    "flake8>=7.1.0,<8.0.0",
-    "flake8-bugbear>=24.12.0,<25.0.0",
-    "flake8-docstrings>=1.7.0,<2.0.0",
-    "flake8-import-order>=0.18.0,<0.19.0",
-    "mccabe>=0.7.0,<0.8.0",
-    "mkdocs>=1.6.0,<2.0.0",
-    "mkdocs-material>=9.5.0,<10.0.0",
-    "mypy>=1.14.0,<2.0.0",
-    "pymdown-extensions>=10.14.0,<11.0.0",
-    "pytest>=8.3.0,<9.0.0",
-    "pytest-cookies>=0.7.0,<0.8.0",
-    "pytest-mock>=3.14.0,<4.0.0",
-    "types-toml>=0.10.0,<0.11.0",
+    "black~=24.10",
+    "flake8~=7.1",
+    "flake8-bugbear~=24.12",
+    "flake8-docstrings~=1.7",
+    "flake8-import-order~=0.18.0",
+    "mccabe~=0.7.0",
+    "mkdocs~=1.6",
+    "mkdocs-material~=9.5",
+    "mypy~=1.14",
+    "pymdown-extensions~=10.14",
+    "pytest~=8.3",
+    "pytest-cookies~=0.7.0",
+    "pytest-mock~=3.14",
+    "types-toml~=0.10.0",
 ]
 
 [project]
@@ -28,7 +32,7 @@ keywords = []
 license = "MIT"
 name = "scaffold-python"
 readme = "README.md"
-requires-python = ">=3.9.0,<4.0.0"
+requires-python = "~=3.9"
 version = "0.2.1"
 
 [tool.black]
@@ -57,11 +61,14 @@ warn_unused_ignores = true
 
 [tool.pytest.ini_options]
 addopts = "-sv"
-filterwarnings = ["ignore::DeprecationWarning"]
+# python_files = ["*.test.py"]
 python_classes = "Test*"
-python_files = ["__init__.py", "test_*.py"]
+python_files = [
+    "__init__.py",
+    "test_*.py",
+]
 python_functions = ["test_*"]
-testpaths = ["tests"]
+testpaths = ["test"]
 
 [tool.uv]
 package = false

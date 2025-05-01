@@ -19,5 +19,5 @@ __pycache__/
 *.pyc
 node_modules/
 package-lock.json
-poetry.lock
 site/
+uv.lock

@@ -4,22 +4,21 @@
 # https://snarky.ca/what-the-heck-is-pyproject-toml/.
 
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core^2.0.0"]
+build-backend = "hatchling.build"
+requires = ["hatchling~=1.0"]
 
 [project]
 authors = [{ email = "{{ cookiecutter.author_email }}", name = "{{ cookiecutter.author_name }}" }]
 description = "{{ cookiecutter.project_description }}"
 documentation = "{{ cookiecutter.project_homepage }}"
 dynamic = ["dependencies"]
-homepage = "{{ cookiecutter.project_repository }}"
 keywords = []
 {%- if cookiecutter.license == "MIT" %}
 license = "MIT"
 {%- endif %}
 name = "{{ cookiecutter.project_name }}"
 readme = "README.md"
-requires-python = "^3.9.0"
+requires-python = "~=3.9"
 version = "{{ cookiecutter.project_version }}"
 
 {% if cookiecutter.cli_support == "yes" -%}
@@ -44,6 +43,9 @@ branch = true
 command_line = "-m pytest"
 omit = []
 source = ["{{ cookiecutter.project_slug }}"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/{{ cookiecutter.project_slug }}"]
 
 [tool.mypy]
 check_untyped_defs = true
@@ -94,7 +96,6 @@ types-toml = "^0.10.0"
 
 [tool.pytest.ini_options]
 addopts = "-sv"
-filterwarnings = ["ignore::DeprecationWarning"]
 markers = [
     "e2e: mark as end to end test.",
     "unit: mark as unit test.",

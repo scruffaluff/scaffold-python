@@ -79,16 +79,14 @@ contents are only generated for that chosen context.
 {{project_name}}
 ├── .github  {githost: github}
 │   └── workflows
-│       ├── build.yaml
-│       ├── pages.yaml
-│       └── release.yaml
+│       └── main.yaml
 ├── .dockerignore
 ├── .gitignore
 ├── .gitlab-ci.yaml  {githost: gitlab}
 ├── .prettierignore  {prettier_support: yes}
 ├── .prettierrc.yaml  {prettier_support: yes}
 ├── CONTRIBUTING.md
-├── docs
+├── doc
 │   ├── api
 │   |   └── index.md
 │   └── usage
@@ -99,19 +97,17 @@ contents are only generated for that chosen context.
 ├── mkdocs.yml
 ├── pyproject.toml
 ├── README.md
-├── scripts
+├── script
 │   ├── __init__.py
 │   ├── build_docs.py
-│   ├── setup_tmate.ps1  {githost: gitlab}
-│   └── setup_tmate.sh  {githost: gitlab}
 ├── src
 │   └── {{project_slug}}
 │       ├── __init__.py
 │       ├── __main__.py  {cli_support: yes}
 │       └── py.typed
-├── tests
+├── test
 │   ├── conftest.py
-│   ├── __init__.py
+│   └── __init__.py
 └── tox.ini
 ```
 

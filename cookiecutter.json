@@ -1,5 +1,4 @@
 {
-  "_copy_without_render": ["scripts/setup_tmate.*"],
   "author_email": "macklan.weinstein@gmail.com",
   "author_name": "Macklan Weinstein",
   "githost_username": "scruffaluff",

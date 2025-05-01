@@ -2,47 +2,110 @@
 #
 # For more information, visit https://just.systems.
 
-set windows-shell := ['pwsh.exe', '-NoLogo', '-Command']
+set script-interpreter := ["nu"]
+set shell := ["nu", "--commands"]
+set unstable := true
+set windows-shell := ["nu", "--commands"]
+export PATH := if os() == "windows" {
+  justfile_dir() / ".vendor/bin;" + env_var("PATH")
+} else {
+  justfile_dir() / ".vendor/bin:" + env_var("PATH")
+}
 
 # List all commands available in justfile.
 list:
   just --list
 
-# Execute all development commands.
-all: setup format lint docs test
+# Execute CI workflow commands.
+ci: setup lint doc build test-ver
+
+# Build distribution package.
+build:
+  uv build --out-dir build/dist
 
 # Build documentation.
-docs:
-  poetry run python scripts/build_docs.py
+doc:
+  uv run python scripts/build_docs.py
 
-# Check code formatting.
+# Fix code formatting.
 format:
   {% if cookiecutter.prettier_support == "yes" -%}
-  prettier --check .
+  deno run --allow-all npm:prettier --write .
   {% endif -%}
-  poetry run black --check .
+  # uv run ruff format .
+  uv run black --write .
 
 # Run code analyses.
 lint:
-  poetry run bandit -ilr src
-  poetry run black --check .
-  poetry run flake8 .
-  poetry run mypy .
-  poetry run nbqa flake8 .
+  {% if cookiecutter.prettier_support == "yes" -%}
+  deno run --allow-all npm:prettier --check .
+  {% endif -%}
+  uv run bandit -ilr src
+  uv run black --check .
+  # uv run ruff check .
+  uv run flake8 .
+  uv run mypy .
+  uv run nbqa flake8 .
+
 
 # Install development dependencies.
-setup:
-  {% if cookiecutter.prettier_support == "yes" -%}
-  node --version
-  npm --version
-  npm install --global prettier
-  {% endif -%}
-  python3 --version
-  python3 -m venv .venv
-  python3 -m pip --version
-  poetry check --lock
-  poetry install
+setup: _setup
+  uv sync --locked
+
+[unix]
+_setup:
+  #!/usr/bin/env sh
+  set -eu
+  if [ ! -x "$(command -v nu)" ]; then
+    curl --fail --location --show-error \
+      https://scruffaluff.github.io/scripts/install/nushell.sh | sh -s -- \
+      --preserve-env --dest .vendor/bin
+  fi
+  echo "Nushell $(nu --version)"
+  if [ ! -x "$(command -v deno)" ]; then
+    curl --fail --location --show-error \
+      https://scruffaluff.github.io/scripts/install/deno.sh | sh -s -- \
+      --preserve-env --dest .vendor/bin
+  fi
+  deno --version
+  if [ ! -x "$(command -v uv)" ]; then
+    curl --fail --location --show-error \
+      https://scruffaluff.github.io/scripts/install/uv.sh | sh -s -- \
+      --preserve-env --dest .vendor/bin
+  fi
+  uv --version
+
+[windows]
+_setup:
+  #!powershell.exe
+  $ErrorActionPreference = 'Stop'
+  $ProgressPreference = 'SilentlyContinue'
+  $PSNativeCommandUseErrorActionPreference = $True
+  if (-not (Get-Command -ErrorAction SilentlyContinue nu)) {
+    powershell {
+      iex "& { $(iwr -useb https://scruffaluff.github.io/scripts/install/nushell.ps1) } --preserve-env --dest .vendor/bin"
+    }
+  }
+  Write-Output "Nushell $(nu --version)"
+  if (-not (Get-Command -ErrorAction SilentlyContinue deno)) {
+    powershell {
+      iex "& { $(iwr -useb https://scruffaluff.github.io/scripts/install/deno.ps1) } --preserve-env --dest .vendor/bin"
+    }
+  }
+  deno --version
+  if (-not (Get-Command -ErrorAction SilentlyContinue uv)) {
+    powershell {
+      iex "& { $(iwr -useb https://scruffaluff.github.io/scripts/install/uv.ps1) } --preserve-env --dest .vendor/bin"
+    }
+  }
+  uv --version
 
 # Run test suites.
-test:
-  poetry run pytest
+test *args:
+  uv run pytest {{args}}
+
+# Run test suite for multiple Python versions.
+[script]
+test-ver versions="3.9,3.10,3.11,3.12,3.13":
+  let versions = "{{versions}}" | split row ","
+  for version in $versions { uv run --python $version pytest }

@@ -10,7 +10,7 @@ from pytest_cookies.plugin import Cookies, Result
 
 # Ingoring unused import for show_match. Function is imported for convenient
 # test debugging.
-from tests.util import file_matches, run_command, show  # noqa: F401
+from test.util import file_matches, run_command, show  # noqa: F401
 
 
 @mark.parametrize(
