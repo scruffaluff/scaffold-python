@@ -43,6 +43,7 @@ lint:
   {% if cookiecutter.prettier_support == "yes" -%}
   deno run --allow-all npm:prettier --check .
   {% endif -%}
+  uv run ruff format --check .
   uv run ruff check .
   uv run mypy .
 

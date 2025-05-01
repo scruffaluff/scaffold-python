@@ -67,5 +67,9 @@ testpaths = ["test"]
 cache-dir = ".vendor/cache/ruff"
 extend-exclude = ["[{][{]cookiecutter.project_name[}][}]"]
 
+[tool.ruff.lint]
+ignore = ["D203", "D213", "D413", "S101", "S603"]
+select = ["A", "B", "D", "C90", "E", "F", "I", "N", "Q", "RUF100", "S", "W"]
+
 [tool.uv]
 package = false

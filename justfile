@@ -34,6 +34,7 @@ format:
 # Run code analyses.
 lint:
   deno run --allow-all npm:prettier --check .
+  uv run ruff format --check .
   uv run ruff check .
   uv run mypy .
 

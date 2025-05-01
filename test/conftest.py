@@ -1,7 +1,7 @@
 """Reusable testing fixtures."""
 
-from _pytest.fixtures import SubRequest
 import pytest
+from _pytest.fixtures import SubRequest
 from pytest_cookies.plugin import Cookies, Result
 
 

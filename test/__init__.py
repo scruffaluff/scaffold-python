@@ -20,9 +20,7 @@ from test.util import file_matches, run_command
         {"pypi_support": "no"},
     ],
 )
-def test_badges_separate_lines(
-    context: Dict[str, Any], cookies: Cookies
-) -> None:
+def test_badges_separate_lines(context: Dict[str, Any], cookies: Cookies) -> None:
     """Readme files must have all badge links on separate lines."""
     result = cookies.bake(extra_context=context)
     assert result.exit_code == 0, str(result.exception)

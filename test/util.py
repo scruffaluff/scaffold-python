@@ -2,9 +2,9 @@
 
 import contextlib
 import os
-from pathlib import Path
 import re
 import subprocess
+from pathlib import Path
 from typing import Any, Iterator, Optional
 
 from pytest_cookies.plugin import Result
@@ -65,7 +65,6 @@ def run_command(
             command,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            shell=True,
         )
 
 

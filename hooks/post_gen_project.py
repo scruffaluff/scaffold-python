@@ -1,9 +1,8 @@
 """Project post-generation hooks."""
 
-from pathlib import Path
 import shutil
+from pathlib import Path
 from typing import Dict, List, Union
-
 
 Paths = List[Path]
 

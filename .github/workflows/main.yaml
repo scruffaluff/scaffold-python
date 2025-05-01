@@ -68,10 +68,15 @@ jobs:
             .venv
       - if: ${{ runner.os == 'Windows' }}
         name: Install Just for Windows
-        run: src/install/just.ps1 --dest C:/Windows
+        run: >-
+          powershell { iex "& { $(iwr -useb
+          https://scruffaluff.github.io/scripts/install/just.ps1) } --dest
+          C:\Windows" }
       - if: ${{ runner.os != 'Windows' }}
         name: Install Just for Unix
-        run: src/install/just.sh --global
+        run: >-
+          curl -LSfs https://scruffaluff.github.io/scripts/install/just.sh | sh
+          -s -- --global
       - name: Run CI workflow commands
         run: just ci
       - if: ${{ always() && inputs.debug }}
@@ -101,7 +106,9 @@ jobs:
             .vendor
             .venv
       - name: Install Just
-        run: src/install/just.sh --global
+        run: >-
+          curl -LSfs https://scruffaluff.github.io/scripts/install/just.sh | sh
+          -s -- --global
       - name: Build documentation
         run: just setup doc
       - name: Upload documentation
