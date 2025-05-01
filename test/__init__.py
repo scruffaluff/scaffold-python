@@ -33,18 +33,6 @@ def test_badges_separate_lines(
         assert len(regex.findall(line)) < 2
 
 
-def test_format(baked_project: Result) -> None:
-    """Generated files must pass Black format checker."""
-    process = run_command(
-        command="uv run ruff format --check .",
-        work_dir=baked_project.project_path,
-    )
-
-    expected = 0
-    actual = process.returncode
-    assert actual == expected, process.stderr.decode("utf-8")
-
-
 @mark.parametrize(
     "context,paths",
     [
@@ -69,20 +57,18 @@ def test_existing_paths(
         assert file_path.exists()
 
 
-def test_flake8_lints(baked_project: Result) -> None:
-    """Generated files must pass Flake8 lints."""
+def test_ruff_lint(baked_project: Result) -> None:
+    """Generated files must pass Ruff lints."""
     process = run_command(
-        command="flake8 .",
+        command="uv run ruff check .",
         work_dir=baked_project.project_path,
     )
 
     expected = 0
     actual = process.returncode
-    # Flake8 prints errors to stdout instead of stderr.
-    assert actual == expected, process.stdout.decode("utf-8")
+    assert actual == expected, process.stderr.decode("utf-8")
 
 
-# Flake8 E501 is disabled since Black autoformats the line to be too long.
 @mark.parametrize(
     "context,expected",
     [
@@ -96,7 +82,7 @@ def test_flake8_lints(baked_project: Result) -> None:
         (
             {
                 "githost": "gitlab",
-                "project_repository": "https://gitlab.com/group/subgroup/repository",  # noqa: E501
+                "project_repository": "https://gitlab.com/group/subgroup/repository",
             },
             "https://group.gitlab.io/subgroup/repository",
         ),
@@ -122,27 +108,15 @@ def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
     assert result.exit_code == -1
 
 
-@mark.skipif(
-    sys.platform == "win32",
-    reason="Poetry install command hits permission errors for temporary paths",
-)
 def test_mkdocs_build(cookies: Cookies) -> None:
     """Mkdocs must be able to build documentation for baked project."""
     result = cookies.bake(extra_context={})
     assert result.exit_code == 0, str(result.exception)
-    expected = 0
-
     process = run_command(
-        command="poetry install", work_dir=result.project_path
-    )
-    # Poetry prints errors to stdout instead of stderr.
-    assert process.returncode == expected, process.stdout.decode("utf-8")
-
-    process = run_command(
-        command="poetry run python scripts/build_docs.py",
+        command="just doc",
         work_dir=result.project_path,
     )
-    assert process.returncode == expected, process.stderr.decode("utf-8")
+    assert process.returncode == 0, process.stderr.decode("utf-8")
 
 
 def test_mypy_type_checks(baked_project: Result) -> None:
@@ -215,27 +189,13 @@ def test_prettier_format(baked_project: Result) -> None:
     assert process.returncode == 0, process.stderr.decode("utf-8")
 
 
-@mark.skipif(
-    sys.platform == "win32",
-    reason="Poetry install command hits permission errors for temporary paths.",
-)
 def test_pytest_test(cookies: Cookies) -> None:
     """Generated files must pass Pytest unit tests."""
     result = cookies.bake(extra_context={})
     assert result.exit_code == 0, str(result.exception)
-    expected = 0
-
-    process = run_command(
-        command="poetry install", work_dir=result.project_path
-    )
-    # Poetry prints errors to stdout instead of stderr.
-    assert process.returncode == expected, process.stdout.decode("utf-8")
-
-    process = run_command(
-        command="poetry run pytest", work_dir=result.project_path
-    )
+    process = run_command(command="uv run pytest", work_dir=result.project_path)
     # Pytest prints errors to stdout instead of stderr.
-    assert process.returncode == expected, process.stdout.decode("utf-8")
+    assert process.returncode == 0, process.stdout.decode("utf-8")
 
 
 @mark.parametrize(
@@ -259,6 +219,18 @@ def test_removed_paths(
     for path in paths:
         remove_path = result.project_path / path
         assert not remove_path.exists()
+
+
+def test_ruff_format(baked_project: Result) -> None:
+    """Generated files must pass Black format checker."""
+    process = run_command(
+        command="uv run ruff format --check .",
+        work_dir=baked_project.project_path,
+    )
+
+    expected = 0
+    actual = process.returncode
+    assert actual == expected, process.stderr.decode("utf-8")
 
 
 @mark.parametrize(

@@ -33,7 +33,6 @@ dependencies = []
 {% endif %}
 description = "{{ cookiecutter.project_description }}"
 documentation = "{{ cookiecutter.project_homepage }}"
-dynamic = ["dependencies"]
 keywords = []
 {%- if cookiecutter.license == "MIT" %}
 license = "MIT"
