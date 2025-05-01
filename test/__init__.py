@@ -8,9 +8,7 @@ import pytest
 from pytest import mark
 from pytest_cookies.plugin import Cookies, Result
 
-# Ingoring unused import for show_match. Function is imported for convenient
-# test debugging.
-from test.util import file_matches, run_command, show  # noqa: F401
+from test.util import file_matches, run_command
 
 
 @mark.parametrize(
@@ -35,10 +33,10 @@ def test_badges_separate_lines(
         assert len(regex.findall(line)) < 2
 
 
-def test_black_format(baked_project: Result) -> None:
+def test_format(baked_project: Result) -> None:
     """Generated files must pass Black format checker."""
     process = run_command(
-        command="black --check . --line-length 80",
+        command="uv run ruff format --check .",
         work_dir=baked_project.project_path,
     )
 

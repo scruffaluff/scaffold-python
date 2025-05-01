@@ -4,6 +4,7 @@
 
 ---
 copyright: Copyright &copy; 2020-Present Macklan Weinstein
+docs_dir: doc
 extra:
   social:
     - icon: fontawesome/solid/house
@@ -41,6 +42,7 @@ repo_name: scaffold-python
 repo_url: https://github.com/scruffaluff/scaffold-python
 site_author: Macklan Weinstein
 site_description: Python project template for scaffolding.
+site_dir: build/site
 site_name: Scaffold Python
 site_url: https://scruffaluff.github.io/scaffold-python
 theme:

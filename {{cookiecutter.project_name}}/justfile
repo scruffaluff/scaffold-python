@@ -24,29 +24,27 @@ build:
   uv build --out-dir build/dist
 
 # Build documentation.
+[script]
 doc:
-  uv run python scripts/build_docs.py
+  mkdir build/site
+  cp README.md doc/index.md
+  cp CONTRIBUTING.md LICENSE.md doc/
+  uv run mkdocs build --strict
 
 # Fix code formatting.
 format:
   {% if cookiecutter.prettier_support == "yes" -%}
   deno run --allow-all npm:prettier --write .
   {% endif -%}
-  # uv run ruff format .
-  uv run black --write .
+  uv run ruff format .
 
 # Run code analyses.
 lint:
   {% if cookiecutter.prettier_support == "yes" -%}
   deno run --allow-all npm:prettier --check .
   {% endif -%}
-  uv run bandit -ilr src
-  uv run black --check .
-  # uv run ruff check .
-  uv run flake8 .
+  uv run ruff check .
   uv run mypy .
-  uv run nbqa flake8 .
-
 
 # Install development dependencies.
 setup: _setup
@@ -102,10 +100,10 @@ _setup:
 
 # Run test suites.
 test *args:
-  uv run pytest {{args}}
+  uv run pytest \{\{args\}\}
 
 # Run test suite for multiple Python versions.
 [script]
 test-ver versions="3.9,3.10,3.11,3.12,3.13":
-  let versions = "{{versions}}" | split row ","
+  let versions = "\{\{versions\}\}" | split row ","
   for version in $versions { uv run --python $version pytest }

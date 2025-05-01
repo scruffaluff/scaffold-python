@@ -29,14 +29,12 @@ doc:
 # Fix code formatting.
 format:
   deno run --allow-all npm:prettier --write .
-  # uv run ruff format .
-  uv run black --write .
+  uv run ruff format .
 
 # Run code analyses.
 lint:
   deno run --allow-all npm:prettier --check .
-  # uv run ruff check .
-  uv run flake8 .
+  uv run ruff check .
   uv run mypy .
 
 # Install development dependencies.

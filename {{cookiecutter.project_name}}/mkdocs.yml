@@ -4,6 +4,7 @@
 
 ---
 copyright: Copyright &copy; {% now 'utc', '%Y' %}-Present {{ cookiecutter.author_name }}
+docs_dir: doc
 extra:
   social:
     - icon: fontawesome/brands/{{ cookiecutter.githost }}
@@ -50,6 +51,7 @@ repo_url: {{ cookiecutter.project_repository }}
 site_author: {{ cookiecutter.author_name }}
 site_description: |
   {{ cookiecutter.project_description }}
+site_dir: build/site
 site_name: {{ cookiecutter.project_name }}
 site_url: {{ cookiecutter.project_homepage }}
 theme:

@@ -10,6 +10,7 @@ __pycache__/
 .hypothesis/
 .mypy_cache/
 .pytest_cache/
+.ruff_cache/
 .tox/
 .venv/
 *.egg-info/

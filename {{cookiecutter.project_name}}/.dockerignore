@@ -15,7 +15,7 @@
 .mypy_cache/
 .pre-commit-config.yaml
 .pytest_cache/
-.python-version
+.ruff_cache/
 .tox/
 .venv/
 .vscode/settings.json
