@@ -4,8 +4,9 @@ import contextlib
 import os
 import re
 import subprocess
+from subprocess import CompletedProcess
 from pathlib import Path
-from typing import Any, Iterator, Optional
+from typing import Any, Iterator, Optional, Sequence
 
 from pytest_cookies.plugin import Result
 
@@ -44,28 +45,24 @@ def file_matches(baked_project: Result, regex_str: str) -> Iterator[Path]:
             yield path
 
 
-def run_command(
-    command: str, work_dir: Optional[Path] = None
-) -> subprocess.CompletedProcess:
-    """Execute shell command in another directory and capture output.
+def run_command(command: Sequence[str], cwd: Optional[Path] = None) -> CompletedProcess:
+    """Test command with helpful error messages.
 
     Args:
-        command: Shell command to execute.
-        work_dir: Location to make temporary working directory for command.
-
-    Raises:
-        CalledProcessError: If shell command returns a non-zero exit code.
+        command: Command to execute.
+        cwd: Location to make temporary working directory for command.
 
     Returns:
         Completed shell process information.
     """
-    directory = Path.cwd() if work_dir is None else work_dir
-    with chdir(directory):
-        return subprocess.run(
-            command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
+    process = subprocess.run(
+        command,
+        capture_output=True,
+        check=True,
+        cwd=cwd,
+    )
+    assert process.returncode == 0, process.stderr.decode("utf-8")
+    return process
 
 
 def show(match: Any) -> None:

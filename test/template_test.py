@@ -1,7 +1,6 @@
 """Project generation tests."""
 
 import re
-import subprocess
 import sys
 from typing import Any, Dict, List
 
@@ -9,7 +8,7 @@ import pytest
 from pytest import mark
 from pytest_cookies.plugin import Cookies, Result
 
-from test.util import file_matches, run_command
+from test import util
 
 
 @mark.parametrize(
@@ -99,26 +98,15 @@ def test_mkdocs_build(cookies: Cookies) -> None:
     """Mkdocs must be able to build documentation for baked project."""
     result = cookies.bake(extra_context={})
     assert result.exit_code == 0, str(result.exception)
-    subprocess.run(
-        ["uv", "sync"],
-        capture_output=True,
-        check=True,
-        cwd=result.project_path,
-    )
-    subprocess.run(
-        ["just", "doc"],
-        capture_output=True,
-        check=True,
-        cwd=result.project_path,
-    )
+    util.run_command(["uv", "sync"], cwd=result.project_path)
+    util.run_command(["just", "doc"], cwd=result.project_path)
 
 
 def test_mypy_type_checks(baked_project: Result) -> None:
     """Generated files must pass Mypy type checks."""
-    subprocess.run(
-        ["uv", "run", "mypy", str(baked_project.project_path)],
-        capture_output=True,
-        check=True,
+    util.run_command(
+        ["deno", "run", "--allow-all", "npm:prettier", "--check", "."],
+        cwd=baked_project.project_path,
     )
 
 
@@ -127,7 +115,7 @@ def test_no_blank_lines(baked_project: Result) -> None:
     regex = re.compile(r"^\s+$")
     error_msg = "File {}, line {}: {} has whitespace."
 
-    for path in file_matches(baked_project, r"^.*$"):
+    for path in util.file_matches(baked_project, r"^.*$"):
         for idx, line in enumerate(path.read_text().split("\n")):
             match = regex.match(line)
             assert match is None, error_msg.format(path, idx, line)
@@ -136,7 +124,7 @@ def test_no_blank_lines(baked_project: Result) -> None:
 def test_no_contiguous_blank_lines(baked_project: Result) -> None:
     """Project files do not have subsequent empty lines."""
     regex = re.compile(r"\n\s*\n\s*\n")
-    for path in file_matches(baked_project, r"^.*(?<!.py)$"):
+    for path in util.file_matches(baked_project, r"^.*(?<!.py)$"):
         text = path.read_text()
 
         match = regex.search(text)
@@ -146,7 +134,7 @@ def test_no_contiguous_blank_lines(baked_project: Result) -> None:
 def test_no_starting_blank_line(baked_project: Result) -> None:
     """Check that generated files do not start with a blank line."""
     regex = re.compile(r"^\s*$")
-    for path in file_matches(baked_project, r"^.*(?<!\.typed)$"):
+    for path in util.file_matches(baked_project, r"^.*(?<!\.typed)$"):
         text = path.read_text().split("\n")[0]
         assert not regex.match(text), f"File {path} begins with a blank line."
 
@@ -154,7 +142,7 @@ def test_no_starting_blank_line(baked_project: Result) -> None:
 def test_no_trailing_blank_line(baked_project: Result) -> None:
     """Check that generated files do not have a trailing blank line."""
     regex = re.compile(r"\n\s*$")
-    for path in file_matches(baked_project, r"^.*$"):
+    for path in util.file_matches(baked_project, r"^.*$"):
         text = path.read_text()
 
         match = regex.match(text)
@@ -172,29 +160,24 @@ def test_prettier_format(baked_project: Result) -> None:
     """Generated files must pass Prettier format checker."""
     if baked_project.context["prettier_support"] == "no":
         pytest.skip("Prettier support is required for format testing.")
-
-    process = run_command(
-        command="prettier --check .", work_dir=baked_project.project_path
+    util.run_command(
+        [
+            "deno",
+            "run",
+            "--allow-all",
+            "npm:prettier",
+            "--check",
+            str(baked_project.project_path),
+        ],
     )
-    assert process.returncode == 0, process.stderr.decode("utf-8")
 
 
 def test_pytest_test(cookies: Cookies) -> None:
     """Generated files must pass Pytest unit tests."""
     result = cookies.bake(extra_context={})
     assert result.exit_code == 0, str(result.exception)
-    subprocess.run(
-        ["uv", "sync"],
-        capture_output=True,
-        check=True,
-        cwd=result.project_path,
-    )
-    subprocess.run(
-        ["uv", "run", "pytest"],
-        capture_output=True,
-        check=True,
-        cwd=result.project_path,
-    )
+    util.run_command(["uv", "sync"], cwd=result.project_path)
+    util.run_command(["uv", "run", "pytest"], cwd=result.project_path)
 
 
 @mark.parametrize(
@@ -222,20 +205,14 @@ def test_removed_paths(
 
 def test_ruff_format(baked_project: Result) -> None:
     """Generated files must pass Ruff format checker."""
-    subprocess.run(
-        ["uv", "run", "ruff", "format", "--check", str(baked_project.project_path)],
-        capture_output=True,
-        check=True,
+    util.run_command(
+        ["uv", "run", "ruff", "format", "--check", str(baked_project.project_path)]
     )
 
 
 def test_ruff_lint(baked_project: Result) -> None:
     """Generated files must pass Ruff lints."""
-    subprocess.run(
-        ["uv", "run", "ruff", "check", str(baked_project.project_path)],
-        capture_output=True,
-        check=True,
-    )
+    util.run_command(["uv", "run", "ruff", "check", str(baked_project.project_path)])
 
 
 @mark.parametrize(
@@ -322,7 +299,7 @@ def test_text_existence(
 def test_toml_blank_lines(baked_project: Result) -> None:
     """Check that TOML files do not have blank lines not followed by a [."""
     regex = re.compile(r"\n\s*\n[^[]")
-    for path in file_matches(baked_project, r"^.*\.toml$"):
+    for path in util.file_matches(baked_project, r"^.*\.toml$"):
         text = path.read_text()
         match = regex.search(text)
         assert match is None, f"TOML file {path} contains blank lines."
