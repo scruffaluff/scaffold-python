@@ -47,6 +47,7 @@ setup: _setup
 _setup:
   #!/usr/bin/env sh
   set -eu
+  mkdir -p .vendor/bin .vendor/cache .vendor/lib
   if [ ! -x "$(command -v nu)" ]; then
     curl --fail --location --show-error \
       https://scruffaluff.github.io/scripts/install/nushell.sh | sh -s -- \
@@ -72,6 +73,9 @@ _setup:
   $ErrorActionPreference = 'Stop'
   $ProgressPreference = 'SilentlyContinue'
   $PSNativeCommandUseErrorActionPreference = $True
+  foreach ($Folder in @('bin', 'cache', 'lib')) {
+    New-Item -Force -ItemType Directory -Path ".vendor/$Folder" | Out-Null
+  }
   if (-not (Get-Command -ErrorAction SilentlyContinue nu)) {
     powershell {
       iex "& { $(iwr -useb https://scruffaluff.github.io/scripts/install/nushell.ps1) } --preserve-env --dest .vendor/bin"
