@@ -19,18 +19,19 @@ dev = [
     "pytest-cov~=6.1",
     "pytest-mock~=3.14",
     "ruff~=0.11.0",
+    "toml~=0.10.0",
     "types-toml~=0.10.0",
 ]
 
 [project]
 authors = [{ email = "{{ cookiecutter.author_email }}", name = "{{ cookiecutter.author_name }}" }]
-{% if cookiecutter.cli_support == "yes" %}
+{%- if cookiecutter.cli_support == "yes" %}
 dependencies = [
     "typer~=0.15.0",
 ]
-{% else %}
+{%- else %}
 dependencies = []
-{% endif %}
+{%- endif %}
 description = "{{ cookiecutter.project_description }}"
 documentation = "{{ cookiecutter.project_homepage }}"
 keywords = []
@@ -91,5 +92,5 @@ markers = [
     "e2e: mark as end to end test.",
     "unit: mark as unit test.",
 ]
-python_files = ["*.test.py"]
+python_files = ["__init__.py", "*_test.py"]
 testpaths = ["test"]

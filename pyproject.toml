@@ -31,7 +31,7 @@ requires-python = "~=3.9"
 version = "0.2.1"
 
 [tool.mypy]
-cache_dir = ".vendor/cache/mypy"
+cache_dir = ".cache/mypy"
 check_untyped_defs = true
 disallow_untyped_calls = false
 disallow_untyped_defs = true
@@ -54,21 +54,15 @@ warn_unused_ignores = true
 
 [tool.pytest.ini_options]
 addopts = "-sv"
-cache_dir = ".vendor/cache/pytest"
-python_classes = "Test*"
-python_files = [
-    "__init__.py",
-    "*.test.py",
-]
-python_functions = ["test_*"]
+cache_dir = ".cache/pytest"
 testpaths = ["test"]
 
 [tool.ruff]
-cache-dir = ".vendor/cache/ruff"
+cache-dir = ".cache/ruff"
 extend-exclude = ["[{][{]cookiecutter.project_name[}][}]"]
 
 [tool.ruff.lint]
-ignore = ["D203", "D213", "D413", "S101", "S603"]
+ignore = ["D203", "D213", "D413", "I001", "S101", "S603", "S607"]
 select = ["A", "B", "D", "C90", "E", "F", "I", "N", "Q", "RUF100", "S", "W"]
 
 [tool.uv]
