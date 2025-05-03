@@ -104,7 +104,7 @@ def test_mkdocs_build(cookies: Cookies) -> None:
 
 def test_mypy_type_checks(baked_project: Result) -> None:
     """Generated files must pass Mypy type checks."""
-    util.run_command(["uv", "run", "mypy", str(baked_project.project_path)])
+    util.run_command(["uv", "run", "mypy", "."], cwd=baked_project.project_path)
 
 
 def test_no_blank_lines(baked_project: Result) -> None:
@@ -164,8 +164,9 @@ def test_prettier_format(baked_project: Result) -> None:
             "--allow-all",
             "npm:prettier",
             "--check",
-            str(baked_project.project_path),
+            ".",
         ],
+        cwd=baked_project.project_path,
     )
 
 
@@ -203,13 +204,15 @@ def test_removed_paths(
 def test_ruff_format(baked_project: Result) -> None:
     """Generated files must pass Ruff format checker."""
     util.run_command(
-        ["uv", "run", "ruff", "format", "--check", str(baked_project.project_path)]
+        ["uv", "run", "ruff", "format", "--check", "."], cwd=baked_project.project_path
     )
 
 
 def test_ruff_lint(baked_project: Result) -> None:
     """Generated files must pass Ruff lints."""
-    util.run_command(["uv", "run", "ruff", "check", str(baked_project.project_path)])
+    util.run_command(
+        ["uv", "run", "ruff", "check", "."], cwd=baked_project.project_path
+    )
 
 
 @mark.parametrize(
