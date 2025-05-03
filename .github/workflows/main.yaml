@@ -41,7 +41,7 @@ on:
 env:
   DENO_DIR: "${{ github.workspace }}/.vendor/cache/deno"
   PIP_CACHE_DIR: "${{ github.workspace }}/.vendor/cache/pip"
-  UV_CACHE_DIR: ${{ github.workspace }}/.vendor/cache/uv"
+  UV_CACHE_DIR: ${{ github.workspace }}/.uv-cache"
 
 jobs:
   build:
