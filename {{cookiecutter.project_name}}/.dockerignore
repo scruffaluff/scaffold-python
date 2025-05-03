@@ -17,6 +17,7 @@
 .pytest_cache/
 .ruff_cache/
 .tox/
+.vendor/
 .venv/
 .vscode/settings.json
 *.ipynb
@@ -36,6 +37,7 @@ nohup.out
 package-lock.json
 Pipfile
 Pipfile.lock
+poetry.lock
 public/
 requirements.lock
 requirements.txt

@@ -7,8 +7,6 @@ copyright: Copyright &copy; 2020-Present Macklan Weinstein
 docs_dir: doc
 extra:
   social:
-    - icon: fontawesome/solid/house
-      link: https://scruffaluff.com
     - icon: fontawesome/brands/github
       link: https://github.com/scruffaluff
     - icon: fontawesome/solid/envelope

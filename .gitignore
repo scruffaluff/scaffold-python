@@ -3,10 +3,12 @@
 # For more information, visit https://git-scm.com/docs/gitignore.
 
 __pycache__/
+.benchmarks/
 .cache/
 .coverage*
 .DS_Store
 .env*
+.hypothesis/
 .ipynb_checkpoints/
 .mypy_cache/
 .pdbrc
@@ -14,21 +16,23 @@ __pycache__/
 .ruff_cache/
 .tox/
 .venv/
-.vscode/
 *.bak
 *.egg-info/
+*.ipynb
 *.log
 *.py[oc]
+*.swp
 *.tar.gz
-*.xml
+*.whl
 /.vendor/
 /build/
 /doc/index.md
 /doc/src/user/cli.md
-/tmp/
 dist/
+f1
 node_modules/
 nohup.out
 package-lock.json
 poetry.lock
 site/
+tmp/

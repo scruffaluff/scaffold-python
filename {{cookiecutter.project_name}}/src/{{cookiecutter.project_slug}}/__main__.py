@@ -7,7 +7,11 @@ named __main__.py.
 from typer import Typer
 
 
-app = Typer(help="{{ cookiecutter.project_description }}")
+app = Typer(
+    add_completion=False,
+    help="{{ cookiecutter.project_description }}",
+    pretty_exceptions_enable=False,
+)
 
 
 if __name__ == "__main__":

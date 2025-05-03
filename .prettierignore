@@ -5,7 +5,9 @@
 __pycache__/
 .benchmarks/
 .cache/
+.coverage*
 .git/
+.hypothesis/
 .ipynb_checkpoints/
 .mypy_cache/
 .pytest_cache/
@@ -18,7 +20,10 @@ __pycache__/
 *.min.js
 *.py
 *.pyc
+/.vendor/
+/build/
+dist/
 node_modules/
 package-lock.json
 site/
-uv.lock
+tmp/

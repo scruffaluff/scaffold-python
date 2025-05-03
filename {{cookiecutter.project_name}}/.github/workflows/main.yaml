@@ -1,0 +1,166 @@
+# GitHub Actions workflow file.
+#
+# For more information, visit
+# https://docs.github.com/actions/learn-github-actions.
+
+---
+name: main
+
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - "**"
+    tags:
+      - "**"
+  workflow_dispatch:
+    inputs:
+      debug:
+        default: false
+        description: Use Tmate session for debugging
+        type: boolean
+      job:
+        description: CI job to run
+        options:
+          - build
+          - pages
+          - release
+        required: true
+        type: choice
+      os:
+        description: Operating system
+        options:
+          - macos
+          - ubuntu
+          - windows
+        required: true
+        type: choice
+
+env:
+  {% if cookiecutter.prettier_support == "yes" -%}
+  DENO_DIR: {% raw -%} "${{ github.workspace }}/.vendor/cache/deno" {%- endraw %}
+  {% endif -%}
+  UV_CACHE_DIR: {% raw -%} "${{ github.workspace }}/.vendor/cache/uv" {%- endraw %}
+
+jobs:
+  build:
+    if: >-
+      {% raw -%} ${{ github.ref_type == 'branch' && github.event_name !=
+      'workflow_dispatch' || inputs.job == 'build' }} {%- endraw %} 
+    name: Run code analyses and test suites
+    runs-on: {% raw -%} ${{ matrix.os }}-latest {%- endraw %}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: >-
+          {% raw -%} ${{ inputs.os && fromJson(format('["{0}"]',inputs.os)) ||
+          fromJson('["macos","ubuntu","windows"]') }} {%- endraw %} 
+    steps:
+      - if: {% raw -%} ${{ runner.os == 'Windows' }} {%- endraw %}
+        name: Override Uv cache variable for Windows
+        run: >-
+          {% raw -%} Add-Content -Path $Env:GITHUB_ENV -Value "UV_CACHE_DIR=${{
+          github.workspace }}\.vendor\cache\uv" {%- endraw %}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          key: {% raw -%} uv-${{ runner.os }}-${{ hashFiles('uv.lock') }} {%- endraw %}
+          path: |
+            .vendor
+            .venv
+      - if: {% raw -%} ${{ runner.os == 'Windows' }} {%- endraw %}
+        name: Install Just for Windows
+        run: >-
+          {% raw -%} powershell { iex "& { $(iwr -useb
+          https://scruffaluff.github.io/scripts/install/just.ps1) } --dest
+          C:\Windows" } {%- endraw %}
+      - if: {% raw -%} ${{ runner.os != 'Windows' }} {%- endraw %}
+        name: Install Just for Unix
+        run: >-
+          curl -LSfs https://scruffaluff.github.io/scripts/install/just.sh | sh
+          -s -- --global
+      - name: Run CI workflow commands
+        run: just ci
+      - if: {% raw -%} ${{ always() && inputs.debug }} {%- endraw %}
+        name: Launch Tmate session if debug enabled
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3
+
+  pages:
+    environment:
+      name: github-pages
+    if: >-
+      {% raw -%} ${{ github.ref == 'refs/heads/main' && github.event_name !=
+      'workflow_dispatch' || inputs.job == 'pages' }} {%- endraw %}
+    name: Build and publish documentation
+    permissions:
+      id-token: write
+      pages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          key: {% raw -%} uv-${{ runner.os }}-${{ hashFiles('uv.lock') }} {%- endraw %}
+          path: |
+            .vendor
+            .venv
+      - name: Install Just
+        run: >-
+          curl -LSfs https://scruffaluff.github.io/scripts/install/just.sh | sh
+          -s -- --global
+      - name: Build documentation
+        run: just setup doc
+      - name: Upload documentation
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: pages
+          path: build/site
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: pages
+      - if: {% raw -%} ${{ always() && inputs.debug }} {%- endraw %}
+        name: Launch Tmate session if debug enabled
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3
+
+  release:
+    if: >-
+      {% raw -%} ${{ github.ref_type == 'tag' && github.event_name != 'workflow_dispatch'
+      || inputs.job == 'release' }} {%- endraw %}
+    name: Make GitHub release
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Just
+        run: >-
+          curl -LSfs https://scruffaluff.github.io/scripts/install/just.sh | sh
+          -s -- --global
+      - name: Build Python packages
+        run: just setup build
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: >-
+            See the
+            [changelog]({{ cookiecutter.project_repository }}/blob/{% raw -%} ${{
+            github.ref_name }} {%- endraw %}/CHANGELOG.md) for more information.
+          files: |
+            build/dist/{{ cookiecutter.project_slug }} {%- raw -%} -${{ github.ref_name }}-py3-none-any.whl {%- endraw %}
+            build/dist/{{ cookiecutter.project_slug }} {%- raw -%} -${{ github.ref_name }}.tar.gz {%- endraw %}
+          name: {{ cookiecutter.project_name }} {% raw -%} ${{ github.ref_name }} {%- endraw %}
+          tag_name: {% raw -%} ${{ github.ref }} {%- endraw %}
+      - if: {% raw -%} ${{ always() && inputs.debug }} {%- endraw %}
+        name: Launch Tmate session if debug enabled
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3

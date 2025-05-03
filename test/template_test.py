@@ -41,7 +41,7 @@ def test_badges_separate_lines(context: Dict[str, Any], cookies: Cookies) -> Non
             ["src/mock/__main__.py"],
         ),
         ({"prettier_support": "yes"}, [".prettierignore", ".prettierrc.yaml"]),
-        ({"pypi_support": "yes"}, [".github/workflows/release.yaml"]),
+        ({"pypi_support": "yes"}, [".github/workflows/main.yaml"]),
     ],
 )
 def test_existing_paths(

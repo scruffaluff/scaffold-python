@@ -67,6 +67,7 @@ source = ["{{ cookiecutter.project_slug }}"]
 packages = ["src/{{ cookiecutter.project_slug }}"]
 
 [tool.mypy]
+cache_dir = ".cache/mypy"
 check_untyped_defs = true
 disallow_untyped_calls = false
 disallow_untyped_defs = true
@@ -88,9 +89,13 @@ warn_unused_ignores = true
 
 [tool.pytest.ini_options]
 addopts = "-sv"
+cache_dir = ".cache/pytest"
 markers = [
     "e2e: mark as end to end test.",
     "unit: mark as unit test.",
 ]
 python_files = ["__init__.py", "*_test.py"]
-testpaths = ["test"]
+testpaths = ["src", "test"]
+
+[tool.ruff]
+cache-dir = ".cache/ruff"
