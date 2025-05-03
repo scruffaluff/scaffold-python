@@ -45,7 +45,9 @@ def file_matches(baked_project: Result, regex_str: str) -> Iterator[Path]:
             yield path
 
 
-def run_command(command: Sequence[str], cwd: Optional[Path] = None) -> CompletedProcess:
+def run_command(
+    command: Sequence[str], cwd: Optional[Path] = None, stream: str = "stderr"
+) -> CompletedProcess:
     """Test command with helpful error messages.
 
     Args:
@@ -58,10 +60,9 @@ def run_command(command: Sequence[str], cwd: Optional[Path] = None) -> Completed
     process = subprocess.run(
         command,
         capture_output=True,
-        check=True,
         cwd=cwd,
     )
-    assert process.returncode == 0, process.stderr.decode("utf-8")
+    assert process.returncode == 0, getattr(process, stream).decode("utf-8")
     return process
 
 

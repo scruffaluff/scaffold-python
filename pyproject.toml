@@ -54,6 +54,7 @@ warn_unused_ignores = true
 [tool.pytest.ini_options]
 addopts = "-sv"
 cache_dir = ".cache/pytest"
+filterwarnings = ["ignore::DeprecationWarning"]
 python_files = ["*_test.py"]
 testpaths = ["src", "test"]
 

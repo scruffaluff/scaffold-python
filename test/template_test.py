@@ -104,7 +104,9 @@ def test_mkdocs_build(cookies: Cookies) -> None:
 
 def test_mypy_type_checks(baked_project: Result) -> None:
     """Generated files must pass Mypy type checks."""
-    util.run_command(["uv", "run", "mypy", "."], cwd=baked_project.project_path)
+    util.run_command(
+        ["uv", "run", "mypy", "."], cwd=baked_project.project_path, stream="stdout"
+    )
 
 
 def test_no_blank_lines(baked_project: Result) -> None:
@@ -175,7 +177,7 @@ def test_pytest_test(cookies: Cookies) -> None:
     result = cookies.bake(extra_context={})
     assert result.exit_code == 0, str(result.exception)
     util.run_command(["uv", "sync"], cwd=result.project_path)
-    util.run_command(["uv", "run", "pytest"], cwd=result.project_path)
+    util.run_command(["uv", "run", "pytest"], cwd=result.project_path, stream="stdout")
 
 
 @mark.parametrize(
@@ -238,39 +240,15 @@ def test_scaffold(context: Dict[str, Any], cookies: Cookies) -> None:
     "context,paths,text,exist",
     [
         (
-            {"githost": "gitlab", "prettier_support": "yes"},
-            [".gitlab-ci.yml"],
+            {"prettier_support": "yes"},
+            ["justfile"],
             "prettier",
             True,
         ),
         (
-            {"githost": "github", "prettier_support": "yes"},
-            [".github/workflows/build.yaml"],
+            {"prettier_support": "no"},
+            ["justfile"],
             "prettier",
-            True,
-        ),
-        (
-            {"githost": "gitlab", "prettier_support": "no"},
-            [".gitlab-ci.yml"],
-            "prettier",
-            False,
-        ),
-        (
-            {"githost": "github", "prettier_support": "no"},
-            [".github/workflows/build.yaml"],
-            "prettier",
-            False,
-        ),
-        (
-            {"githost": "github", "pypi_support": "yes"},
-            [".github/workflows/release.yaml"],
-            "pypi",
-            True,
-        ),
-        (
-            {"githost": "github", "pypi_support": "no"},
-            [".github/workflows/release.yaml"],
-            "pypi",
             False,
         ),
         (

@@ -107,9 +107,8 @@ test-windows:
           https://scruffaluff.github.io/scripts/action/tmate-session.ps1 | iex
       }
   before_script:
-    - powershell { iex 
-      "& { $(iwr -useb https://scruffaluff.github.io/scripts/install/uv.ps1) } --global"
-      }
+    - powershell { iex "& { $(iwr -useb
+      https://scruffaluff.github.io/scripts/install/uv.ps1) } --global" }
   # Creates a dependencies cache for each unique Poetry lock file hash pair to
   # speed up dependency installations.
   cache:
