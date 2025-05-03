@@ -59,8 +59,8 @@ jobs:
       - if: ${{ runner.os == 'Windows' }}
         name: Override Uv cache variable for Windows
         run: >-
-          Add-Content -Path $GITHUB_ENV -Value "UV_CACHE_DIR=${{
-          github.workspace }}\\.vendor\\cache\\uv"
+          Add-Content -Path $Env:GITHUB_ENV -Value "UV_CACHE_DIR=${{
+          github.workspace }}\.vendor\cache\uv"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Cache dependencies
