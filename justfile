@@ -11,7 +11,6 @@ export PATH := if os() == "windows" {
 } else {
   justfile_dir() / ".vendor/bin:" + env_var("PATH")
 }
-export UV_NO_SYNC := "true"
 
 # List all commands available in justfile.
 list:

@@ -40,7 +40,7 @@ on:
 
 env:
   DENO_DIR: "${{ github.workspace }}/.vendor/cache/deno"
-  PIP_CACHE_DIR: "${{ github.workspace }}/.vendor/cache/pip"
+  UV_CACHE_DIR: "${{ github.workspace }}/.vendor/cache/uv"
 
 jobs:
   build:
@@ -56,6 +56,11 @@ jobs:
           ${{ inputs.os && fromJson(format('["{0}"]',inputs.os)) ||
           fromJson('["macos","ubuntu","windows"]') }}
     steps:
+      - if: ${{ runner.os == 'Windows' }}
+        name: Override Uv cache variable for Windows
+        run: >-
+          Add-Content -Path $GITHUB_ENV -Value "UV_CACHE_DIR=${{
+          github.workspace }}\\.vendor\\cache\\uv"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Cache dependencies
