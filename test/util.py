@@ -53,6 +53,7 @@ def run_command(
     Args:
         command: Command to execute.
         cwd: Location to make temporary working directory for command.
+        stream: Error message output stream.
 
     Returns:
         Completed shell process information.
