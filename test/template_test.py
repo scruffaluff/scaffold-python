@@ -104,10 +104,7 @@ def test_mkdocs_build(cookies: Cookies) -> None:
 
 def test_mypy_type_checks(baked_project: Result) -> None:
     """Generated files must pass Mypy type checks."""
-    util.run_command(
-        ["deno", "run", "--allow-all", "npm:prettier", "--check", "."],
-        cwd=baked_project.project_path,
-    )
+    util.run_command(["uv", "run", "mypy", str(baked_project.project_path)])
 
 
 def test_no_blank_lines(baked_project: Result) -> None:
