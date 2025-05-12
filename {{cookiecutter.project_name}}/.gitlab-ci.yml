@@ -3,6 +3,26 @@
 # For a reference of the CI file syntax, visit
 # https://docs.gitlab.com/ee/ci/yaml.
 
+# Define user configurable workflow inputs. For more information, visit
+# https://docs.gitlab.com/ci/inputs.
+spec:
+  inputs:
+    debug:
+      default: false
+      description: Use Tmate session for debugging
+      type: boolean
+    job:
+      default: build-linux
+      description: CI job to run
+      options:
+        - build-linux
+        - build-macos
+        - build-windows
+        - pages
+        - release
+        - test
+      type: string
+
 ---
 # Workflow rules define when the CI pipeline is created. Rule order matters
 # since they are evaluated until first match.
@@ -26,8 +46,6 @@ stages:
 
 # Environment variables that apply to all jobs.
 variables:
-  CI_WEB_DEBUG: "false"
-  CI_WEB_JOB: build-linux
   {% if cookiecutter.prettier_support == "yes" -%}
   DENO_DIR: "${CI_PROJECT_DIR}/.vendor/cache/deno"
   {% endif -%}
@@ -40,20 +58,19 @@ default:
   # Allows for debugging via Tmate session for manual pipelines.
   after_script:
     - |
-      if [ "${CI_WEB_DEBUG}" = 'true' ]; then
+      if [ "$[[ inputs.debug ]]" = 'true' ]; then
         curl --fail --location --show-error \
           https://scruffaluff.github.io/scripts/action/tmate-session.sh | sh
-
       fi
   before_script:
     - apt-get update
     - apt-get install --yes curl zip
     - curl --fail --location --show-error
       https://scruffaluff.github.io/scripts/install/just.sh | sh -s -- --global
-  # Creates a dependencies cache for each unique Docker image and Uv lock file
-  # hash pair to speed up dependency installations. Since caches are shared
-  # between jobs and branches, cache keys must not apply to multiple version
-  # targets to avoid installation errors. For more information, visit
+  # Creates a dependencies cache for each unique Docker image and lock file hash
+  # pair to speed up dependency installations. Since caches are shared between
+  # jobs and branches, cache keys must not apply to multiple version targets to
+  # avoid installation errors. For more information, visit
   # https://docs.gitlab.com/ee/ci/caching.
   cache:
     key:
@@ -68,7 +85,7 @@ default:
 build-linux:
   # Makes job run on every Git event except for tags.
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'build-linux'
+    - if: $CI_PIPELINE_SOURCE == 'web' && "$[[ inputs.job ]]" == 'build-linux'
     - if: $CI_PIPELINE_SOURCE == 'web'
       when: never
     - if: $CI_COMMIT_TAG
@@ -80,12 +97,15 @@ build-linux:
 
 # Job is commented out, since MacOS shared runners are a beta GitLab feature
 # that is only availabe upon special request. Uncomment if you have access.
-# test-macos:
-#   image: macos-12-xcode-14
-#   # Makes job skip Git tags and run only on commits to or merge requests to the
+# build-macos:
+#   before_script:
+#     - curl --fail --location --show-error
+#       https://scruffaluff.github.io/scripts/install/just.sh | sh -s -- --global
+#   image: macos-15-xcode-16
+#   # Makes job skip Git tags and run only on commits or merge requests to the
 #   # default repository branch.
 #   rules:
-#     - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'build-macos'
+#     - if: $CI_PIPELINE_SOURCE == 'web' && "$[[ inputs.job ]]" == 'build-macos'
 #     - if: $CI_PIPELINE_SOURCE == 'web'
 #       when: never
 #     - if: $CI_COMMIT_TAG
@@ -98,31 +118,27 @@ build-linux:
 #   tags:
 #     - saas-macos-medium-m1
 
-test-windows:
+build-windows:
   # Allows for debugging via Tmate session for manual pipelines.
   after_script:
     - |
-      If ("$Env:CI_WEB_DEBUG" -Eq 'true') {
-        iwr -useb `
-          https://scruffaluff.github.io/scripts/action/tmate-session.ps1 | iex
+      if ("$[[ inputs.debug ]]" -eq 'true') {
+        Invoke-WebRequest -UseBasicParsing -Uri `
+          https://scruffaluff.github.io/scripts/action/tmate-session.ps1 `
+          | Invoke-Expression
       }
   before_script:
-    - powershell { iex "& { $(iwr -useb
-      https://scruffaluff.github.io/scripts/install/uv.ps1) } --global" }
-  # Creates a dependencies cache for each unique Poetry lock file hash pair to
-  # speed up dependency installations.
-  cache:
-    key:
-      files:
-        - uv.lock
-      prefix: windows
-    paths:
-      - .vendor
-      - .venv
-  # Makes job skip Git tags and run only on commits to or merge requests to the
+    - choco install --yes unzip zip
+    - |
+      $JustScript = Invoke-WebRequest -UseBasicParsing -Uri `
+        https://scruffaluff.github.io/scripts/install/just.ps1
+      Invoke-Expression "& { $JustScript } --global"
+  # Ensures unique prefix for cache key.
+  image: windows
+  # Makes job skip Git tags and run only on commits or merge requests to the
   # default repository branch.
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'build-windows'
+    - if: $CI_PIPELINE_SOURCE == 'web' && "$[[ inputs.job ]]" == 'build-windows'
     - if: $CI_PIPELINE_SOURCE == 'web'
       when: never
     - if: $CI_COMMIT_TAG
@@ -133,7 +149,7 @@ test-windows:
     - just ci
   stage: build
   tags:
-    - shared-windows
+    - saas-windows-medium-amd64
 
 pages:
   # GitLab Pages uploads files inside the "public" folder after job completes.
@@ -142,7 +158,7 @@ pages:
       - public
   # Makes job only run on the default repository branch.
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'pages'
+    - if: $CI_PIPELINE_SOURCE == 'web' && "$[[ inputs.job ]]" == 'pages'
     - if: $CI_PIPELINE_SOURCE == 'web'
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
@@ -174,7 +190,7 @@ release:
     name: "{{ cookiecutter.project_name }} ${CI_COMMIT_TAG}"
   # Makes job only run on Git tags.
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'release'
+    - if: $CI_PIPELINE_SOURCE == 'web' && "$[[ inputs.job ]]" == 'release'
     - if: $CI_PIPELINE_SOURCE == 'web'
       when: never
     - if: $CI_COMMIT_TAG
@@ -193,30 +209,17 @@ release:
       "${PACKAGE_REGISTRY_URL}/${CI_COMMIT_TAG}/{{ cookiecutter.project_slug }}-${CI_COMMIT_TAG}.tar.gz"
   stage: deploy
 
-test-linux:
-  image: "python:${version}"
-  parallel:
-    matrix:
-      - version:
-          - "3.9"
-          - "3.10"
-          - "3.11"
-          - "3.12"
-          - "3.13"
-  # Makes job skip Git tags and run only default Python version on all events
-  # except for commits to or merge requests to the default repository branch.
-  # Then all Python versions are run.
+test:
+  # Makes job skip Git tags and run only on commits or merge requests to the
+  # default repository branch.
   rules:
-    - if: >-
-        $CI_PIPELINE_SOURCE == 'web' && $CI_WEB_JOB == 'test-linux' &&
-        $CI_WEB_PYTHON_VERSION == $version
+    - if: $CI_PIPELINE_SOURCE == 'web' && "$[[ inputs.job ]]" == 'test'
     - if: $CI_PIPELINE_SOURCE == 'web'
       when: never
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
-    - if: $version == $PYTHON_VERSION_DEFAULT
   script:
-    - poetry run pytest --cov
+    - just setup test-ver
   stage: build
