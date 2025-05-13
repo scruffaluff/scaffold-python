@@ -72,21 +72,21 @@ _setup:
   $ProgressPreference = 'SilentlyContinue'
   $PSNativeCommandUseErrorActionPreference = $True
   if (-not (Get-Command -ErrorAction SilentlyContinue nu)) {
-    powershell {
-      iex "& { $(iwr -useb https://scruffaluff.github.io/scripts/install/nushell.ps1) } --preserve-env --dest .vendor/bin"
-    }
+    $NushellScript = Invoke-WebRequest -UseBasicParsing -Uri `
+      https://scruffaluff.github.io/scripts/install/nushell.ps1
+    Invoke-Expression "& { $NushellScript } --preserve-env --dest .vendor/bin"
   }
   Write-Output "Nushell $(nu --version)"
   if (-not (Get-Command -ErrorAction SilentlyContinue deno)) {
-    powershell {
-      iex "& { $(iwr -useb https://scruffaluff.github.io/scripts/install/deno.ps1) } --preserve-env --dest .vendor/bin"
-    }
+    $DenoScript = Invoke-WebRequest -UseBasicParsing -Uri `
+      https://scruffaluff.github.io/scripts/install/deno.ps1
+    Invoke-Expression "& { $DenoScript } --preserve-env --dest .vendor/bin"
   }
   deno --version
   if (-not (Get-Command -ErrorAction SilentlyContinue uv)) {
-    powershell {
-      iex "& { $(iwr -useb https://scruffaluff.github.io/scripts/install/uv.ps1) } --preserve-env --dest .vendor/bin"
-    }
+    $UvScript = Invoke-WebRequest -UseBasicParsing -Uri `
+      https://scruffaluff.github.io/scripts/install/uv.ps1
+    Invoke-Expression "& { $UvScript } --preserve-env --dest .vendor/bin"
   }
   uv --version
 
