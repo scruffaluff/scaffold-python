@@ -31,6 +31,10 @@ format:
   deno run --allow-all npm:prettier --write .
   uv run ruff format .
 
+# Initialize project.
+init: _setup && format
+  uv sync
+
 # Run code analyses.
 lint:
   deno run --allow-all npm:prettier --check .
@@ -99,3 +103,9 @@ test *args:
 test-ver versions="3.9,3.10,3.11,3.12,3.13":
   let versions = "{{versions}}" | split row ","
   for version in $versions { uv run --python $version pytest }
+
+# Wrapper to Uv.
+[no-exit-message]
+@uv *args:
+  uv {{args}}
+

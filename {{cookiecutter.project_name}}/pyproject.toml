@@ -45,7 +45,7 @@ version = "{{ cookiecutter.project_version }}"
 
 {% if cookiecutter.cli_support == "yes" -%}
 [project.scripts]
-{{ cookiecutter.project_name }} = "{{ cookiecutter.project_slug }}.__main__:app"
+{{ cookiecutter.project_name }} = "{{ cookiecutter.project_slug }}.__main__:cli"
 {% endif -%}
 
 [tool.coverage.report]
