@@ -7,14 +7,14 @@ set shell := ["nu", "--commands"]
 set unstable := true
 set windows-shell := ["nu", "--commands"]
 export PATH := if os() == "windows" {
-  justfile_dir() / ".vendor/bin;" + env_var("PATH")
+  justfile_dir() / ".vendor/bin;" + env("PATH")
 } else {
-  justfile_dir() / ".vendor/bin:" + env_var("PATH")
+  justfile_dir() / ".vendor/bin:" + env("PATH")
 }
 
 # List all commands available in justfile.
 list:
-  just --list
+  @just --list
 
 # Execute CI workflow commands.
 ci: setup lint doc test

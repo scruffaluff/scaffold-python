@@ -7,14 +7,14 @@ set shell := ["nu", "--commands"]
 set unstable := true
 set windows-shell := ["nu", "--commands"]
 export PATH := if os() == "windows" {
-  justfile_dir() / ".vendor/bin;" + env_var("PATH")
+  justfile_dir() / ".vendor/bin;" + env("PATH")
 } else {
-  justfile_dir() / ".vendor/bin:" + env_var("PATH")
+  justfile_dir() / ".vendor/bin:" + env("PATH")
 }
 
 # List all commands available in justfile.
 list:
-  just --list
+  @just --list
 
 # Execute CI workflow commands.
 ci: setup lint doc build test
@@ -105,10 +105,10 @@ _setup:
 
 # Run test suites.
 test *args:
-  uv run pytest --cov \{\{args\}\}
+  uv run pytest --cov {{ "{{" }}args{{ "}}" }}
 
 # Run test suite for multiple Python versions.
 [script]
 test-ver versions="3.9,3.10,3.11,3.12,3.13":
-  let versions = "\{\{versions\}\}" | split row ","
+  let versions = "{{ "{{" }}versions{{ "}}" }}" | split row ","
   for version in $versions { uv run --python $version pytest }

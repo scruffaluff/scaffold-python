@@ -27,7 +27,7 @@ dev = [
 authors = [{ email = "{{ cookiecutter.author_email }}", name = "{{ cookiecutter.author_name }}" }]
 {%- if cookiecutter.cli_support == "yes" %}
 dependencies = [
-    "typer~=0.15.0",
+    "typer~=0.16.0",
 ]
 {%- else %}
 dependencies = []
@@ -40,7 +40,7 @@ license = "MIT"
 {%- endif %}
 name = "{{ cookiecutter.project_name }}"
 readme = "README.md"
-requires-python = "~=3.9"
+requires-python = ">=3.9.0,<4.0.0"
 version = "{{ cookiecutter.project_version }}"
 
 {% if cookiecutter.cli_support == "yes" -%}

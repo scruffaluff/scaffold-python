@@ -18,14 +18,12 @@ will be generated in your current working directory.
 
 ## Setup
 
-To develop with the generated project, install
-[Poetry](https://python-poetry.org/) and step into the project folder.
-Afterwards execute the following commands.
+To develop with the generated project, install [Just](https://just.systems) and
+step into the project folder. Afterwards execute the following commands.
 
 ```console
-poetry install
-poetry shell
-black .
+uv sync
+just setup format
 git init
 ```
 

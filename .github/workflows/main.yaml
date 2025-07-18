@@ -39,8 +39,8 @@ on:
         type: choice
 
 env:
-  DENO_DIR: "${{ github.workspace }}/.vendor/cache/deno"
-  UV_CACHE_DIR: "${{ github.workspace }}/.vendor/cache/uv"
+  DENO_DIR: "${{ github.workspace }}/.vendor/deno"
+  UV_CACHE_DIR: "${{ github.workspace }}/.vendor/uv"
 
 jobs:
   build:
@@ -56,14 +56,9 @@ jobs:
           ${{ inputs.os && fromJson(format('["{0}"]',inputs.os)) ||
           fromJson('["macos","ubuntu","windows"]') }}
     steps:
-      - if: ${{ runner.os == 'Windows' }}
-        name: Override Uv cache variable for Windows
-        run: >-
-          Add-Content -Path $Env:GITHUB_ENV -Value "UV_CACHE_DIR=${{
-          github.workspace }}\.vendor\cache\uv"
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Cache dependencies
+      - name: Cache packages
         uses: actions/cache@v4
         with:
           key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
@@ -102,7 +97,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Cache dependencies
+      - name: Cache packages
         uses: actions/cache@v4
         with:
           key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
