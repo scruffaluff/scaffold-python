@@ -19,8 +19,8 @@ will be generated in your current working directory.
 ## Setup
 
 To develop with the generated project, install [Just](https://just.systems) and
-step into the project folder. Then execute `just init` and you are ready to
-code.
+step into the project folder. Then execute `JUST_INIT=true just setup` and you
+are ready to code.
 
 ## Tooling
 

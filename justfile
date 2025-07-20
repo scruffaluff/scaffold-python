@@ -31,10 +31,6 @@ format:
   deno run --allow-all npm:prettier --write .
   uv run ruff format .
 
-# Initialize project.
-init: _setup && format
-  uv sync
-
 # Run code analyses.
 lint:
   deno run --allow-all npm:prettier --check .
@@ -43,11 +39,8 @@ lint:
   uv run mypy .
 
 # Install development dependencies.
-setup: _setup
-  uv sync --locked
-
 [unix]
-_setup:
+setup:
   #!/usr/bin/env sh
   set -eu
   if [ ! -x "$(command -v nu)" ]; then
@@ -68,9 +61,15 @@ _setup:
       --preserve-env --dest .vendor/bin
   fi
   uv --version
+  if [ -n "${JUST_INIT:-}" ]; then
+    uv sync
+  else
+    uv sync --locked
+  fi
 
+# Install development dependencies.
 [windows]
-_setup:
+setup:
   #!powershell.exe
   $ErrorActionPreference = 'Stop'
   $ProgressPreference = 'SilentlyContinue'
@@ -93,6 +92,12 @@ _setup:
     Invoke-Expression "& { $UvScript } --preserve-env --dest .vendor/bin"
   }
   uv --version
+  if ("$Env:JUST_INIT") {
+    uv sync
+  }
+  else {
+    uv sync --locked
+  }
 
 # Run test suites.
 test *args:
