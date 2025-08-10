@@ -38,6 +38,11 @@ format:
   {% endif -%}
   uv run ruff format .
 
+# Install project programs.
+[script]
+install: build
+  python3 -m pip install (ls build/dist/*.whl | get name | first)
+
 # Run code analyses.
 lint:
   {% if cookiecutter.prettier_support == "yes" -%}
