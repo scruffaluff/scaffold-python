@@ -39,8 +39,26 @@ lint:
   uv run mypy .
 
 # Install development dependencies.
-[unix]
+[script]
 setup:
+  if (which deno | is-empty) {
+    http get https://scruffaluff.github.io/scripts/install/deno.nu
+    | nu -c $"($in | decode); main --preserve-env --dest .vendor/bin"
+  }
+  deno --version
+  if (which uv | is-empty) {
+    http get https://scruffaluff.github.io/scripts/install/uv.nu
+    | nu -c $"($in | decode); main --preserve-env --dest .vendor/bin"
+  }
+  uv --version
+  if ($env.JUST_INIT? | is-empty) {
+    uv sync --locked
+  } else {
+    uv sync
+  }
+
+[unix]
+_setup:
   #!/usr/bin/env sh
   set -eu
   if [ ! -x "$(command -v nu)" ]; then
@@ -49,27 +67,9 @@ setup:
       --preserve-env --dest .vendor/bin
   fi
   echo "Nushell $(nu --version)"
-  if [ ! -x "$(command -v deno)" ]; then
-    curl --fail --location --show-error \
-      https://scruffaluff.github.io/scripts/install/deno.sh | sh -s -- \
-      --preserve-env --dest .vendor/bin
-  fi
-  deno --version
-  if [ ! -x "$(command -v uv)" ]; then
-    curl --fail --location --show-error \
-      https://scruffaluff.github.io/scripts/install/uv.sh | sh -s -- \
-      --preserve-env --dest .vendor/bin
-  fi
-  uv --version
-  if [ -n "${JUST_INIT:-}" ]; then
-    uv sync
-  else
-    uv sync --locked
-  fi
 
-# Install development dependencies.
 [windows]
-setup:
+_setup:
   #!powershell.exe
   $ErrorActionPreference = 'Stop'
   $ProgressPreference = 'SilentlyContinue'
@@ -80,24 +80,6 @@ setup:
     Invoke-Expression "& { $NushellScript } --preserve-env --dest .vendor/bin"
   }
   Write-Output "Nushell $(nu --version)"
-  if (-not (Get-Command -ErrorAction SilentlyContinue deno)) {
-    $DenoScript = Invoke-WebRequest -UseBasicParsing -Uri `
-      https://scruffaluff.github.io/scripts/install/deno.ps1
-    Invoke-Expression "& { $DenoScript } --preserve-env --dest .vendor/bin"
-  }
-  deno --version
-  if (-not (Get-Command -ErrorAction SilentlyContinue uv)) {
-    $UvScript = Invoke-WebRequest -UseBasicParsing -Uri `
-      https://scruffaluff.github.io/scripts/install/uv.ps1
-    Invoke-Expression "& { $UvScript } --preserve-env --dest .vendor/bin"
-  }
-  uv --version
-  if ("$Env:JUST_INIT") {
-    uv sync
-  }
-  else {
-    uv sync --locked
-  }
 
 # Run test suites.
 test *args:
