@@ -62,9 +62,23 @@ testpaths = ["src", "test"]
 cache-dir = ".cache/ruff"
 extend-exclude = ["[{][{]cookiecutter.project_name[}][}]"]
 
+[tool.ruff.format]
+docstring-code-format = true
+
 [tool.ruff.lint]
-ignore = ["D203", "D213", "D413", "I001", "S101", "S603", "S607"]
-select = ["A", "B", "D", "C90", "E", "F", "I", "N", "Q", "RUF100", "S", "W"]
+pydocstyle = { convention = "google" }
+ignore = [
+    "COM", # Rule conflicts with formatter.
+    "FBT", # Boolean function arguments are acceptable.
+    "FIX", # Todo comments are acceptable.
+    "ICN", # Import abbreviations reduce readability.
+    "INP001", # Project hooks directory is not a package.
+    "S101", # Assert statements are standard for test functions.
+    "S603", # Rule warns about using subprocess commands without a solution.
+    "T201", # Print statements are acceptable for CLI applications.
+    "TD", # Todo formatting is excessive for personal projects.
+]
+select = ["ALL"]
 
 [tool.uv]
 package = false

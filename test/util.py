@@ -1,14 +1,20 @@
 """Utility functions for testing."""
 
+from __future__ import annotations
+
 import contextlib
 import os
 import re
 import subprocess
-from subprocess import CompletedProcess
 from pathlib import Path
-from typing import Any, Iterator, Optional, Sequence
+from subprocess import CompletedProcess
+from typing import TYPE_CHECKING
 
-from pytest_cookies.plugin import Result
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
+    from re import Match
+
+    from pytest_cookies.plugin import Result
 
 
 @contextlib.contextmanager
@@ -46,7 +52,7 @@ def file_matches(baked_project: Result, regex_str: str) -> Iterator[Path]:
 
 
 def run_command(
-    command: Sequence[str], cwd: Optional[Path] = None, stream: str = "stderr"
+    command: Sequence[str], cwd: Path | None = None, stream: str = "stderr"
 ) -> CompletedProcess:
     """Test command with helpful error messages.
 
@@ -58,7 +64,7 @@ def run_command(
     Returns:
         Completed shell process information.
     """
-    process = subprocess.run(
+    process = subprocess.run(  # noqa: PLW1510
         command,
         capture_output=True,
         cwd=cwd,
@@ -67,7 +73,7 @@ def run_command(
     return process
 
 
-def show(match: Any) -> None:
+def show(match: Match) -> None:
     """Show lines surrounding regex match.
 
     Args:
@@ -78,16 +84,9 @@ def show(match: Any) -> None:
     start, stop = match.span()
 
     m = re.match(r"\n.*$", text[:start])
-    if m is None:
-        before = ""
-    else:
-        before = m.string[m.start() : m.end()]
-
+    before = "" if m is None else m.string[m.start() : m.end()]
     m = re.match(r"^.*\n", text[stop:])
-    if m is None:
-        after = ""
-    else:
-        after = m.string[m.start() : m.end()]
+    after = "" if m is None else m.string[m.start() : m.end()]
 
     lines = before + text[start:stop] + after
     print(lines)

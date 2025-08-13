@@ -5,12 +5,11 @@ named __main__.py.
 """
 
 import sys
-from typing import Annotated, Optional
+from typing import Annotated
 
 from typer import Option, Typer
 
 import {{ cookiecutter.project_slug }}
-
 
 cli = Typer(
     add_completion=False,
@@ -28,8 +27,8 @@ def print_version(value: bool) -> None:
 
 @cli.command()
 def main(
-    version: Annotated[
-        Optional[bool],
+    version: Annotated[  # noqa: ARG001
+        bool,
         Option(
             "-v",
             "--version",
@@ -39,7 +38,8 @@ def main(
         ),
     ] = False,
 ) -> None:
-    pass
+    """{{ cookiecutter.project_description }}"""
+    print("Replace me with application logic!")
 
 
 if __name__ == "__main__":

@@ -1,17 +1,20 @@
 """Project generation tests."""
 
+from __future__ import annotations
+
 import re
 import sys
-from typing import Any, Dict, List
+from typing import TYPE_CHECKING, Any
 
 import pytest
-from pytest import mark
-from pytest_cookies.plugin import Cookies, Result
 
 from test import util
 
+if TYPE_CHECKING:
+    from pytest_cookies.plugin import Cookies, Result
 
-@mark.parametrize(
+
+@pytest.mark.parametrize(
     "context",
     [
         {"githost": "github"},
@@ -20,7 +23,7 @@ from test import util
         {"pypi_support": "no"},
     ],
 )
-def test_badges_separate_lines(context: Dict[str, Any], cookies: Cookies) -> None:
+def test_badges_separate_lines(context: dict[str, Any], cookies: Cookies) -> None:
     """Readme files must have all badge links on separate lines."""
     result = cookies.bake(extra_context=context)
     assert result.exit_code == 0, str(result.exception)
@@ -28,11 +31,11 @@ def test_badges_separate_lines(context: Dict[str, Any], cookies: Cookies) -> Non
 
     regex = re.compile(r"img\.shields\.io")
     for line in readme.read_text().split("\n"):
-        assert len(regex.findall(line)) < 2
+        assert len(regex.findall(line)) < 2  # noqa: PLR2004
 
 
-@mark.parametrize(
-    "context,paths",
+@pytest.mark.parametrize(
+    ("context", "paths"),
     [
         ({"githost": "github"}, [".github"]),
         ({"githost": "gitlab"}, [".gitlab-ci.yml"]),
@@ -45,7 +48,7 @@ def test_badges_separate_lines(context: Dict[str, Any], cookies: Cookies) -> Non
     ],
 )
 def test_existing_paths(
-    context: Dict[str, Any], paths: List[str], cookies: Cookies
+    context: dict[str, Any], paths: list[str], cookies: Cookies
 ) -> None:
     """Check that specific paths exist after scaffolding."""
     result = cookies.bake(extra_context=context)
@@ -55,8 +58,8 @@ def test_existing_paths(
         assert file_path.exists()
 
 
-@mark.parametrize(
-    "context,expected",
+@pytest.mark.parametrize(
+    ("context", "expected"),
     [
         (
             {
@@ -75,7 +78,7 @@ def test_existing_paths(
     ],
 )
 def test_homepage_context(
-    context: Dict[str, Any], expected: str, cookies: Cookies
+    context: dict[str, Any], expected: str, cookies: Cookies
 ) -> None:
     """Default homepage is generated from repository URL."""
     result = cookies.bake(extra_context=context)
@@ -84,11 +87,11 @@ def test_homepage_context(
     assert actual == expected
 
 
-@mark.parametrize(
+@pytest.mark.parametrize(
     "context",
     [{"project_name": "$Mock?"}],
 )
-def test_invalid_context(context: Dict[str, Any], cookies: Cookies) -> None:
+def test_invalid_context(context: dict[str, Any], cookies: Cookies) -> None:
     """Check that cookiecutter rejects invalid context arguments."""
     result = cookies.bake(extra_context=context)
     assert result.exit_code == -1
@@ -148,7 +151,7 @@ def test_no_trailing_blank_line(baked_project: Result) -> None:
         assert match is None, f"File {path} ends with a blank line."
 
 
-@mark.skipif(
+@pytest.mark.skipif(
     sys.platform in ["darwin", "win32"],
     reason="""
     Cookiecutter does not generate files with Windows line endings and Prettier
@@ -180,8 +183,8 @@ def test_pytest_test(cookies: Cookies) -> None:
     util.run_command(["uv", "run", "pytest"], cwd=result.project_path, stream="stdout")
 
 
-@mark.parametrize(
-    "context,paths",
+@pytest.mark.parametrize(
+    ("context", "paths"),
     [
         ({"githost": "github"}, [".gitlab-ci.yml"]),
         ({"githost": "gitlab"}, [".github"]),
@@ -193,7 +196,7 @@ def test_pytest_test(cookies: Cookies) -> None:
     ],
 )
 def test_removed_paths(
-    context: Dict[str, Any], paths: List[str], cookies: Cookies
+    context: dict[str, Any], paths: list[str], cookies: Cookies
 ) -> None:
     """Check that specific paths are removed after scaffolding."""
     result = cookies.bake(extra_context=context)
@@ -213,11 +216,13 @@ def test_ruff_format(baked_project: Result) -> None:
 def test_ruff_lint(baked_project: Result) -> None:
     """Generated files must pass Ruff lints."""
     util.run_command(
-        ["uv", "run", "ruff", "check", "."], cwd=baked_project.project_path
+        ["uv", "run", "--active", "ruff", "check", "."],
+        cwd=baked_project.project_path,
+        stream="stdout",
     )
 
 
-@mark.parametrize(
+@pytest.mark.parametrize(
     "context",
     [
         {"githost": "github"},
@@ -230,14 +235,14 @@ def test_ruff_lint(baked_project: Result) -> None:
         {"pypi_support": "no"},
     ],
 )
-def test_scaffold(context: Dict[str, Any], cookies: Cookies) -> None:
+def test_scaffold(context: dict[str, Any], cookies: Cookies) -> None:
     """Check that various configurations generate successfully."""
     result = cookies.bake(extra_context=context)
     assert result.exit_code == 0, str(result.exception)
 
 
-@mark.parametrize(
-    "context,paths,text,exist",
+@pytest.mark.parametrize(
+    ("context", "paths", "text", "exist"),
     [
         (
             {"prettier_support": "yes"},
@@ -260,8 +265,8 @@ def test_scaffold(context: Dict[str, Any], cookies: Cookies) -> None:
     ],
 )
 def test_text_existence(
-    context: Dict[str, Any],
-    paths: List[str],
+    context: dict[str, Any],
+    paths: list[str],
     text: str,
     exist: bool,
     cookies: Cookies,

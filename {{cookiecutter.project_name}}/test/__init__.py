@@ -1,13 +1,12 @@
 """{{ cookiecutter.project_name }} testing package."""
 
-import pathlib
+from pathlib import Path
 
 import toml
 
 import {{ cookiecutter.project_slug }}
 
-
-REPO_PATH = pathlib.Path(__file__).parents[1]
+REPO_PATH = Path(__file__).parents[1]
 
 
 def test_version() -> None:

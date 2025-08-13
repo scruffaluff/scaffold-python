@@ -67,10 +67,10 @@ default:
     - apt-get install --yes curl zip
     - curl --fail --location --show-error
       https://scruffaluff.github.io/scripts/install/just.sh | sh -s -- --global
-  # Creates a dependencies cache for each unique Docker image and lock file hash
-  # pair to speed up dependency installations. Since caches are shared between
-  # jobs and branches, cache keys must not apply to multiple version targets to
-  # avoid installation errors. For more information, visit
+  # Creates a dependencies cache for each unique container image and lock file
+  # hash pair to speed up dependency installations. Since caches are shared
+  # between jobs and branches, cache keys must not apply to multiple version
+  # targets to avoid installation errors. For more information, visit
   # https://docs.gitlab.com/ee/ci/caching.
   cache:
     key:

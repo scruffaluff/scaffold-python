@@ -1,13 +1,14 @@
 """Project post-generation hooks."""
 
+from __future__ import annotations
+
 import shutil
 from pathlib import Path
-from typing import Dict, List, Union
 
-Paths = List[Path]
+Paths = list[Path]
 
 
-PATHS: Dict[str, Union[Paths, Dict[str, Paths]]] = {
+PATHS: dict[str, Paths | dict[str, Paths]] = {
     "githost": {
         "github": [Path(".github")],
         "gitlab": [Path(".gitlab-ci.yml")],
@@ -34,7 +35,7 @@ def clean_bool(chosen: str, paths: Paths) -> None:
             remove_path(path)
 
 
-def clean_choice(choice: str, options: Dict[str, Paths]) -> None:
+def clean_choice(choice: str, options: dict[str, Paths]) -> None:
     """Remove choice paths from unchosen options.
 
     Args:
@@ -47,7 +48,7 @@ def clean_choice(choice: str, options: Dict[str, Paths]) -> None:
                 remove_path(path)
 
 
-def clean_paths(context: Dict[str, str]) -> None:
+def clean_paths(context: dict[str, str]) -> None:
     """Delete residual paths from project.
 
     Args:
@@ -59,7 +60,8 @@ def clean_paths(context: Dict[str, str]) -> None:
         elif isinstance(val, list):
             clean_bool(context[key], val)
         else:
-            raise TypeError("Unsupported type in PATHS data.")
+            message = f"Unsupported type '{type(val)}' in PATHS data."
+            raise TypeError(message)
 
 
 def main() -> None:
